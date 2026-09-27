@@ -1,0 +1,28 @@
+.mono { font-variant-numeric: tabular-nums; }
+
+.week-pick-label:hover { background: var(--color-accent-100); }
+.week-toggle-local:hover { border-color: var(--color-accent); background: var(--color-accent-100); }
+.week-picker-row:hover { background: var(--color-accent-100); border-color: var(--color-accent-200) !important; }
+
+/* An input that reads as plain text until you interact with it — for editing
+   a value in place inside a dense table row without it looking like a form. */
+.plain-input {
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px 6px;
+  font: inherit;
+  color: inherit;
+  width: 100%;
+}
+.plain-input:hover { border-color: var(--color-neutral-300); }
+.plain-input:focus-visible { border-color: var(--color-accent); outline: none; background: var(--color-surface); }
+
+@media print {
+  @page { size: A4 portrait; margin: 12mm; }
+  html, body { background: #fff; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  [data-noprint] { display: none !important; }
+  .nav { display: none !important; }
+  tr, td, table { break-inside: avoid; }
+}
