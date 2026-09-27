@@ -41,7 +41,7 @@ export function EditorHeader() {
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: 'var(--space-3) var(--space-4)', flexWrap: 'wrap' }}>
+    <div data-noprint="1" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: 'var(--space-3) var(--space-4)', flexWrap: 'wrap' }}>
       <div style={{ flex: 'none' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <span className="card-kicker" style={{ margin: 0 }}>The</span>

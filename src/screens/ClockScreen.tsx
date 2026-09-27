@@ -12,10 +12,10 @@ export function ClockScreen() {
 
   return (
     <div style={{ padding: '0 var(--space-6) var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-      <div style={{ background: 'var(--color-surface)', borderRadius: 'calc(var(--radius-lg)*1.6)', padding: 'var(--space-6) var(--space-4)', boxShadow: 'var(--shadow-sm)' }}>
+      <div className="print-clock-card" style={{ background: 'var(--color-surface)', borderRadius: 'calc(var(--radius-lg)*1.6)', padding: 'var(--space-6) var(--space-4)', boxShadow: 'var(--shadow-sm)' }}>
         <ClockFace segments={segments} hour={clock.hour} name={clock.name} categories={categories} />
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3) var(--space-6)', alignItems: 'center' }}>
+      <div data-noprint="1" style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3) var(--space-6)', alignItems: 'center' }}>
         {categoryOrder.map((id) => {
           const secs = segments.filter((s) => s.c === id).reduce((a, s) => a + s.d, 0);
           const pct = total ? Math.round((secs / total) * 100) : 0;

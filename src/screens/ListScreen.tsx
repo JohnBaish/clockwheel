@@ -68,7 +68,7 @@ export function ListScreen() {
 
   return (
     <div style={{ padding: '0 var(--space-6) var(--space-6)' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 'var(--space-3)' }}>
+      <div data-noprint="1" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 'var(--space-3)' }}>
         <span style={{ font: '700 11px var(--font-body)', letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--color-neutral-700)' }}>
           {rows.length} segments · drag to reorder
         </span>
@@ -76,17 +76,20 @@ export function ListScreen() {
           <IconPlus size={15} />Add segment
         </button>
       </div>
+      <div className="print-only" style={{ font: '400 22px var(--font-heading)', marginBottom: 'var(--space-3)' }}>
+        {clock.name} · {String(clock.hour).padStart(2, '0')}:00
+      </div>
       <table className="table">
         <thead>
           <tr>
-            <th style={{ width: 26 }}></th>
+            <th data-noprint="1" style={{ width: 26 }}></th>
             <th style={{ width: 78 }}>Time</th>
             <th style={{ width: 460 }}>Segment</th>
             <th style={{ width: 104 }}>Category</th>
             <th style={{ width: 84 }}>Dur</th>
             {PINS_ENABLED && <th style={{ width: 104 }}>Anchor</th>}
             {NOTES_ENABLED && <th style={{ width: 30 }}></th>}
-            <th style={{ width: 30 }}></th>
+            <th data-noprint="1" style={{ width: 30 }}></th>
           </tr>
         </thead>
         <tbody>
@@ -110,7 +113,7 @@ export function ListScreen() {
                 background: overIndex === i && dragIndex !== null && dragIndex !== i ? 'var(--color-accent-100)' : undefined,
               }}
             >
-              <td style={{ paddingRight: 0, color: 'var(--color-neutral-600)', cursor: 'grab' }}><IconGrip size={14} /></td>
+              <td data-noprint="1" style={{ paddingRight: 0, color: 'var(--color-neutral-600)', cursor: 'grab' }}><IconGrip size={14} /></td>
               <td className="mono" style={{ fontWeight: PINS_ENABLED && s.pin ? 700 : 400, color: PINS_ENABLED && s.pin ? '#201e1d' : 'var(--color-neutral-700)' }}>
                 {clockOf(clock.hour, s.t)}
               </td>
@@ -167,7 +170,7 @@ export function ListScreen() {
                   {s.note ? <IconNote size={14} /> : <IconPlus size={14} />}
                 </td>
               )}
-              <td>
+              <td data-noprint="1">
                 <button
                   className="btn btn-ghost"
                   onClick={() => removeSegment(s.id)}

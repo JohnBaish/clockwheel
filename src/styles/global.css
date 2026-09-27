@@ -18,11 +18,18 @@
 .plain-input:hover { border-color: var(--color-neutral-300); }
 .plain-input:focus-visible { border-color: var(--color-accent); outline: none; background: var(--color-surface); }
 
+/* Hidden on screen, shown only in a printed page — the opposite of
+   [data-noprint] — for identifying text a screen doesn't otherwise need
+   (e.g. which clock/hour a printed List belongs to). */
+.print-only { display: none; }
+
 @media print {
   @page { size: A4 portrait; margin: 12mm; }
   html, body { background: #fff; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   [data-noprint] { display: none !important; }
   .nav { display: none !important; }
+  .print-only { display: block; }
+  .print-clock-card { background: none !important; box-shadow: none !important; padding: 0 !important; }
   tr, td, table { break-inside: avoid; }
 }

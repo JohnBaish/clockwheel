@@ -75,6 +75,30 @@ Also done the same day, in a follow-up round:
    (`SummaryScreen.tsx` sets its own `width: 100%` inline, so it's
    unaffected by removing it from the shared class.)
 
+## Recently completed (2026-09-27, later same day)
+
+7. **Print now works, scoped to Clock and List only.** `Nav.tsx`'s Print
+   button only renders when `screen === 'clock' || screen === 'list'` — it
+   did nothing useful anywhere else, so it's gone from Library/Week/Summary/
+   Categories. Each of the two screens prints *only its own content*, per
+   the user's explicit call: printing is really a "get it into a PDF"
+   vehicle for producers, not primarily a paper thing, in colour, portrait.
+   - Clock: `EditorHeader` is `data-noprint` (shared by both screens), and
+     the category-legend row below the face is `data-noprint` too. The
+     clock's outer "card" div got a `print-clock-card` class that drops its
+     background/shadow/padding in print — `ClockFace` already shows the
+     clock's own name+hour in its hub, so nothing else is needed to
+     identify the sheet.
+   - List: the toolbar (segment count + Add segment) is `data-noprint`; the
+     drag-handle and delete `<td>`/`<th>` are `data-noprint`. Since the
+     table itself has no name/hour anywhere, a plain `.print-only` heading
+     (`{clock.name} · {hour}:00`) was added above it — `.print-only` is a
+     new small CSS utility in `global.css` (opposite of `[data-noprint]`:
+     hidden on screen, `display: block` only under `@media print`).
+   - Verified with Playwright's `page.emulateMedia({ media: 'print' })` +
+     screenshot on both screens, and confirmed the Print button's
+     count is 0 on lib/week/summary/categories and 1 on clock/list.
+
 ## Parked for next session — user has NOT asked for these to be done yet
 
 Raised 2026-09-27, explicitly deferred so the user could move on to other
@@ -94,13 +118,7 @@ questions. Implement only when the user actually asks to resume this.
    understood (stale memo dependency, a specific ordering of edits, MAX_CALLOUTS
    interaction, etc.), or there's a real bug in how `ratio`/`avail` get
    recomputed. Reproduce it first, in the running app, before touching code.
-2. **Print doesn't produce useful output yet.** `Nav.tsx`'s Print button
-   calls `window.print()`, and `global.css` has an `@media print` block that
-   hides `.nav`/`[data-noprint]` and avoids breaking table rows mid-page —
-   but nothing has been checked or built beyond that baseline (e.g. whether
-   the Clock screen's SVG face, the Week grid, or the List table actually
-   look reasonable on a printed page). Needs an actual print-preview pass
-   before deciding what's missing.
+Item 2 (Print) is now done — see "Recently completed" below.
 
 ## Publishing the artifact (do this after any change the user should see)
 

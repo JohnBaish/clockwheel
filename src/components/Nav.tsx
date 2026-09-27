@@ -41,14 +41,16 @@ export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Sc
       >
         New clock
       </button>
-      <button
-        className="btn btn-ghost"
-        onClick={() => window.print()}
-        data-noprint="1"
-        style={{ color: 'var(--color-accent-700)' }}
-      >
-        Print
-      </button>
+      {(screen === 'clock' || screen === 'list') && (
+        <button
+          className="btn btn-ghost"
+          onClick={() => window.print()}
+          data-noprint="1"
+          style={{ color: 'var(--color-accent-700)' }}
+        >
+          Print
+        </button>
+      )}
       <span className="tag tag-neutral mono" data-noprint="1">saved {relativeTime(lastEditedAt, now)}</span>
     </div>
   );
