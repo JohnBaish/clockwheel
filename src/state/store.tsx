@@ -89,6 +89,12 @@ interface AppContextValue extends PersistedState {
   /** Returns null on success, or a message explaining why it refused. */
   deleteCategory: (id: CategoryId) => string | null;
   categoryUsageCount: (id: CategoryId) => number;
+  /** All persisted state, wrapped and pretty-printed for a downloadable backup file. */
+  exportState: () => string;
+  /** Loads a previously exported file back in. Returns null on success, or a
+   *  message explaining why it was rejected — the only place this app parses
+   *  data from outside itself, so it's the one place worth validating. */
+  importState: (json: string) => string | null;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -229,6 +235,34 @@ export function AppProvider({ children }: { children: ReactNode }) {
       return null;
     },
     categoryUsageCount: (id) => categoryUsageCountFor(id, state.clocks),
+    exportState: () => JSON.stringify({ app: 'clockwheel', version: 2, exportedAt: new Date().toISOString(), state }, null, 2),
+    importState: (json) => {
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(json);
+      } catch {
+        return "That file isn't valid JSON.";
+      }
+      const wrapper = parsed as Record<string, unknown>;
+      if (typeof wrapper !== 'object' || wrapper === null || wrapper.app !== 'clockwheel' || typeof wrapper.state !== 'object' || wrapper.state === null) {
+        return "That doesn't look like a Clockwheel export file.";
+      }
+      const incoming = wrapper.state as Partial<PersistedState>;
+      if (
+        typeof incoming.clocks !== 'object' || incoming.clocks === null ||
+        !Array.isArray(incoming.clockOrder) ||
+        typeof incoming.categories !== 'object' || incoming.categories === null ||
+        !Array.isArray(incoming.categoryOrder)
+      ) {
+        return 'That file is missing data Clockwheel needs — it may be corrupted.';
+      }
+      setState((s) => {
+        const merged: PersistedState = { ...s, ...incoming, lastEditedAt: Date.now(), screen: 'lib' };
+        if (!merged.clocks[merged.openClockId]) merged.openClockId = merged.clockOrder[0] ?? s.openClockId;
+        return merged;
+      });
+      return null;
+    },
   }), [state]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -99,26 +99,77 @@ Also done the same day, in a follow-up round:
      screenshot on both screens, and confirmed the Print button's
      count is 0 on lib/week/summary/categories and 1 on clock/list.
 
+8. **"Share link" replaced with "Copy image."** Share link only ever copied
+   `window.location.href` — verified with Playwright that opening that link
+   in a fresh browser lands on a different, default clock, not the one that
+   was open, since nothing in the URL encodes which clock/screen it was.
+   Now `EditorHeader.tsx`'s button (still shared by both screens) calls
+   `copyImage()`, which branches on `screen` and calls one of two new
+   functions in `src/lib/exportImage.ts`:
+   - `copyClockImage(svg, filename)` — serializes the clock face's own
+     `<svg id="clock-face-svg">` (id added in `ClockFace.tsx` so it can be
+     found from `EditorHeader`), draws it onto an offscreen canvas at 2x
+     scale, and writes the PNG to the clipboard. One real wrinkle caught
+     before shipping: the SVG paints two shapes via CSS custom properties
+     (`var(--color-bg)`, `var(--color-neutral-700)`) which work fine live
+     on the page but silently resolve to nothing in a *serialized,
+     standalone* SVG (no access to the page's stylesheet) — fixed by
+     reading their live computed values and inlining a `<style>:root{...}`
+     block into the serialized string before rasterizing it. Verified by
+     actually reading the resulting PNG back off the clipboard in
+     Playwright: without the fix the background would render broken;
+     with it, the cream background and hub text render correctly.
+   - `copyListImage(rows, clock, categories, filename)` — hand-draws the
+     table (time/name/category-pill/duration per row, plus a
+     `{clock.name} · {hour}:00` heading) directly with the canvas 2D API,
+     per the user's explicit choice — there's no native "rasterize this
+     DOM" API for a plain HTML table the way SVG has one for itself, so
+     this mirrors `ListScreen.tsx`'s own columns rather than pulling in a
+     screenshot library. Column widths reuse the same ~50-char sizing
+     logic as the List screen's own Segment column.
+   - Both funnel through a shared `deliver()` helper: tries
+     `navigator.clipboard.write([new ClipboardItem({'image/png': blob})])`
+     first, and falls back to a plain file download if the Clipboard API
+     throws or isn't available (the known Safari-timing wrinkle flagged
+     when this was scoped) — the button reads "Copied!" or "Downloaded"
+     accordingly, reusing the same transient-status pattern the old Share
+     link button used.
+   - Verified end-to-end in Playwright by reading the actual clipboard
+     contents back out as PNGs and visually inspecting them on both
+     screens — not just checking that the code ran without throwing.
+
 ## Parked for next session — user has NOT asked for these to be done yet
 
 Raised 2026-09-27, explicitly deferred so the user could move on to other
 questions. Implement only when the user actually asks to resume this.
 
-1. **Callouts don't move back inside the ring when a segment shrinks.**
-   User's report: make a segment's label big enough to force it into a
-   callout (outside the ring, with a leader line), then shrink the segment
-   back down to a size that should fit inline again — it stays a callout.
-   Worth a careful look before assuming the fix: `ClockFace.tsx`'s
-   `buildFace()` recomputes `scored`/`callouts`/`inner` from scratch on
-   every call (it's a plain function, memoized only on
-   `[segments, hour, name, categories]` via `useMemo` in the `ClockFace`
-   component) — there's no persisted "this segment is a callout" flag, so on
-   the surface it looks like membership should already be fully re-derived
-   each render. That means either the repro involves something not yet
-   understood (stale memo dependency, a specific ordering of edits, MAX_CALLOUTS
-   interaction, etc.), or there's a real bug in how `ratio`/`avail` get
-   recomputed. Reproduce it first, in the running app, before touching code.
-Item 2 (Print) is now done — see "Recently completed" below.
+1. **Callouts not moving back inline when a segment shrinks — investigated
+   2026-09-27, could NOT reproduce.** User's original report: make a
+   segment's label big enough to force it into a callout, then shrink it
+   back down to a size that should fit inline — it stayed a callout.
+   Tested three ways with Playwright against a real running build, each
+   testing a different reading of "make it smaller":
+   1. Shorten an over-long name back down (e.g. a forced-callout title →
+      "News") — correctly returned inline.
+   2. Grow the segment's duration a lot while keeping an over-wide name —
+      correctly *stayed* a callout, because `RADIAL_AVAIL = RO - RI - 6`
+      (~54px) is a hard physical ceiling no duration can raise; this is
+      the earlier arc-vs-radial fix working as intended, not a bug.
+   3. Grow the duration with a name sized right at that ~54px edge —
+      correctly returned inline once there was enough room.
+   `buildFace()` has no persisted "is a callout" flag — it's a plain
+   function re-deriving `scored`/`callouts`/`inner` from scratch on every
+   call, memoized only on `[segments, hour, name, categories]` — and every
+   test confirmed that recomputation is correct in both directions. Best
+   guess at the original report: an edit that didn't shrink the label
+   *enough* to cross back under the ~54px threshold would correctly stay a
+   callout, which can look identical to "stuck" — or the user was on a
+   build from before some of the same day's other fixes. Left un-"fixed"
+   since nothing reproducibly wrong was found; if it recurs, get the exact
+   before/after name+duration values before touching `ClockFace.tsx`.
+
+Items 2 (Print) and the old item 3 (Copy image) are both done — see
+"Recently completed" above. No items are currently parked.
 
 ## Publishing the artifact (do this after any change the user should see)
 
@@ -134,14 +185,32 @@ https://claude.ai/code/artifact/c11281cb-2a48-41f4-83cb-e252339d2dd5` to
 update the same link in place (omitting `url` creates a new, separate
 artifact — don't do that).
 
-## Requested, deferred to a future session
+## Export/Import — done (2026-09-27)
 
-- **Export/import.** A button to download the current state as a JSON file,
-  and one to load a JSON file back in — a manual, no-backend way for a user
-  to back up their work or move it between devices, since everything today
-  lives only in that browser's `localStorage`. Discussed 2026-09-27 as a
-  stepping stone before any real accounts/backend; user explicitly asked to
-  park it for later, not build now.
+Built as a no-backend way to back up a browser's data or move it to another
+device/browser, since everything still lives only in `localStorage`.
+- `store.tsx`: `exportState()` wraps the full `PersistedState` as
+  `{ app: 'clockwheel', version: 2, exportedAt, state }` and pretty-prints it.
+  `importState(json)` is the one place in the app that parses data from
+  outside itself, so it's the one place that validates: rejects invalid
+  JSON, rejects anything not shaped like a Clockwheel export (checks `app`,
+  and that `clocks`/`clockOrder`/`categories`/`categoryOrder` exist with the
+  right basic types), then merges over current state, forces `screen: 'lib'`
+  so the import is visibly obvious, and re-points `openClockId` at a real
+  clock if the imported one doesn't exist. Returns an error string (same
+  pattern as `deleteCategory`) rather than throwing.
+- `LibraryScreen.tsx`: "Import"/"Export" buttons, top-right of the header
+  (Library is the natural whole-library-not-one-clock home for this).
+  Export triggers a browser download (`clockwheel-YYYY-MM-DD.json`) via a
+  Blob + object URL; Import is a hidden `<input type="file">` triggered by
+  the visible button. Reuses `CategoriesScreen.tsx`'s existing dismissible
+  error-banner pattern for a bad import, rather than a new one.
+- Verified with Playwright end-to-end: exported, changed the state further
+  (renamed the clock, added another), imported the earlier export back in,
+  confirmed the changes were undone — including after a full page reload,
+  proving it actually persists rather than just updating in-memory state.
+  Also confirmed importing garbage JSON shows the error banner and leaves
+  the app fully functional rather than crashing.
 
 ## Other known backlog (not urgent, not asked for — just context)
 

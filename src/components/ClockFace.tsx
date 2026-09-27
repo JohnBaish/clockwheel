@@ -227,6 +227,7 @@ export function ClockFace({ segments, hour, name, categories }: ClockFaceProps) 
   const { nodes, EX, EY } = useMemo(() => buildFace(segments, hour, name, categories), [segments, hour, name, categories]);
   return (
     <svg
+      id="clock-face-svg"
       viewBox={`${-EX} ${-EY} ${EX * 2} ${EY * 2}`}
       style={{ width: '100%', maxWidth: `${px(Math.min(760, 700 * (EX / EY)))}px`, height: 'auto', display: 'block', margin: '0 auto' }}
     >

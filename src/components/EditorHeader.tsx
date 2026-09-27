@@ -2,20 +2,26 @@ import { useEffect, useRef, useState } from 'react';
 import { useApp } from '../state/store';
 import { dur, hourBalance } from '../lib/time';
 import { songCount } from '../lib/clockStats';
+import { withTimes } from '../data/segments';
+import { copyClockImage, copyListImage } from '../lib/exportImage';
 import { PINS_ENABLED } from '../config';
 
 const HOURS = Array.from({ length: 24 }, (_, h) => h);
 
+// A filesystem-safe stand-in for whatever the clock's own name is, for the
+// downloaded-file fallback's filename.
+const slug = (name: string) => name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'clock';
+
 // Shared header for the Clock and List screens — both are views onto
 // whichever clock is currently open.
 export function EditorHeader() {
-  const { clocks, openClockId, renameClock, setClockHour, duplicateClock, openClock, categories, setScreen } = useApp();
+  const { clocks, openClockId, renameClock, setClockHour, duplicateClock, openClock, categories, setScreen, screen } = useApp();
   const clock = clocks[openClockId];
   const total = clock.segments.reduce((a, s) => a + s.d, 0);
   const anchors = clock.segments.filter((s) => s.pin).length;
   const songs = songCount(clock.segments, categories);
   const balance = hourBalance(total);
-  const [copied, setCopied] = useState(false);
+  const [imageStatus, setImageStatus] = useState<'idle' | 'copied' | 'downloaded'>('idle');
   const nameInput = useRef<HTMLInputElement | null>(null);
 
   // A brand-new, untouched clock ("New clock", no segments yet) gets its name
@@ -29,14 +35,17 @@ export function EditorHeader() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openClockId]);
 
-  const shareLink = async () => {
+  const copyImage = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
+      const filename = `${slug(clock.name)}-${String(clock.hour).padStart(2, '0')}00`;
+      const result = screen === 'clock'
+        ? await copyClockImage(document.querySelector<SVGSVGElement>('#clock-face-svg')!, `${filename}.png`)
+        : await copyListImage(withTimes(clock.segments), clock, categories, `${filename}-list.png`);
+      setImageStatus(result);
+      setTimeout(() => setImageStatus('idle'), 1500);
     } catch {
-      // Clipboard access can be blocked (permissions, insecure context) —
-      // nothing useful to do beyond leaving the button unchanged.
+      // Nothing user-actionable beyond leaving the button unchanged — the
+      // clipboard/canvas APIs this relies on can be unavailable or blocked.
     }
   };
 
@@ -76,8 +85,8 @@ export function EditorHeader() {
         >
           Duplicate
         </button>
-        <button onClick={shareLink} className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '13.5px', whiteSpace: 'nowrap' }}>
-          {copied ? 'Copied!' : 'Share link'}
+        <button onClick={copyImage} className="btn btn-secondary" style={{ padding: '8px 16px', fontSize: '13.5px', whiteSpace: 'nowrap' }}>
+          {imageStatus === 'copied' ? 'Copied!' : imageStatus === 'downloaded' ? 'Downloaded' : 'Copy image'}
         </button>
         <button onClick={() => setScreen('lib')} className="btn btn-primary" style={{ padding: '8px 18px', fontSize: '13.5px', whiteSpace: 'nowrap' }}>Done</button>
       </div>
