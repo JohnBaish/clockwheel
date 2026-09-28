@@ -238,6 +238,19 @@ All six verified with Playwright against a real running build (not just
 "the code looks right") — the label-collision fix specifically needed two
 attempts before the repro actually stopped overlapping.
 
+## Library: Open/Duplicate swapped (2026-09-28)
+
+`LibraryScreen.tsx`'s per-card button row: the wide, `flex: 1` box (which
+used to be Duplicate) now contains **Open**, styled in Open's own
+typeface (`btn-ghost` + `color: var(--color-accent-700)`) rather than
+adopting the box's old bordered look. The narrower box next to it (which
+used to be Open's position) now contains **Duplicate**, in its own
+original `btn-secondary` look. So: box *shape/size* stayed anchored to
+*position* (left = wide, right = narrow); button *label + typeface +
+onClick* moved as a unit between positions. Verified both still do the
+right thing (Open navigates to the Clock screen; Duplicate adds a second
+card and stays on Library).
+
 ## Publishing the artifact (do this after any change the user should see)
 
 ```

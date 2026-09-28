@@ -90,8 +90,8 @@ export function LibraryScreen() {
                   {mixLine(split, cats) || 'No segments yet'}
                 </div>
                 <div style={{ display: 'flex', gap: 6, marginTop: 'auto', paddingTop: 2 }}>
-                  <button className="btn btn-secondary" onClick={() => duplicateClock(id)} style={{ padding: '6px 14px', fontSize: '12.5px', flex: 1 }}>Duplicate</button>
-                  <button className="btn btn-ghost" onClick={() => openClock(id)} style={{ padding: '6px 14px', fontSize: '12.5px', color: 'var(--color-accent-700)' }}>Open</button>
+                  <button className="btn btn-ghost" onClick={() => openClock(id)} style={{ padding: '6px 14px', fontSize: '12.5px', flex: 1, color: 'var(--color-accent-700)' }}>Open</button>
+                  <button className="btn btn-secondary" onClick={() => duplicateClock(id)} style={{ padding: '6px 14px', fontSize: '12.5px' }}>Duplicate</button>
                 </div>
               </div>
             );
