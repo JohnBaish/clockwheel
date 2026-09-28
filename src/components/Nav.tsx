@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Menu, X } from 'lucide-react';
 import { useApp, type Screen } from '../state/store';
 import { relativeTime } from '../lib/time';
 
@@ -21,19 +22,25 @@ export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Sc
     return () => clearInterval(id);
   }, []);
 
+  // Below the narrow-screen breakpoint (see global.css), the links/Print/
+  // saved-tag collapse behind this toggle instead of overflowing the bar —
+  // on a wide screen .nav-panel is CSS `display: contents`, so this state
+  // is simply irrelevant there regardless of its value.
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = (s: Screen) => { onNavigate(s); setMenuOpen(false); };
+
   return (
-    <div className="nav" style={{ padding: 'var(--space-3) var(--space-6)', background: 'var(--color-surface)' }}>
+    <div className="nav" style={{ padding: 'var(--space-3) var(--space-6)', background: 'var(--color-surface)', flexWrap: 'wrap' }}>
       <span className="nav-brand">Clockwheel</span>
-      {LINKS.map((l) => (
-        <a
-          key={l.screen}
-          href={`#${l.screen}`}
-          onClick={(e) => { e.preventDefault(); onNavigate(l.screen); }}
-          aria-current={screen === l.screen ? 'page' : undefined}
-        >
-          {l.label}
-        </a>
-      ))}
+      <button
+        className="nav-menu-toggle"
+        onClick={() => setMenuOpen((o) => !o)}
+        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={menuOpen}
+        data-noprint="1"
+      >
+        {menuOpen ? <X size={19} /> : <Menu size={19} />}
+      </button>
       <button
         className="btn btn-primary"
         onClick={() => createClock()}
@@ -41,17 +48,29 @@ export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Sc
       >
         New clock
       </button>
-      {(screen === 'clock' || screen === 'list') && (
-        <button
-          className="btn btn-ghost"
-          onClick={() => window.print()}
-          data-noprint="1"
-          style={{ color: 'var(--color-accent-700)' }}
-        >
-          Print
-        </button>
-      )}
-      <span className="tag tag-neutral mono" data-noprint="1">saved {relativeTime(lastEditedAt, now)}</span>
+      <div className={`nav-panel${menuOpen ? ' open' : ''}`}>
+        {LINKS.map((l) => (
+          <a
+            key={l.screen}
+            href={`#${l.screen}`}
+            onClick={(e) => { e.preventDefault(); navigate(l.screen); }}
+            aria-current={screen === l.screen ? 'page' : undefined}
+          >
+            {l.label}
+          </a>
+        ))}
+        {(screen === 'clock' || screen === 'list') && (
+          <button
+            className="btn btn-ghost"
+            onClick={() => window.print()}
+            data-noprint="1"
+            style={{ color: 'var(--color-accent-700)' }}
+          >
+            Print
+          </button>
+        )}
+        <span className="tag tag-neutral mono" data-noprint="1">saved {relativeTime(lastEditedAt, now)}</span>
+      </div>
     </div>
   );
 }

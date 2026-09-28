@@ -300,6 +300,62 @@ a 61-character typed name: capped to 40 by the field, wraps to 3 lines
 in the header, and reads as "THIS IS A D…" in the hub without spilling
 onto the wheel.
 
+## Nav + List made to work on a phone (2026-09-28)
+
+The earlier verdict on List not working on mobile named two separate root
+causes; a planning discussion first (see git log for that conversation)
+turned up a third, and the user weighed in on two real design decisions
+before any of this was built:
+
+0. **Nav overflow (prerequisite, affects every screen).** The nav bar's
+   links, Print, and the saved-tag now live inside `.nav-panel`
+   (`Nav.tsx`), which is `display: contents` above 720px (so desktop is
+   byte-for-byte the same layout as before) and collapses behind a
+   hamburger toggle (`.nav-menu-toggle`, from `lucide-react`'s `Menu`/`X`)
+   below it (`global.css`). Clicking a link closes the menu. This alone
+   fixed body-level horizontal overflow on *every* screen, not just List
+   — verified `document.body.scrollWidth` exactly matches the viewport
+   width at both 1400px and 390px on all six screens.
+1. **List's table → a card layout below 720px.** A 5-6 column table with
+   text inputs in it doesn't become mobile-friendly by shrinking — it
+   stops being readable as a table. `ListScreen.tsx` now branches on
+   `useIsNarrow(720)` (`src/lib/responsive.ts`) and renders either the
+   original `<table>` or a `.list-cards` stack (one card per segment:
+   name prominent, time/category/duration/delete beneath it) — **never
+   both at once**. That matters more than it sounds: rendering both and
+   hiding one with CSS would have left two sets of `<input>` elements
+   fighting over the same `nameInputs.current[id]` / `durInputs.current[id]`
+   ref keys, silently breaking Tab/Arrow keyboard navigation on whichever
+   layout's refs lost. The category `<select>` needed no special mobile
+   handling — phones already turn a plain `<select>` into their own native
+   picker UI.
+2. **Drag-to-reorder rebuilt on Pointer Events, handle-only.** The old
+   reordering used the browser's native HTML5 drag-and-drop, which is
+   mouse-only by design — it has never responded to touch on any
+   touchscreen, on any site, ever; not a bug in this app. Replaced
+   entirely (not just supplemented) with `useDragReorder()`
+   (`src/lib/useDragReorder.ts`), a small hook built on Pointer Events
+   (which unify mouse/touch/pen) and shared verbatim by both the desktop
+   table's rows and the new mobile cards — one mechanism, not two. Per
+   the user's own observation and explicit request: the drag only starts
+   from `onPointerDown` on the grip icon specifically (`setPointerCapture`
+   on that element keeps move/up events firing on it even once the
+   pointer has moved well off it) — clicking/tapping into a segment's
+   name or duration field to edit it can no longer be mistaken for a
+   reorder gesture, on desktop or mobile alike. Verified with a real mouse
+   drag (desktop table) and a dispatched touch-type `PointerEvent`
+   sequence (mobile cards), plus a regression check that dragging *from
+   the name field* does nothing on either layout.
+
+Two decisions were the user's call, not assumed: reordering got the full
+Pointer Events rebuild rather than simple up/down arrow buttons, and this
+effort was scoped to Nav + List only — Clock/Week/Library/Summary/
+Categories likely have smaller versions of the same underlying problem
+(dense desktop-oriented layouts) but weren't touched. Week's 7-day grid in
+particular is still cramped at phone width, though it no longer causes
+page-level overflow now that Nav is fixed — worth a look whenever the
+other screens' turn comes.
+
 ## Publishing the artifact (do this after any change the user should see)
 
 ```

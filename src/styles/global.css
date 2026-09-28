@@ -23,6 +23,44 @@
    (e.g. which clock/hour a printed List belongs to). */
 .print-only { display: none; }
 
+/* — narrow-screen breakpoint — */
+/* .nav-panel wraps the screen links, Print, and the saved-tag. On a wide
+   screen it's `display: contents`, so those children lay out exactly as if
+   they were direct children of .nav (unchanged from before this existed).
+   Below the breakpoint it becomes a collapsible column, toggled by
+   .nav-menu-toggle (itself hidden until the breakpoint). */
+.nav-menu-toggle {
+  display: none; align-items: center; justify-content: center;
+  width: 34px; height: 34px; padding: 0; border: none; border-radius: 999px;
+  background: transparent; color: var(--color-text); cursor: pointer;
+}
+.nav-menu-toggle:hover { background: color-mix(in srgb, var(--color-text) 7%, transparent); }
+.nav-panel { display: contents; }
+
+@media (max-width: 720px) {
+  .nav-menu-toggle { display: inline-flex; }
+  .nav-panel {
+    display: none; flex-direction: column; align-items: flex-start;
+    gap: var(--space-2); width: 100%; order: 10;
+  }
+  .nav-panel.open { display: flex; }
+}
+
+/* List screen's narrow-width alternative to its desktop <table> — one
+   card per segment instead of one row, since a 5-6 column table just
+   doesn't fit a phone screen no matter how it's squeezed. */
+.list-cards { display: flex; flex-direction: column; gap: var(--space-2); }
+.list-card {
+  background: var(--color-surface); border-radius: var(--radius-md);
+  padding: 10px 12px; box-shadow: var(--shadow-sm);
+}
+.list-card-row { display: flex; align-items: center; gap: 8px; }
+.list-card-grip {
+  display: flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; flex: none; margin-left: -6px;
+  color: var(--color-neutral-600); cursor: grab; touch-action: none;
+}
+
 @media print {
   @page { size: A4 portrait; margin: 12mm; }
   html, body { background: #fff; }
