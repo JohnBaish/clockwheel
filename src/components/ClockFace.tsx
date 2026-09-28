@@ -164,38 +164,43 @@ function buildFace(segments: Segment[], hour: number, name: string, categories: 
     }
     // Two segments can both sit near :00 or near :30 and land on the same shelf
     // (same side, same top/bottom) — previously they got the exact same (x,y)
-    // and overlapped outright. Space them out along the shelf, closest to the
-    // ring first — ordered by how close each one's own angle is to the shelf's
-    // boundary (:00 or :30), i.e. by |turn.x|, not raw turn.x: on the left
-    // side turn.x is negative, so sorting by the raw (signed) value put the
-    // segment furthest from the boundary closest to the ring instead, which
-    // read as the wrong chronological order and crossed leader lines with the
-    // item next to it.
+    // and overlapped outright. Space them out, closest to the ring first —
+    // ordered by how close each one's own angle is to the shelf's boundary
+    // (:00 or :30), i.e. by |turn.x|, not raw turn.x: on the left side turn.x
+    // is negative, so sorting by the raw (signed) value put the segment
+    // furthest from the boundary closest to the ring instead, which read as
+    // the wrong chronological order and crossed leader lines with the item
+    // next to it.
     //
-    // Walk them out along a diagonal, not a flat horizontal shelf: a purely
-    // horizontal shelf packs every pole-hugging label into a tight strip right
-    // above/below the ring, ignoring the (usually much larger) empty corner
-    // between that strip and the side columns' full height. Climbing away from
-    // the ring as we go — the DIAG slope — spends that corner space instead,
-    // and means even a single lone label ends up beside the :00/:30 mark
-    // rather than dead-center above/below it.
-    const DIAG = 0.62;
-    const RING_GAP = 30;
+    // Give each one its own angle away from the pole, rather than walking
+    // them along one shared line: spacing them by a fixed x/y slope put every
+    // label in a group exactly on the same ray from a shared point, so with
+    // the near-pole segments' leader-line bends also clustered together, each
+    // one's line overlapped the ones before it and the group read as a single
+    // chain threading through the labels rather than separate lines back to
+    // the ring. Spreading by angle instead means each label sits somewhere
+    // genuinely different around the ring, so the lines fan out properly.
+    // MIN_OFF keeps even a lone label off the pole itself, so — combined with
+    // skipping the elbow bend below — its line points straight at its
+    // segment on a real diagonal instead of dropping onto the ring from
+    // directly overhead.
+    const MIN_OFF = 0.5; // ~29°, radians
     const shelfGroups = new Map<number, number[]>();
     list.forEach((_s, i) => {
       if (!shelf[i]) return;
-      const key = Math.sign(ys[i]) || 1;
+      const key = Math.sign(turns[i][1]) || 1;
       if (!shelfGroups.has(key)) shelfGroups.set(key, []);
       shelfGroups.get(key)!.push(i);
     });
     shelfGroups.forEach((idxs, poleSign) => {
       idxs.sort((a, b) => Math.abs(turns[a][0]) - Math.abs(turns[b][0]));
-      let cursor = RING_GAP;
+      let offset = MIN_OFF;
       idxs.forEach((i) => {
-        xs[i] = side * cursor;
-        ys[i] = poleSign * (RO + 14 + cursor * DIAG);
+        const a = poleSign * (Math.PI / 2 - side * offset);
+        xs[i] = Math.cos(a) * TURN_R;
+        ys[i] = Math.sin(a) * TURN_R;
         const w = Math.max(...rows[i].map((ln) => textWidth(ln, LABEL_FONT)));
-        cursor += w + 24;
+        offset += (w + 24) / TURN_R;
       });
     });
     list.forEach((s, j) => {
@@ -204,14 +209,23 @@ function buildFace(segments: Segment[], hour: number, name: string, categories: 
       const ex = xs[j], ey = ys[j];
       const [tipx, tipy] = polar(mid, RO + 2);
       k.push(<circle key={`cd${s.i}`} cx={px(tipx)} cy={px(tipy)} r={2.2} fill="rgba(32,30,29,.55)" />);
-      k.push(
-        <line key={`ct${s.i}`} x1={px(tipx)} y1={px(tipy)} x2={px(bx)} y2={px(by)}
-          stroke="rgba(32,30,29,.34)" strokeWidth={1.2} strokeLinecap="round" strokeDasharray="1.5 3" />
-      );
-      k.push(
-        <line key={`cl${s.i}`} x1={px(bx)} y1={px(by)} x2={px(ex)} y2={px(ey)}
-          stroke="rgba(32,30,29,.28)" strokeWidth={1.2} strokeLinecap="round" />
-      );
+      if (shelf[j]) {
+        // No elbow: a pole-hugging label points in one straight line at its
+        // own segment, rather than bending off a shared bend point.
+        k.push(
+          <line key={`ct${s.i}`} x1={px(tipx)} y1={px(tipy)} x2={px(ex)} y2={px(ey)}
+            stroke="rgba(32,30,29,.28)" strokeWidth={1.2} strokeLinecap="round" />
+        );
+      } else {
+        k.push(
+          <line key={`ct${s.i}`} x1={px(tipx)} y1={px(tipy)} x2={px(bx)} y2={px(by)}
+            stroke="rgba(32,30,29,.34)" strokeWidth={1.2} strokeLinecap="round" strokeDasharray="1.5 3" />
+        );
+        k.push(
+          <line key={`cl${s.i}`} x1={px(bx)} y1={px(by)} x2={px(ex)} y2={px(ey)}
+            stroke="rgba(32,30,29,.28)" strokeWidth={1.2} strokeLinecap="round" />
+        );
+      }
       const anchor = side > 0 ? 'start' : 'end';
       k.push(
         <circle key={`cs${s.i}`} cx={px(ex + side * 5)} cy={px(ey)} r={3.6} fill={categories[s.c].color} stroke="rgba(32,30,29,.14)" strokeWidth={1} />

@@ -416,7 +416,7 @@ in `document.body.innerText`), then confirmed it does NOT appear in the
 Clock screen legend while existing in-use categories (Music, Speech, Travel,
 News, Imaging) still show their correct percentages.
 
-## Fan pole-hugging callouts diagonally into corner space (2026-09-28)
+## Fan pole-hugging callouts by angle, not by a shared diagonal line (2026-09-28)
 
 User's complaint, from a screenshot of their real clock: callouts near :00
 or :30 (the "shelf" case in `ClockFace.tsx`'s `place()` — a segment whose
@@ -427,35 +427,44 @@ out, between that strip and the full height the side columns reach. Asked,
 in effect, for a general way to code "spend the corner space, and try not to
 leave anything sitting dead-center above :00 or below :30."
 
-Fix, in the `shelfGroups.forEach(...)` block: each item on a shelf used to
-get a fixed `y = ±SHELF` with only `x` stepping outward (`cursor`). Now both
-`x` and `y` grow together along a diagonal (`ys[i] = poleSign * (RO + 14 +
-cursor * DIAG)` with `DIAG = 0.62`, `RING_GAP = 30` as the starting offset) —
-so the item closest to the boundary sits just barely off-centre rather than
-dead above/below the ring, and each subsequent one on the same shelf climbs
-further out into the actual empty corner as it goes, instead of just
-sliding sideways at the same height. `DIAG` was chosen so a shelf item's
-position lines up smoothly with where the ordinary side-column takes over
-at the shelf/column angle threshold (both land close to the same point),
-so there's no visible seam between the two systems.
+First attempt (superseded, see below): walked each shelf item out along a
+fixed-slope diagonal, both `x` and `y` growing together as more items shared
+a shelf. That moved things into the corner, but the user's follow-up
+screenshot showed two new problems it introduced: (1) with several items on
+one shelf all placed along one straight line from a shared point, and their
+leader-line bend points all clustering near the pole (since the segments
+are close together in time), each item's line overlapped the ones before
+it — the group read as one continuous chain threading through the labels
+("Weather"→"Trail"→"Travel") rather than separate lines back to the ring;
+(2) a lone item like "Ident" still bent from a near-vertical elbow to a
+barely-offset label, reading as a line dropping onto the ring from directly
+overhead rather than pointing at its segment.
 
-This is a heuristic, not a true whitespace-optimising layout — it always
-walks a lone shelf item off to one fixed diagonal, and doesn't reason about
-how tall the side columns happen to be this time. It also doesn't move
-items between the left/right side lists (a callout's side is still decided
-purely by which hemisphere its own angle falls in, same as before) — the
-user's specific mockup suggestion of moving one label all the way across to
-sit under a completely different clock-face number wasn't implemented
-literally; the general "climb into the corner, don't hug the pole" behaviour
-was, and was explicitly offered as an example rather than a spec. Verified
-with Playwright against a synthetic split of the seed clock's "Weather
-trail travel" segment into three adjacent short segments (reproducing the
-reported :30 cluster) — before/after screenshots confirm the new version
-visibly spreads into the previously-empty corners on both sides, a same-side
-3-item group fans out without crossing, and a lone shelf item (the
-unmodified default clock) still reads cleanly, just offset rather than
-centred. Not verified against the user's own live "Daytime 1" clock, which
-this session has no access to — worth asking them to check.
+Fixed by changing what varies per item, in the same `shelfGroups.forEach`
+block: instead of walking along one shared line, each item gets its own
+**angle** away from the pole (`a = poleSign * (Math.PI/2 - side*offset)`,
+`offset` starting at `MIN_OFF` ≈ 29° and growing by each label's own arc
+length at radius `TURN_R`), so a group of them genuinely fans out around
+the ring rather than sitting collinear. And shelf items drop the elbow
+bend entirely — one straight line runs from the segment's true position on
+the ring directly to the label (`shelf[j]` branches to a single `<line>`
+instead of the tip→turn→label pair column items still use) — so it always
+points straight at its own segment, satisfying "parallel with :00 [or
+whichever mark], pointing straight at the segment." `MIN_OFF` is what keeps
+even a lone shelf item off the pole itself.
+
+Still a heuristic, not a true whitespace-optimiser — it doesn't measure how
+tall the side columns happen to be this time, and a callout's side is still
+decided purely by which hemisphere its own angle falls in (never moved
+across to the other side). Verified with Playwright against the same
+synthetic three-way split of the seed clock's "Weather trail travel"
+segment used to catch the first attempt's bug, plus a forced two-item
+same-side top shelf (by shrinking "Song 8" to push it into callout
+territory alongside "Ident") — cropped screenshots confirm distinct fanned
+lines with no chaining in both the 3-item and 2-item cases, and Ident's
+line now sits roughly level with :00 and points straight at its segment.
+Not verified against the user's own live "Daytime 1"/"Daytime 2" clocks,
+which this session has no access to.
 
 ## Other known backlog (not urgent, not asked for — just context)
 
