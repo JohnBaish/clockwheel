@@ -397,6 +397,25 @@ device/browser, since everything still lives only in `localStorage`.
   Also confirmed importing garbage JSON shows the error banner and leaves
   the app fully functional rather than crashing.
 
+## Hide 0%-usage categories from the Clock screen legend (2026-09-28)
+
+`ClockScreen.tsx`'s percentage legend (the row of colour dots + names +
+percentages under the clock face) used to list every category in
+`categoryOrder`, including ones with 0% usage in the currently-open clock.
+User's reasoning: categories are shared across all clocks for different
+purposes, so a category being absent from *this particular* clock isn't
+meaningful information — it just clutters the legend with irrelevant rows.
+Fix: the `categoryOrder.map(...)` was split into a `.map()` that computes
+`{ id, pct }` pairs, a `.filter(({ pct }) => pct > 0)`, then the render
+`.map()` — categories at exactly 0% are dropped before rendering. `PINS_ENABLED`
+pin-legend entry is unaffected (separate, unconditional block). Verified with
+Playwright: added a brand-new, genuinely-unused category via the Categories
+screen (confirmed it was really created — via the category count tag and by
+reading each name `<input>`'s `.value`, since `input` values don't show up
+in `document.body.innerText`), then confirmed it does NOT appear in the
+Clock screen legend while existing in-use categories (Music, Speech, Travel,
+News, Imaging) still show their correct percentages.
+
 ## Other known backlog (not urgent, not asked for — just context)
 
 - Per-anchor over/under (the fuller "over by 2:30 before the 07:29 anchor"
