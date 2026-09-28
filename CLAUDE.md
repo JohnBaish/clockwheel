@@ -477,6 +477,48 @@ cases — labels now land much closer to their true mark while still
 fanning out cleanly with no crossing or overlapping text. These two
 constants are the ones to retune first if it still reads as too far or
 not far enough on the user's real data.
+
+**Verified against real data:** the user exported their actual library
+(`Export` on the Library screen) and confirmed "Daytime 2" — the clock in
+every screenshot above — was looking better. Loaded their export's raw
+state directly into a test browser's `localStorage` and re-screenshotted
+both problem spots (the bottom 3-item cluster, the "Ident" top item):
+distinct fanned lines, no chaining, no dogleg, both close to their true
+mark. Confirms the tuned constants above hold up on their real segment
+lengths and label text, not just synthetic test data.
+
+## Replace the seed clock/categories with the user's own "Daytime 1" (2026-09-28)
+
+User asked: fresh browser (no `localStorage`) should default to just their
+"Daytime 1" clock — no other clocks, no unused categories, empty Week.
+Previously the seed was a placeholder "Breakfast" hour invented early in
+this project, before real user data existed.
+
+- `data/segments.ts`: `INITIAL_SEGMENTS` replaced wholesale with "Daytime
+  1"'s actual 18 segments and durations (from the user's exported JSON),
+  category ids remapped to the new short ids below. Sums to exactly 60:00,
+  same as their real clock.
+- `data/categories.ts`: `SEED_CATEGORIES`/`SEED_CATEGORY_ORDER` cut down to
+  exactly the 5 categories Daytime 1 uses (`mus`, `trv`, `nws`, `img`, and a
+  new `cnt` for their custom "Content" category) — `spe` (Speech) dropped
+  since Daytime 1 never uses it. Names/colours match the user's own
+  customisation verbatim, e.g. `trv` is named "Junction" now, not "Travel",
+  and `nws` is pure black (`#000000`) — both are what the user actually set,
+  not this file's old placeholder values.
+- `data/clocks.ts`: `SEED_CLOCK_ID` changed from `breakfast-07` to
+  `daytime-1-10`, `seedClocks()` returns a single "Daytime 1" clock at hour
+  10 instead of "Breakfast" at hour 7.
+- Week (`week: {}`) was already seeded empty in `store.tsx`'s
+  `loadInitial()` — no change needed there, a fresh browser has never
+  pre-assigned any clock to the week grid.
+
+Verified with Playwright against a completely fresh `localStorage`: Library
+shows exactly one clock ("Daytime 1"), Categories shows exactly 5 rows all
+marked "used" (none orphaned), Week shows "0 of 83 local hours assigned",
+and the Clock screen renders correctly — including the 0%-category-legend
+filter (shipped earlier the same day) correctly hiding Imaging, since
+Ident's 17s rounds to 0% of the hour.
+
 ## Other known backlog (not urgent, not asked for — just context)
 
 - Per-anchor over/under (the fuller "over by 2:30 before the 07:29 anchor"

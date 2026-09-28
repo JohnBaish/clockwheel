@@ -40,17 +40,17 @@ export function seedOutside(): Record<string, true> {
 // The library used to ship with 14 clocks, 13 of which were colour and
 // percentage placeholders with no real segments behind them. Those are
 // gone — the library now only ever holds clocks someone actually built.
-// The one real clock (the user's own breakfast hour) stays as a starting
+// The one real clock (the user's own "Daytime 1" hour) stays as a starting
 // example; the week grid starts with nothing assigned.
-export const SEED_CLOCK_ID: ClockId = 'breakfast-07';
+export const SEED_CLOCK_ID: ClockId = 'daytime-1-10';
 
 export function seedClocks(): Record<ClockId, Clock> {
   return {
     [SEED_CLOCK_ID]: {
       id: SEED_CLOCK_ID,
-      name: 'Breakfast',
-      color: CLOCK_COLORS[0],
-      hour: 7,
+      name: 'Daytime 1',
+      color: CLOCK_COLORS[1],
+      hour: 10,
       segments: INITIAL_SEGMENTS,
       lastEditedAt: Date.now(),
     },
