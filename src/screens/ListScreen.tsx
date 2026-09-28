@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useApp } from '../state/store';
 import { withTimes } from '../data/segments';
 import { clockOf, dur, parseDur } from '../lib/time';
@@ -19,22 +19,12 @@ export function ListScreen() {
   const nameInputs = useRef<Record<string, HTMLInputElement | null>>({});
   const durInputs = useRef<Record<string, HTMLInputElement | null>>({});
   const prevCount = useRef(seed.length);
-  // Tab-ing past the last row's duration adds a new row and should land back
-  // in ITS duration field (keeping a fast duration-entry flow going), unlike
-  // the Add-segment button, which focuses the name field for renaming.
-  const focusNewRowDuration = useRef(false);
 
   useEffect(() => {
     if (seed.length > prevCount.current) {
       const lastId = seed[seed.length - 1].id;
-      if (focusNewRowDuration.current) {
-        const input = durInputs.current[lastId];
-        if (input) { input.focus(); input.select(); }
-      } else {
-        const input = nameInputs.current[lastId];
-        if (input) { input.focus(); input.select(); }
-      }
-      focusNewRowDuration.current = false;
+      const input = nameInputs.current[lastId];
+      if (input) { input.focus(); input.select(); }
     }
     prevCount.current = seed.length;
   }, [seed]);
@@ -51,19 +41,33 @@ export function ListScreen() {
     setDurDrafts((d) => { const next = { ...d }; delete next[segmentId]; return next; });
   };
 
+  const focusName = (segmentId: string) => {
+    const input = nameInputs.current[segmentId];
+    if (input) { input.focus(); input.select(); }
+  };
+
   const focusDuration = (segmentId: string) => {
     const input = durInputs.current[segmentId];
     if (input) { input.focus(); input.select(); }
   };
 
+  // Tab from Duration always advances to the NEXT row's Segment field —
+  // whether that row already exists, or (past the last row) gets created —
+  // so the keyboard flow is one consistent rule rather than two.
   const handleDurationTab = (index: number, segmentId: string) => {
     commitDuration(segmentId);
-    if (index < rows.length - 1) {
-      focusDuration(rows[index + 1].id);
-    } else {
-      focusNewRowDuration.current = true;
-      addSegment();
-    }
+    if (index < rows.length - 1) focusName(rows[index + 1].id);
+    else addSegment();
+  };
+
+  // Up/Down from Segment or Duration jumps to the same column on the
+  // previous/next row — spreadsheet-style row navigation.
+  const handleRowArrow = (e: KeyboardEvent, index: number, focus: (id: string) => void) => {
+    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+    const target = index + (e.key === 'ArrowUp' ? -1 : 1);
+    if (target < 0 || target >= rows.length) return;
+    e.preventDefault();
+    focus(rows[target].id);
   };
 
   return (
@@ -125,6 +129,7 @@ export function ListScreen() {
                   value={s.n}
                   maxLength={50}
                   onChange={(e) => setSegmentName(s.id, e.target.value)}
+                  onKeyDown={(e) => handleRowArrow(e, i, focusName)}
                 />
               </td>
               <td>
@@ -151,6 +156,7 @@ export function ListScreen() {
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') { (e.target as HTMLInputElement).blur(); }
                     else if (e.key === 'Tab' && !e.shiftKey) { e.preventDefault(); handleDurationTab(i, s.id); }
+                    else handleRowArrow(e, i, focusDuration);
                   }}
                 />
               </td>

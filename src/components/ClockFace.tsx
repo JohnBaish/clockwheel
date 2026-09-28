@@ -5,7 +5,7 @@ import { ang, polar, arcPath, px, textWidth, wrap2, LABEL_FONT } from '../lib/ge
 import { PINS_ENABLED } from '../config';
 
 const RO = 140;
-const RI = 80;
+const RI = 58;
 const TURN_R = RO + 38;
 
 interface ScoredSegment extends Segment {
@@ -137,7 +137,26 @@ function buildFace(segments: Segment[], hour: number, name: string, categories: 
       const i = col[q], p = col[q - 1];
       if (ys[i] - ys[p] < gapAt(i, p)) ys[i] = ys[p] + gapAt(i, p);
     }
-
+    // Two segments can both sit near :00 or near :30 and land on the same shelf
+    // (same side, same top/bottom) — previously they got the exact same (x,y)
+    // and overlapped outright. Space them out along the shelf, ordered to match
+    // their real position on the ring, the same way the column items are spaced.
+    const shelfGroups = new Map<number, number[]>();
+    list.forEach((_s, i) => {
+      if (!shelf[i]) return;
+      const key = Math.sign(ys[i]) || 1;
+      if (!shelfGroups.has(key)) shelfGroups.set(key, []);
+      shelfGroups.get(key)!.push(i);
+    });
+    shelfGroups.forEach((idxs) => {
+      idxs.sort((a, b) => turns[a][0] - turns[b][0]);
+      let cursor = 52;
+      idxs.forEach((i) => {
+        xs[i] = side * cursor;
+        const w = Math.max(...rows[i].map((ln) => textWidth(ln, LABEL_FONT)));
+        cursor += w + 24;
+      });
+    });
     list.forEach((s, j) => {
       const mid = s.t + s.d / 2;
       const [bx, by] = turns[j];
@@ -199,14 +218,14 @@ function buildFace(segments: Segment[], hour: number, name: string, categories: 
   // tag row above the face, so repeating them here would just be noise.
   k.push(<circle key="in" cx={0} cy={0} r={RI - 1} fill="var(--color-bg)" />);
   k.push(
-    <text key="h1" x={0} y={-17} textAnchor="middle" fill="var(--color-neutral-700)"
-      style={{ fontFamily: 'Figtree,sans-serif', fontWeight: 700, fontSize: '9px', letterSpacing: '.14em' }}>
+    <text key="h1" x={0} y={-9} textAnchor="middle" fill="var(--color-neutral-700)"
+      style={{ fontFamily: 'Figtree,sans-serif', fontWeight: 700, fontSize: '8px', letterSpacing: '.1em' }}>
       {name.toUpperCase()}
     </text>
   );
   k.push(
-    <text key="h2" x={0} y={17} textAnchor="middle" fill="#201e1d"
-      style={{ fontFamily: 'Caprasimo,serif', fontSize: '38px', fontVariantNumeric: 'tabular-nums' }}>
+    <text key="h2" x={0} y={9} textAnchor="middle" fill="#201e1d"
+      style={{ fontFamily: 'Caprasimo,serif', fontSize: '18px', fontVariantNumeric: 'tabular-nums' }}>
       {String(hour).padStart(2, '0')}:00
     </text>
   );

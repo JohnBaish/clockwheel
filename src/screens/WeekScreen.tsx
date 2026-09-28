@@ -17,6 +17,8 @@ export function WeekScreen() {
   const [drag, setDrag] = useState(false);
   const [hover, setHover] = useState<string | null>(null);
   const [picker, setPicker] = useState(false);
+  // undefined = nothing copied yet; null = copied an empty/no-clock cell.
+  const [clipboard, setClipboard] = useState<ClockId | null | undefined>(undefined);
 
   useEffect(() => {
     const up = () => setDrag(false);
@@ -49,11 +51,41 @@ export function WeekScreen() {
   const doAssign = (id: ClockId | null) => { assign(selKeys, id); setSel({}); setPicker(false); };
   const doMarkLocal = (local: boolean) => { markLocal(selKeys, local); setSel({}); };
 
+  // Ctrl/Cmd+C copies the first selected cell's clock; Ctrl/Cmd+V assigns it
+  // to whatever's currently selected — reuses the existing multi-cell
+  // selection, so pasting onto a whole day or hour-row works the same way
+  // assigning from the library already does.
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      const active = document.activeElement as HTMLElement | null;
+      if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable)) return;
+      const key = e.key.toLowerCase();
+      if (key === 'c') {
+        if (selKeys.length === 0) return;
+        e.preventDefault();
+        setClipboard(week[selKeys[0]] ?? null);
+      } else if (key === 'v') {
+        if (clipboard === undefined || selKeys.length === 0) return;
+        e.preventDefault();
+        assign(selKeys, clipboard);
+        setSel({});
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [selKeys, clipboard, week, assign]);
+
   return (
     <div style={{ padding: '0 var(--space-4) var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', background: 'var(--color-surface)', borderRadius: 'calc(var(--radius-lg)*1.1)', padding: '9px var(--space-4)', boxShadow: 'var(--shadow-sm)' }}>
         <span style={{ font: '700 11px var(--font-body)', letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--color-neutral-700)', flex: 'none' }}>Local hours</span>
-        <span style={{ fontSize: 13, color: 'var(--color-neutral-700)' }} data-noprint="1">Set per day: select any hours in the grid and mark them local or non-local.</span>
+        <span style={{ fontSize: 13, color: 'var(--color-neutral-700)' }} data-noprint="1">Set per day: select any hours in the grid and mark them local or non-local. Select a cell and press Ctrl/Cmd+C to copy its clock, then select another and press Ctrl/Cmd+V to paste.</span>
+        {clipboard !== undefined && (
+          <span className="tag tag-neutral mono" data-noprint="1" style={{ flex: 'none' }}>
+            Copied {clipboard ? clocks[clipboard].name : 'empty'} — Ctrl/Cmd+V to paste
+          </span>
+        )}
         <span className="mono" style={{ marginLeft: 'auto', font: '600 13px var(--font-body)', color: 'var(--color-text)', minHeight: 18 }}>{hoverLabel}</span>
       </div>
 

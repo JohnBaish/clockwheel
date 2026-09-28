@@ -32,15 +32,20 @@ it after any change the user should see.)
   case-insensitive — still used by `LibraryScreen.tsx`'s per-card line), and
   `songCount` (same pattern, category named "Music" — used by
   `EditorHeader.tsx`'s tag row).
-- `src/components/ClockFace.tsx` — the SVG donut. Labels are drawn radially
-  (like spokes — "News" at 12 o'clock reads top-to-bottom), not curved along
-  the arc; the callout fit-test is capped at the ring's radial thickness
-  (`RO-RI-6`), not arc length, since arc length is unbounded for a long
-  segment while the ring's physical thickness isn't (this was a real bug,
-  fixed — see git log). The hub shows just the open clock's name and hour
-  (e.g. "BREAKFAST" / "07:00") — total duration and balance state are
-  deliberately not repeated here since they're already in EditorHeader's tag
-  row above the face.
+- `src/components/ClockFace.tsx` — the SVG donut. `RO = 140`, `RI = 58`
+  (shrunk from 80 on 2026-09-28 to give the ring more radial room and the
+  hub less dead space — see below). Labels are drawn radially (like spokes
+  — "News" at 12 o'clock reads top-to-bottom), not curved along the arc;
+  the callout fit-test is capped at the ring's radial thickness (`RO-RI-6`),
+  not arc length, since arc length is unbounded for a long segment while
+  the ring's physical thickness isn't (this was a real bug, fixed — see git
+  log). Callouts that land on the same shelf (both near :00 or :30, same
+  side) are spread apart width-aware in `place()` so they can't overlap —
+  also fixed 2026-09-28, see below. The hub shows just the open clock's
+  name and hour (e.g. "BREAKFAST" / "07:00", the hour now 18px, just a
+  little bigger than the ring's own `:00`/`:15` labels at 14px) — total
+  duration and balance state are deliberately not repeated here since
+  they're already in EditorHeader's tag row above the face.
 - `src/components/EditorHeader.tsx` — shared header for Clock+List screens:
   editable clock name and hour, balance tag, an "N songs" tag, Duplicate/Share
   link/Done.
@@ -170,6 +175,51 @@ questions. Implement only when the user actually asks to resume this.
 
 Items 2 (Print) and the old item 3 (Copy image) are both done — see
 "Recently completed" above. No items are currently parked.
+
+## Recently completed (2026-09-28) — six fixes from real work usage
+
+The user started using Clockwheel at work and reported six things from a
+real clock they'd built. All six are done:
+
+1. **Overlapping callout labels, fixed.** `ClockFace.tsx`'s `place()`
+   assigned every "shelf" item (a callout near :00 or :30, which has nowhere
+   useful to point sideways) the exact same `(x, y)` whenever two of them
+   shared a side and top/bottom — confirmed by reproducing it with two
+   deliberately long-named segments placed either side of :30. Fixed by
+   grouping shelf items by side+top/bottom, ordering them to match their
+   real position on the ring, and spacing each one out by the previous
+   item's actual rendered text width (not a fixed gap — a fixed gap was
+   tried first and still overlapped for unusually long labels).
+2. **Tab from Duration → next row's Segment field**, not its Duration
+   field — for both an existing next row and a newly-created one (user
+   confirmed both, via question). This also simplified `ListScreen.tsx`:
+   the old `focusNewRowDuration` ref (which made Tab-created rows behave
+   differently from button-created ones) is gone — both now just focus the
+   name field.
+3. **Up/Down arrow row navigation.** From the Segment or Duration field,
+   ArrowUp/ArrowDown jumps to the same column on the previous/next row
+   (`handleRowArrow` in `ListScreen.tsx`). Does nothing at the first/last
+   row (no wraparound, no new-row creation — that's still Tab's job).
+4. **Hub hour text shrunk** from 38px to 18px — "just a little bigger"
+   than the ring's own `:00`/`:15`/`:30` labels (14px), per the user's ask.
+5. **Hub shrunk, ring thickened** — `RI: 80 → 58`. Ring thickness goes
+   60px → 82px (more inline-label room, so fewer segments need to become
+   callouts at all — a nice side effect) and the blank centre is visibly
+   smaller. Vertical hub layout (name/hour y-offsets) tightened to match
+   the now-much-smaller hour text, rather than leaving a gap.
+6. **Ctrl/Cmd+C / Ctrl/Cmd+V in Schedule.** `WeekScreen.tsx` gained a
+   `clipboard` state (`ClockId | null | undefined`; `undefined` = nothing
+   copied yet). Copy takes the first selected cell's clock; paste assigns
+   it to whatever's currently selected — reuses the existing multi-cell
+   selection as-is, so pasting onto a whole day or hour-row works
+   automatically, same as assigning from the library already does. Guarded
+   to do nothing while focus is in a text input (so it doesn't hijack
+   normal browser copy/paste), and shows a small "Copied X — Ctrl/Cmd+V to
+   paste" tag in the toolbar so the copied value isn't invisible state.
+
+All six verified with Playwright against a real running build (not just
+"the code looks right") — the label-collision fix specifically needed two
+attempts before the repro actually stopped overlapping.
 
 ## Publishing the artifact (do this after any change the user should see)
 
