@@ -5,7 +5,7 @@ import { ang, polar, arcPath, px, textWidth, wrap2, LABEL_FONT } from '../lib/ge
 import { PINS_ENABLED } from '../config';
 
 const RO = 140;
-const RI = 58;
+const RI = 39;
 const TURN_R = RO + 38;
 
 interface ScoredSegment extends Segment {
@@ -139,8 +139,13 @@ function buildFace(segments: Segment[], hour: number, name: string, categories: 
     }
     // Two segments can both sit near :00 or near :30 and land on the same shelf
     // (same side, same top/bottom) — previously they got the exact same (x,y)
-    // and overlapped outright. Space them out along the shelf, ordered to match
-    // their real position on the ring, the same way the column items are spaced.
+    // and overlapped outright. Space them out along the shelf, closest to the
+    // ring first — ordered by how close each one's own angle is to the shelf's
+    // boundary (:00 or :30), i.e. by |turn.x|, not raw turn.x: on the left
+    // side turn.x is negative, so sorting by the raw (signed) value put the
+    // segment furthest from the boundary closest to the ring instead, which
+    // read as the wrong chronological order and crossed leader lines with the
+    // item next to it.
     const shelfGroups = new Map<number, number[]>();
     list.forEach((_s, i) => {
       if (!shelf[i]) return;
@@ -149,7 +154,7 @@ function buildFace(segments: Segment[], hour: number, name: string, categories: 
       shelfGroups.get(key)!.push(i);
     });
     shelfGroups.forEach((idxs) => {
-      idxs.sort((a, b) => turns[a][0] - turns[b][0]);
+      idxs.sort((a, b) => Math.abs(turns[a][0]) - Math.abs(turns[b][0]));
       let cursor = 52;
       idxs.forEach((i) => {
         xs[i] = side * cursor;

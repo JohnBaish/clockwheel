@@ -32,16 +32,18 @@ it after any change the user should see.)
   case-insensitive — still used by `LibraryScreen.tsx`'s per-card line), and
   `songCount` (same pattern, category named "Music" — used by
   `EditorHeader.tsx`'s tag row).
-- `src/components/ClockFace.tsx` — the SVG donut. `RO = 140`, `RI = 58`
-  (shrunk from 80 on 2026-09-28 to give the ring more radial room and the
-  hub less dead space — see below). Labels are drawn radially (like spokes
-  — "News" at 12 o'clock reads top-to-bottom), not curved along the arc;
-  the callout fit-test is capped at the ring's radial thickness (`RO-RI-6`),
-  not arc length, since arc length is unbounded for a long segment while
-  the ring's physical thickness isn't (this was a real bug, fixed — see git
-  log). Callouts that land on the same shelf (both near :00 or :30, same
-  side) are spread apart width-aware in `place()` so they can't overlap —
-  also fixed 2026-09-28, see below. The hub shows just the open clock's
+- `src/components/ClockFace.tsx` — the SVG donut. `RO = 140`, `RI = 39`
+  (shrunk from 80 on 2026-09-28, in two steps, to give the ring more
+  radial room and the hub less dead space — see below). Labels are drawn
+  radially (like spokes — "News" at 12 o'clock reads top-to-bottom), not
+  curved along the arc; the callout fit-test is capped at the ring's
+  radial thickness (`RO-RI-6`), not arc length, since arc length is
+  unbounded for a long segment while the ring's physical thickness isn't
+  (this was a real bug, fixed — see git log). Callouts that land on the
+  same shelf (both near :00 or :30, same side) are spread apart width-aware
+  in `place()`, ordered by `Math.abs(turns[i][0])` (closest to the shelf's
+  boundary time sits closest to the ring, on either side) — two related
+  bugs fixed 2026-09-28, see below. The hub shows just the open clock's
   name and hour (e.g. "BREAKFAST" / "07:00", the hour now 18px, just a
   little bigger than the ring's own `:00`/`:15` labels at 14px) — total
   duration and balance state are deliberately not repeated here since
@@ -181,15 +183,26 @@ Items 2 (Print) and the old item 3 (Copy image) are both done — see
 The user started using Clockwheel at work and reported six things from a
 real clock they'd built. All six are done:
 
-1. **Overlapping callout labels, fixed.** `ClockFace.tsx`'s `place()`
-   assigned every "shelf" item (a callout near :00 or :30, which has nowhere
-   useful to point sideways) the exact same `(x, y)` whenever two of them
-   shared a side and top/bottom — confirmed by reproducing it with two
-   deliberately long-named segments placed either side of :30. Fixed by
-   grouping shelf items by side+top/bottom, ordering them to match their
-   real position on the ring, and spacing each one out by the previous
-   item's actual rendered text width (not a fixed gap — a fixed gap was
-   tried first and still overlapped for unusually long labels).
+1. **Overlapping callout labels, fixed — then a follow-up ordering bug,
+   also fixed, same day.** `ClockFace.tsx`'s `place()` assigned every
+   "shelf" item (a callout near :00 or :30, which has nowhere useful to
+   point sideways) the exact same `(x, y)` whenever two of them shared a
+   side and top/bottom. Fixed by grouping shelf items by side+top/bottom
+   and spacing each one out by the previous item's actual rendered text
+   width (a fixed gap was tried first and still overlapped for unusually
+   long labels). The user then reported the fixed labels were reading in
+   the *wrong order* with crossing leader lines on a real clock (three
+   segments — "Weather", "Trail", "Travel" — straddling :30). Root cause:
+   the initial fix sorted shelf items within a group by raw `turns[i][0]`
+   (signed turn x) — fine on the right side (positive x), but backwards on
+   the left side (negative x), where it put the segment *furthest* from
+   the :00/:30 boundary closest to the ring instead of furthest out.
+   Fixed by sorting on `Math.abs(turns[i][0])` instead (closest to the
+   shelf boundary = closest to the ring, regardless of which side), which
+   is direction-agnostic and correct for both sides. Verified by
+   reproducing the exact reported scenario (one right-side item, two
+   left-side items at different distances from :30) and confirming their
+   rendered x-positions land in true chronological order.
 2. **Tab from Duration → next row's Segment field**, not its Duration
    field — for both an existing next row and a newly-created one (user
    confirmed both, via question). This also simplified `ListScreen.tsx`:
@@ -202,11 +215,15 @@ real clock they'd built. All six are done:
    row (no wraparound, no new-row creation — that's still Tab's job).
 4. **Hub hour text shrunk** from 38px to 18px — "just a little bigger"
    than the ring's own `:00`/`:15`/`:30` labels (14px), per the user's ask.
-5. **Hub shrunk, ring thickened** — `RI: 80 → 58`. Ring thickness goes
-   60px → 82px (more inline-label room, so fewer segments need to become
-   callouts at all — a nice side effect) and the blank centre is visibly
-   smaller. Vertical hub layout (name/hour y-offsets) tightened to match
-   the now-much-smaller hour text, rather than leaving a gap.
+5. **Hub shrunk, ring thickened** — `RI: 80 → 58`, then per a same-day
+   follow-up ask ("another third of the blank space") → `39`. Ring
+   thickness is now 101px, up from the original 60px (more inline-label
+   room, so fewer segments need to become callouts at all — a nice side
+   effect) and the blank centre is visibly smaller. Vertical hub layout
+   (name/hour y-offsets) tightened to match the now-much-smaller hour
+   text, rather than leaving a gap. Checked that "BREAKFAST"/"07:00" and a
+   longer real name ("DAYTIME 1") both still read clearly at this size
+   before settling on it.
 6. **Ctrl/Cmd+C / Ctrl/Cmd+V in Schedule.** `WeekScreen.tsx` gained a
    `clipboard` state (`ClockId | null | undefined`; `undefined` = nothing
    copied yet). Copy takes the first selected cell's clock; paste assigns
