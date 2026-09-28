@@ -416,6 +416,47 @@ in `document.body.innerText`), then confirmed it does NOT appear in the
 Clock screen legend while existing in-use categories (Music, Speech, Travel,
 News, Imaging) still show their correct percentages.
 
+## Fan pole-hugging callouts diagonally into corner space (2026-09-28)
+
+User's complaint, from a screenshot of their real clock: callouts near :00
+or :30 (the "shelf" case in `ClockFace.tsx`'s `place()` — a segment whose
+angle is too close to vertical for the normal side-column treatment to look
+right) were stacked in a flat horizontal strip hugging tight to the ring,
+even though there's usually a much bigger empty triangle of space further
+out, between that strip and the full height the side columns reach. Asked,
+in effect, for a general way to code "spend the corner space, and try not to
+leave anything sitting dead-center above :00 or below :30."
+
+Fix, in the `shelfGroups.forEach(...)` block: each item on a shelf used to
+get a fixed `y = ±SHELF` with only `x` stepping outward (`cursor`). Now both
+`x` and `y` grow together along a diagonal (`ys[i] = poleSign * (RO + 14 +
+cursor * DIAG)` with `DIAG = 0.62`, `RING_GAP = 30` as the starting offset) —
+so the item closest to the boundary sits just barely off-centre rather than
+dead above/below the ring, and each subsequent one on the same shelf climbs
+further out into the actual empty corner as it goes, instead of just
+sliding sideways at the same height. `DIAG` was chosen so a shelf item's
+position lines up smoothly with where the ordinary side-column takes over
+at the shelf/column angle threshold (both land close to the same point),
+so there's no visible seam between the two systems.
+
+This is a heuristic, not a true whitespace-optimising layout — it always
+walks a lone shelf item off to one fixed diagonal, and doesn't reason about
+how tall the side columns happen to be this time. It also doesn't move
+items between the left/right side lists (a callout's side is still decided
+purely by which hemisphere its own angle falls in, same as before) — the
+user's specific mockup suggestion of moving one label all the way across to
+sit under a completely different clock-face number wasn't implemented
+literally; the general "climb into the corner, don't hug the pole" behaviour
+was, and was explicitly offered as an example rather than a spec. Verified
+with Playwright against a synthetic split of the seed clock's "Weather
+trail travel" segment into three adjacent short segments (reproducing the
+reported :30 cluster) — before/after screenshots confirm the new version
+visibly spreads into the previously-empty corners on both sides, a same-side
+3-item group fans out without crossing, and a lone shelf item (the
+unmodified default clock) still reads cleanly, just offset rather than
+centred. Not verified against the user's own live "Daytime 1" clock, which
+this session has no access to — worth asking them to check.
+
 ## Other known backlog (not urgent, not asked for — just context)
 
 - Per-anchor over/under (the fuller "over by 2:30 before the 07:29 anchor"

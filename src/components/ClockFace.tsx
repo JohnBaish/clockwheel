@@ -171,6 +171,16 @@ function buildFace(segments: Segment[], hour: number, name: string, categories: 
     // segment furthest from the boundary closest to the ring instead, which
     // read as the wrong chronological order and crossed leader lines with the
     // item next to it.
+    //
+    // Walk them out along a diagonal, not a flat horizontal shelf: a purely
+    // horizontal shelf packs every pole-hugging label into a tight strip right
+    // above/below the ring, ignoring the (usually much larger) empty corner
+    // between that strip and the side columns' full height. Climbing away from
+    // the ring as we go — the DIAG slope — spends that corner space instead,
+    // and means even a single lone label ends up beside the :00/:30 mark
+    // rather than dead-center above/below it.
+    const DIAG = 0.62;
+    const RING_GAP = 30;
     const shelfGroups = new Map<number, number[]>();
     list.forEach((_s, i) => {
       if (!shelf[i]) return;
@@ -178,11 +188,12 @@ function buildFace(segments: Segment[], hour: number, name: string, categories: 
       if (!shelfGroups.has(key)) shelfGroups.set(key, []);
       shelfGroups.get(key)!.push(i);
     });
-    shelfGroups.forEach((idxs) => {
+    shelfGroups.forEach((idxs, poleSign) => {
       idxs.sort((a, b) => Math.abs(turns[a][0]) - Math.abs(turns[b][0]));
-      let cursor = 52;
+      let cursor = RING_GAP;
       idxs.forEach((i) => {
         xs[i] = side * cursor;
+        ys[i] = poleSign * (RO + 14 + cursor * DIAG);
         const w = Math.max(...rows[i].map((ln) => textWidth(ln, LABEL_FONT)));
         cursor += w + 24;
       });
