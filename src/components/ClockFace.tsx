@@ -22,6 +22,31 @@ interface Extent { x: number; y: number }
 // placement and label orientation break for anything past the top of hour.
 const degOf = (s: { t: number; d: number }) => (((s.t + s.d / 2) / 3600) * 360) % 360;
 
+// The hub name label is tiny and the hub itself is now quite small, so a long
+// clock title (which can wrap freely in EditorHeader, where there's real
+// room) needs to be shortened here instead of overflowing the hub onto the
+// wheel. canvas measureText doesn't know about CSS letter-spacing, so that's
+// added back in by hand rather than just under-measuring the real width.
+const HUB_NAME_FONT = '700 8px Figtree, sans-serif';
+const HUB_LETTER_SPACING = 0.8; // .1em at an 8px font size
+
+function measureHubName(s: string): number {
+  return textWidth(s, HUB_NAME_FONT) + Math.max(0, s.length - 1) * HUB_LETTER_SPACING;
+}
+
+function truncateHubName(name: string, maxWidth: number): string {
+  const upper = name.toUpperCase();
+  if (measureHubName(upper) <= maxWidth) return upper;
+  let lo = 0;
+  let hi = upper.length;
+  while (lo < hi) {
+    const mid = (lo + hi + 1) >> 1;
+    if (measureHubName(upper.slice(0, mid) + '…') <= maxWidth) lo = mid;
+    else hi = mid - 1;
+  }
+  return upper.slice(0, lo) + '…';
+}
+
 // Faithful port of the design prototype's face() renderer: segments that
 // don't fit their own arc get pulled out to a callout with a leader line,
 // placed and de-collided dynamically from measured text — not by hand.
@@ -225,7 +250,7 @@ function buildFace(segments: Segment[], hour: number, name: string, categories: 
   k.push(
     <text key="h1" x={0} y={-9} textAnchor="middle" fill="var(--color-neutral-700)"
       style={{ fontFamily: 'Figtree,sans-serif', fontWeight: 700, fontSize: '8px', letterSpacing: '.1em' }}>
-      {name.toUpperCase()}
+      {truncateHubName(name, 2 * (RI - 1) - 12)}
     </text>
   );
   k.push(

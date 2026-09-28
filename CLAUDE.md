@@ -259,6 +259,47 @@ keeping its `btn-ghost` class and accent-coloured text exactly as-is —
 only the border changed. Verified computed `border-color` is now
 byte-identical between the two buttons.
 
+## EditorHeader: clock name field now wraps + capped at 40 chars (2026-09-28)
+
+User reported a long clock name ("Daytime 1 copy" et al) overlapping the
+tag/button row above it — screenshot showed the name sitting right under
+a cropped-looking header. Root cause: the name field was a plain
+`<input>`, which can never wrap its value onto a second line no matter
+how much CSS you throw at it — a single-line form control is a hard HTML
+constraint, not a styling choice. Fixed in `EditorHeader.tsx` by:
+- Swapping the name field from `<input>` to `<textarea rows={1}>` (same
+  `plain-input` class, so it still looks like plain text until focused).
+  `resize: none`, `overflow: hidden`, `wordBreak: 'break-word'`.
+- Auto-growing its height to fit content: a `useEffect` keyed on
+  `clock.name` resets `el.style.height` to `'auto'` then to
+  `scrollHeight` on every change, so a short name stays one line and a
+  long one grows to exactly as many lines as it needs (verified it also
+  *shrinks* back down when renamed shorter again).
+- Enter is intercepted (`preventDefault` + blur) so it commits the name
+  rather than inserting a literal newline — same pattern as the Duration
+  field.
+- The name block's container got `maxWidth: 420` so wrapping actually has
+  something to wrap against (a `flex: 'none'` box with no width cap would
+  just keep growing wider instead of ever wrapping).
+- Added `maxLength={40}` — tighter than the 50-char cap on segment names,
+  since this renders at 32px (vs. List's ~14px) so the same character
+  count takes up much more visual space.
+
+**A second bug this surfaced, also fixed in `ClockFace.tsx`:** once
+longer names were possible, the SVG hub's own name label (rendered at a
+tiny 8px inside the now-small `RI: 39` hub circle) started overflowing
+out of the hub and onto the wheel itself — the hub label was never
+designed to hold more than a short name. Added `truncateHubName()`,
+which measures the rendered width (canvas `measureText` plus a manual
+add-back for the `.1em` letter-spacing it doesn't account for) and
+binary-searches for the longest prefix + "…" that fits
+`2*(RI-1) - 12` px. The header still shows the *full* (wrapped) name —
+only the hub's small badge-style label gets shortened, since it was
+always meant to be a small identifier, not the full title. Verified with
+a 61-character typed name: capped to 40 by the field, wraps to 3 lines
+in the header, and reads as "THIS IS A D…" in the hub without spilling
+onto the wheel.
+
 ## Publishing the artifact (do this after any change the user should see)
 
 ```

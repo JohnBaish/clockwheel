@@ -22,7 +22,7 @@ export function EditorHeader() {
   const songs = songCount(clock.segments, categories);
   const balance = hourBalance(total);
   const [imageStatus, setImageStatus] = useState<'idle' | 'copied' | 'downloaded'>('idle');
-  const nameInput = useRef<HTMLInputElement | null>(null);
+  const nameInput = useRef<HTMLTextAreaElement | null>(null);
 
   // A brand-new, untouched clock ("New clock", no segments yet) gets its name
   // field focused so it can be renamed immediately — checked whenever the
@@ -34,6 +34,18 @@ export function EditorHeader() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openClockId]);
+
+  // The name field is a <textarea> (not <input>) specifically so a long
+  // title can wrap onto a second line instead of overflowing — but a plain
+  // fixed-rows textarea would either clip a wrapped line or waste space on
+  // a short one, so its height is measured and reset to fit its content on
+  // every change.
+  useEffect(() => {
+    const el = nameInput.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, [clock.name]);
 
   const copyImage = async () => {
     try {
@@ -51,7 +63,7 @@ export function EditorHeader() {
 
   return (
     <div data-noprint="1" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: 'var(--space-3) var(--space-4)', flexWrap: 'wrap' }}>
-      <div style={{ flex: 'none' }}>
+      <div style={{ flex: 'none', maxWidth: 420 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <span className="card-kicker" style={{ margin: 0 }}>The</span>
           <select
@@ -64,12 +76,18 @@ export function EditorHeader() {
           </select>
           <span className="card-kicker" style={{ margin: 0 }}>hour</span>
         </div>
-        <input
+        <textarea
           ref={nameInput}
           className="plain-input"
+          rows={1}
+          maxLength={40}
           value={clock.name}
           onChange={(e) => renameClock(clock.id, e.target.value)}
-          style={{ font: '400 32px var(--font-heading)', lineHeight: 1.05, margin: '1px 0 0', padding: '0 6px' }}
+          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); (e.target as HTMLTextAreaElement).blur(); } }}
+          style={{
+            font: '400 32px var(--font-heading)', lineHeight: 1.05, margin: '1px 0 0', padding: '0 6px',
+            display: 'block', resize: 'none', overflow: 'hidden', wordBreak: 'break-word',
+          }}
         />
       </div>
       <div style={{ display: 'flex', gap: 6, alignItems: 'center', minWidth: 0, flexWrap: 'wrap' }}>
