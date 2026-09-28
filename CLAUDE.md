@@ -238,7 +238,7 @@ All six verified with Playwright against a real running build (not just
 "the code looks right") — the label-collision fix specifically needed two
 attempts before the repro actually stopped overlapping.
 
-## Library: Open/Duplicate swapped (2026-09-28)
+## Library: Open/Duplicate swapped, then Open given a matching frame (2026-09-28)
 
 `LibraryScreen.tsx`'s per-card button row: the wide, `flex: 1` box (which
 used to be Duplicate) now contains **Open**, styled in Open's own
@@ -250,6 +250,14 @@ original `btn-secondary` look. So: box *shape/size* stayed anchored to
 onClick* moved as a unit between positions. Verified both still do the
 right thing (Open navigates to the Clock screen; Duplicate adds a second
 card and stays on Library).
+
+Follow-up same day: Open had no visible border (`.btn-ghost` doesn't set
+one, only `.btn-secondary` does, via `border-color: var(--color-divider)`)
+— user asked for Open to get the same frame Duplicate has. Added
+`borderColor: 'var(--color-divider)'` directly to Open's inline style,
+keeping its `btn-ghost` class and accent-coloured text exactly as-is —
+only the border changed. Verified computed `border-color` is now
+byte-identical between the two buttons.
 
 ## Publishing the artifact (do this after any change the user should see)
 
