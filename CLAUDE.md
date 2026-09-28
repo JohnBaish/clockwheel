@@ -466,6 +466,17 @@ line now sits roughly level with :00 and points straight at its segment.
 Not verified against the user's own live "Daytime 1"/"Daytime 2" clocks,
 which this session has no access to.
 
+**Follow-up (same day):** user's next screenshot (their real "Daytime 2"
+clock) showed the angle-fan working — no more chain, no more dogleg — but
+too aggressive: a 3-item bottom cluster swung as far as :40, ten real
+minutes from :30, reading as if those labels belonged to a different part
+of the hour than they do. Halved both knobs: `MIN_OFF` from `0.5` (~29°) to
+`0.25` (~14°), and the per-item angular growth from `(w+24)/TURN_R` to
+`(w+24)/(TURN_R*2)`. Re-verified with the same synthetic 3-item and 2-item
+cases — labels now land much closer to their true mark while still
+fanning out cleanly with no crossing or overlapping text. These two
+constants are the ones to retune first if it still reads as too far or
+not far enough on the user's real data.
 ## Other known backlog (not urgent, not asked for — just context)
 
 - Per-anchor over/under (the fuller "over by 2:30 before the 07:29 anchor"

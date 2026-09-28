@@ -184,7 +184,7 @@ function buildFace(segments: Segment[], hour: number, name: string, categories: 
     // skipping the elbow bend below — its line points straight at its
     // segment on a real diagonal instead of dropping onto the ring from
     // directly overhead.
-    const MIN_OFF = 0.5; // ~29°, radians
+    const MIN_OFF = 0.25; // ~14°, radians
     const shelfGroups = new Map<number, number[]>();
     list.forEach((_s, i) => {
       if (!shelf[i]) return;
@@ -200,7 +200,7 @@ function buildFace(segments: Segment[], hour: number, name: string, categories: 
         xs[i] = Math.cos(a) * TURN_R;
         ys[i] = Math.sin(a) * TURN_R;
         const w = Math.max(...rows[i].map((ln) => textWidth(ln, LABEL_FONT)));
-        offset += (w + 24) / TURN_R;
+        offset += (w + 24) / (TURN_R * 2);
       });
     });
     list.forEach((s, j) => {
