@@ -975,6 +975,37 @@ shows whether Middleware compiled and is actually attached to a
 deployment, which would immediately confirm or rule out a syntax/detection
 problem this session has no way to see from here).
 
+## backtimer.baish.net link preview, round 2: middleware regressed to *no* preview (2026-09-29)
+
+After the `middleware.ts` fix above was deployed, the user reported a
+*different* symptom on a never-before-shared link: no preview card at all,
+rather than the previous wrong-but-readable "Clockwheel" one.
+
+Diagnosis (not independently confirmed — no live network access this
+session, as usual — but a known footgun for exactly this pattern):
+`return fetch(...)` handed back the upstream `Response` object completely
+unchanged, including headers like `content-encoding`,
+`content-length`/`transfer-encoding` that described the *original* fetch.
+Vercel's edge re-serving that same Response under a different outer
+request can mismatch those headers against the actual bytes, corrupting or
+truncating the body. A crawler that gets a broken body finds no readable
+`<meta>` tags at all — which fits "no preview," as opposed to a body that
+loads fine but just has the wrong tags in it (the earlier symptom, from
+before middleware existed, when the real static `index.html` was being
+served untouched).
+
+Fix: read the upstream response out as text and construct a fresh
+`Response` with only the header it actually needs
+(`content-type: text/html; charset=utf-8`), instead of forwarding the
+original `Response` object. Same `fetch('/backtimer.html', ...)` call,
+just no longer passing its headers through wholesale.
+
+**Still not confirmed working** — next step is the user testing a
+never-shared `backtimer.baish.net` link again once this redeploys. If this
+still doesn't produce the right preview, the fallback list from the entry
+above still applies (actual `redirect` instead of rewrite/middleware being
+the most likely next thing to try).
+
 ## Other known backlog (not urgent, not asked for — just context)
 
 - Per-anchor over/under (the fuller "over by 2:30 before the 07:29 anchor"

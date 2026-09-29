@@ -10,17 +10,26 @@
 // no @vercel/edge or next/server import — since this is a plain Vite
 // project, not Next.js, and those helper libraries' exact APIs for a
 // non-Next project weren't something this session could verify against
-// live docs (no outbound network access while this was written). Fetching
-// this same deployment's own /backtimer.html and returning that Response
-// directly is the most standards-based way to hand back different content
-// for the same "/" request, so it should hold up regardless of the exact
-// conveniences a Vercel-specific helper might otherwise offer.
+// live docs (no outbound network access while this was written).
 export const config = { matcher: '/' };
 
 export default async function middleware(request: Request) {
   const host = request.headers.get('host') ?? '';
   if (host === 'backtimer.baish.net') {
-    return fetch(new URL('/backtimer.html', request.url));
+    const upstream = await fetch(new URL('/backtimer.html', request.url));
+    // Read the body out and rebuild a fresh Response with only the header
+    // it actually needs. An earlier version of this middleware returned
+    // `upstream` directly, carrying over its content-encoding/
+    // content-length/transfer-encoding headers unchanged — those describe
+    // the original fetch, not this response, and Vercel's edge re-serving
+    // that same Response object under a different request produced a
+    // corrupted/truncated body (no link preview at all, since crawlers
+    // found no readable <meta> tags). Rebuilding it plain avoids that.
+    const body = await upstream.text();
+    return new Response(body, {
+      status: upstream.status,
+      headers: { 'content-type': 'text/html; charset=utf-8' },
+    });
   }
   // Anything else (clockwheel.baish.net, this session's own preview
   // deployments, etc.) falls through to Vercel's normal handling —
