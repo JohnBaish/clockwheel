@@ -28,15 +28,30 @@ export function signedDur(seconds: number): string {
 /** HH:00 — used for week-grid hour labels. */
 export const hh = (n: number) => `${String(n).padStart(2, '0')}:00`;
 
+function parseMmSs(input: string, min: number): number | null {
+  const trimmed = input.trim();
+  const withColon = trimmed.match(/^(\d+):([0-5]?\d)$/);
+  if (withColon) return Math.max(min, +withColon[1] * 60 + +withColon[2]);
+  const secondsOnly = trimmed.match(/^\d+$/);
+  if (secondsOnly) return Math.max(min, +trimmed);
+  return null;
+}
+
 /** Parses a duration typed as "m:ss" or plain seconds. Returns null if unusable,
  *  clamps to a minimum of 1 second so a segment never collapses to nothing. */
 export function parseDur(input: string): number | null {
-  const trimmed = input.trim();
-  const withColon = trimmed.match(/^(\d+):([0-5]?\d)$/);
-  if (withColon) return Math.max(1, +withColon[1] * 60 + +withColon[2]);
-  const secondsOnly = trimmed.match(/^\d+$/);
-  if (secondsOnly) return Math.max(1, +trimmed);
-  return null;
+  return parseMmSs(input, 1);
+}
+
+/** Same as parseDur(), but allows exactly 0 — for a target time-of-day-style
+ *  value (Backtimer's out time) rather than a duration, where 0 is
+ *  meaningful rather than degenerate. parseDur's clamp-to-1 meant typing
+ *  "0:00" as an out time silently became 1 second, not 0, so it never even
+ *  reached normalizeOutTime()'s "0 means the top of the hour" handling —
+ *  the actual bug behind a 17-second item backtimed to "0:00" reporting a
+ *  start of -0:17ish instead of 59:43. */
+export function parseOutTime(input: string): number | null {
+  return parseMmSs(input, 0);
 }
 
 export interface HourBalance {

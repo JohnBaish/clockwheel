@@ -18,7 +18,18 @@ export interface BacktimerState {
 }
 
 export function seedBacktimer(): BacktimerState {
-  return { outTime: 0, items: [] };
+  return { outTime: 3600, items: [] };
+}
+
+/** An out time of exactly 0 always means the top of the hour, not its
+ *  literal first instant — nobody backtimes to the very start of an hour,
+ *  and ":00" as a target is genuinely ambiguous between "the start" and
+ *  "the end" of one (the same way a clock face doesn't distinguish them).
+ *  Treating 0 as 3600 (60:00) resolves it the way anyone typing "0:00" as
+ *  an out time actually means it — otherwise a 17-second item backtimed to
+ *  "0:00" reported starting at -0:17 instead of 59:43. */
+export function normalizeOutTime(seconds: number): number {
+  return seconds === 0 ? 3600 : seconds;
 }
 
 export interface BacktimedItem extends BacktimerItemSeed {
@@ -34,7 +45,7 @@ export interface BacktimedItem extends BacktimerItemSeed {
  *  left visible rather than clamped — that's the whole point of the tool,
  *  telling you when you're overrunning. */
 export function withBackTimes(items: BacktimerItemSeed[], outTime: number): BacktimedItem[] {
-  let end = outTime;
+  let end = normalizeOutTime(outTime);
   return items.map((it) => {
     const start = end - it.d;
     const resolved: BacktimedItem = { ...it, start, end };

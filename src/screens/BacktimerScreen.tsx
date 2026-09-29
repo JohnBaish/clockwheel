@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useApp } from '../state/store';
-import { withBackTimes } from '../data/backtimer';
-import { dur, signedDur, parseDur } from '../lib/time';
+import { withBackTimes, normalizeOutTime } from '../data/backtimer';
+import { dur, signedDur, parseDur, parseOutTime } from '../lib/time';
 import { useDragReorder } from '../lib/useDragReorder';
 import { useIsNarrow } from '../lib/responsive';
 import { IconGrip, IconPlus, IconTrash } from '../lib/icons';
@@ -36,8 +36,8 @@ export function BacktimerScreen() {
   }, [seed]);
 
   const commitOutTime = () => {
-    const parsed = outDraft === null ? null : parseDur(outDraft);
-    if (parsed !== null) setBacktimerOutTime(parsed);
+    const parsed = outDraft === null ? null : parseOutTime(outDraft);
+    if (parsed !== null) setBacktimerOutTime(normalizeOutTime(parsed));
     setOutDraft(null);
   };
 
@@ -90,8 +90,8 @@ export function BacktimerScreen() {
           <input
             className="plain-input mono"
             style={{ width: 64, fontWeight: 700, background: 'var(--color-surface)', border: '1px solid var(--color-divider)' }}
-            value={outDraft ?? dur(backtimer.outTime)}
-            onFocus={(e) => { setOutDraft(dur(backtimer.outTime)); e.target.select(); }}
+            value={outDraft ?? dur(normalizeOutTime(backtimer.outTime))}
+            onFocus={(e) => { setOutDraft(dur(normalizeOutTime(backtimer.outTime))); e.target.select(); }}
             onChange={(e) => setOutDraft(e.target.value)}
             onBlur={commitOutTime}
             onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
@@ -109,7 +109,7 @@ export function BacktimerScreen() {
         </button>
       </div>
       <div className="print-only" style={{ font: '400 22px var(--font-heading)', marginBottom: 'var(--space-3)' }}>
-        Backtimer · out at {dur(backtimer.outTime)}
+        Backtimer · out at {dur(normalizeOutTime(backtimer.outTime))}
       </div>
 
       {isNarrow ? (

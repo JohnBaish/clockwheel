@@ -721,6 +721,48 @@ screen loads directly with no flash of any other screen; mobile hamburger
 menu (with the reduced set of collapsed items — just Print and the saved
 tag) still opens/closes correctly.
 
+## Fix: backtiming to "0:00" gave a negative start instead of 59:43 (2026-09-29)
+
+User's real bug report: backtiming a 17-second item to an out time of
+"0:00" showed a start of roughly -0:17, when the actually-wanted answer was
+59:43 — i.e. "0:00" as an out time should mean the top of the hour, the
+same instant a broadcast clock calls both "00:00" and "60:00", not the
+literal first instant of the hour (backtiming a positive-duration item to
+the literal start of an hour is nonsensical — everything before it goes
+negative immediately).
+
+Two layered causes, found in order:
+1. **The real fix**: `data/backtimer.ts` gained `normalizeOutTime(seconds)`
+   — `0` becomes `3600`. `withBackTimes()` now normalizes internally
+   (so the maths is always right no matter what's stored), and so does
+   `BacktimerScreen.tsx`'s displayed/edited out-time value (so the field
+   never shows a misleading "0:00" that doesn't match what's actually being
+   calculated). `seedBacktimer()`'s default was also changed from `0` to
+   `3600`, so a brand-new Backtimer already reads "60:00" rather than
+   silently meaning the same thing while displaying "0:00".
+2. **A second, independent bug this uncovered**: typing "0:00" into the out
+   time field wasn't even reaching `normalizeOutTime()`'s `=== 0` check,
+   because `lib/time.ts`'s shared `parseDur()` clamps *every* parsed value
+   to a minimum of 1 second — correct for an item's duration (a segment
+   can't be zero-length) but wrong for the out time, where 0 is meaningful
+   input, not a degenerate one. `parseDur` was refactored to share its
+   regex logic with a new `parseOutTime()` (via a private `parseMmSs(input,
+   min)`) that allows exactly 0; `BacktimerScreen.tsx`'s `commitOutTime`
+   now uses `parseOutTime`, item durations still use `parseDur` unchanged.
+   Without this second fix, typing "0:00" silently became 1 second (not 0,
+   not 3600), which is why the very first attempt at the "real fix" above
+   still failed in testing until this was found.
+
+Verified with Playwright: the user's exact scenario (out time typed as
+"0:00", one 17-second item) now shows the out-time field reading "60:00"
+and the item starting at 59:43. Regression-checked: a normal non-zero out
+time (29:30) still computes correctly and unaffected by the 0-handling;
+deliberately overrunning a small non-zero out time (1:00) still correctly
+shows a negative start rather than being swallowed by the new
+normalization (which only ever triggers on a literal 0); an item's own
+duration typed as "0:00" still clamps to "0:01" as before, confirming
+`parseDur` itself (used for item durations) wasn't changed in behaviour.
+
 ## Other known backlog (not urgent, not asked for — just context)
 
 - Per-anchor over/under (the fuller "over by 2:30 before the 07:29 anchor"
