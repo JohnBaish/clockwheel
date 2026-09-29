@@ -25,6 +25,15 @@ export function signedDur(seconds: number): string {
   return seconds < 0 ? `-${dur(-seconds)}` : dur(seconds);
 }
 
+/** Wraps a seconds value onto a 60-minute dial, e.g. -98 (1:38 before the
+ *  hour) becomes 3502 (58:22) — the position that moment actually reads at
+ *  on a clock face. Backtiming past :00 doesn't stop existing, it's just
+ *  in the hour before, so Backtimer shows a real wrapped clock time rather
+ *  than a negative offset for any row that crosses the boundary. */
+export function wrapHour(seconds: number): number {
+  return ((seconds % 3600) + 3600) % 3600;
+}
+
 /** HH:00 — used for week-grid hour labels. */
 export const hh = (n: number) => `${String(n).padStart(2, '0')}:00`;
 

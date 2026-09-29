@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useApp } from '../state/store';
 import { withBackTimes, normalizeOutTime } from '../data/backtimer';
-import { dur, signedDur, parseDur, parseOutTime } from '../lib/time';
+import { dur, parseDur, parseOutTime, wrapHour } from '../lib/time';
 import { useDragReorder } from '../lib/useDragReorder';
 import { useIsNarrow } from '../lib/responsive';
 import { IconGrip, IconPlus, IconTrash } from '../lib/icons';
@@ -101,7 +101,7 @@ export function BacktimerScreen() {
         <span className="tag tag-neutral mono">{dur(total)} total</span>
         {rows.length > 0 && rows[rows.length - 1].start < 0 && (
           <span className="tag" style={{ background: 'var(--color-accent-100)', color: 'var(--color-accent-800)' }}>
-            starts {signedDur(rows[rows.length - 1].start)} — before the top of the hour
+            starts {dur(wrapHour(rows[rows.length - 1].start))} — in the hour before this one
           </span>
         )}
         <button className="btn btn-ghost" onClick={() => addBacktimerItem()} style={{ marginLeft: 'auto', color: 'var(--color-accent-700)' }}>
@@ -159,7 +159,7 @@ export function BacktimerScreen() {
                 </div>
                 <div className="list-card-row" style={{ marginTop: 6 }}>
                   <span className="mono" style={{ fontSize: 12.5, fontWeight: 700, color: it.start < 0 ? 'var(--color-accent-700)' : 'var(--color-neutral-700)' }}>
-                    {signedDur(it.start)}
+                    {dur(wrapHour(it.start))}
                   </span>
                   <input
                     ref={(el) => { durInputs.current[it.id] = el; }}
@@ -215,7 +215,7 @@ export function BacktimerScreen() {
                   <IconGrip size={14} />
                 </td>
                 <td className="mono" style={{ fontWeight: 700, color: it.start < 0 ? 'var(--color-accent-700)' : 'var(--color-neutral-700)' }}>
-                  {signedDur(it.start)}
+                  {dur(wrapHour(it.start))}
                 </td>
                 <td>
                   <input

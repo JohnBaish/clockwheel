@@ -763,6 +763,47 @@ normalization (which only ever triggers on a literal 0); an item's own
 duration typed as "0:00" still clamps to "0:01" as before, confirming
 `parseDur` itself (used for item durations) wasn't changed in behaviour.
 
+## Follow-up: wrap rows that cross the hour boundary onto the clock face, don't go negative (2026-09-29)
+
+Same day, next real usage bug: with out time 10:00 and four items totalling
+15:00, the two that fall before :00 were showing raw negative deltas
+(-1:38, -5:00). User's ask: those items are still real, they're just in
+the hour before this one — a producer backtiming to :10 with 15 minutes of
+material expects the earlier items to read as clock positions in the
+*previous* hour (58:22, 55:00), the same way the "0:00 means the top of the
+hour" fix treated :00 as a wrap point rather than a wall.
+
+- `lib/time.ts`: new `wrapHour(seconds)` — `((seconds % 3600) + 3600) %
+  3600`, i.e. wherever that moment actually sits on a 60-minute dial,
+  regardless of sign or magnitude. Replaces `signedDur()` in
+  `BacktimerScreen.tsx` entirely (no longer used anywhere, kept in
+  `lib/time.ts` in case something else wants a literal signed delta later,
+  but nothing currently does).
+- `BacktimerScreen.tsx`: every displayed start time — the per-row "Starts"
+  column/card value, and the header's overage tag — now shows
+  `dur(wrapHour(it.start))` instead of the raw signed value. The
+  **underlying raw `start` from `withBackTimes()` is unchanged** and still
+  goes negative internally; that's deliberately kept as the source of truth
+  for *detecting* a boundary crossing (`it.start < 0`), which still drives
+  the accent-colour styling on that row and whether the header warning
+  shows at all — only the number shown to the user changed, not the
+  underlying maths or the "something crossed the hour" signal.
+- Worth knowing: this wraps onto *a* 60-minute dial, not a specific
+  calendar hour — Backtimer has no hour-of-day concept (per the original
+  design), so overrunning by more than a full 60 minutes would wrap back
+  round rather than distinguish "one hour early" from "two hours early".
+  Not addressed; a real scenario that overruns by more than an hour is rare
+  and arguably a sign something else needs fixing first.
+
+Verified with Playwright, the user's exact scenario (out 10:00; items
+0:17, 2:10, 9:11, 3:22): now reads 9:43, 7:33, 58:22, 55:00 — matching
+exactly what was asked for — with the last two rows still flagged in
+accent colour and the header reading "starts 55:00 — in the hour before
+this one". Also checked the same crossing on the mobile card layout, and
+re-confirmed a non-crossing case (a smaller items list against the same
+10:00 out time) still displays plainly with no accent colour, i.e. the
+wrap logic is invisible until it's actually needed.
+
 ## Other known backlog (not urgent, not asked for — just context)
 
 - Per-anchor over/under (the fuller "over by 2:30 before the 07:29 anchor"
