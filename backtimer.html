@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Backtimer</title>
+    <meta name="description" content="Work out exactly when each item needs to start to hit your out time." />
+    <!-- Backtimer's twin of index.html, serving the same app — see that file's
+         comment for why this exists, and keep the two in sync for anything
+         other than these tags and <title>. Only ever reached via vercel.json's
+         rewrite for backtimer.baish.net; the app itself decides what to show
+         at runtime via lib/hostMode.ts regardless of which of these two files
+         actually loaded it. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Backtimer" />
+    <meta property="og:description" content="Work out exactly when each item needs to start to hit your out time." />
+    <meta property="og:image" content="https://backtimer.baish.net/og-backtimer.png" />
+    <meta property="og:url" content="https://backtimer.baish.net/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Backtimer" />
+    <meta name="twitter:description" content="Work out exactly when each item needs to start to hit your out time." />
+    <meta name="twitter:image" content="https://backtimer.baish.net/og-backtimer.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
