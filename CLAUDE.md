@@ -519,6 +519,72 @@ and the Clock screen renders correctly — including the 0%-category-legend
 filter (shipped earlier the same day) correctly hiding Imaging, since
 Ident's 17s rounds to 0% of the hour.
 
+## Draggable callout labels (2026-09-29)
+
+User asked (feasibility question first, then went ahead) for the auto-placed
+callout labels — the ones with leader lines, per the last several sections —
+to be manually draggable, "as you can do in Excel." Scoped in advance to two
+decisions: only the callout labels (not the ones that already sit inline on
+the ring), and double-click to reset a dragged label back to automatic
+placement.
+
+- `data/segments.ts`: `SegmentSeed` gained an optional `labelPos?: { x, y }`
+  — a manually-dragged position in the face's own SVG coordinate space
+  (centred on the hub, same units `place()` already computes in). Persists
+  and round-trips through localStorage/export exactly like every other
+  segment field, no special-casing needed.
+- `state/store.tsx`: `setSegmentLabelPos(segmentId, pos | null)`, same
+  `editOpenClock` pattern as the other per-segment setters. `null` clears it.
+- `components/ClockFace.tsx`:
+  - `buildFace()` now takes a `LabelInteraction` object (drag id/position
+    plus the four pointer-event handlers) and, inside `place()`, applies it
+    as the *last* step after the normal auto-layout maths — so a manual
+    override never throws off how the *other* labels in that list computed
+    their own gaps/angles, it just substitutes the final `(x, y)` for the
+    one label being overridden. Priority: live drag position, then a saved
+    `labelPos`, then whatever the automatic layout produced.
+  - Each callout's swatch dot + text is wrapped in a `<g className="callout-label">`
+    with a generous invisible hit-rect behind it (the visible dot/glyphs
+    alone are too small and gappy to reliably grab, especially on touch),
+    carrying `onPointerDown`/`onPointerMove`/`onPointerUp`/`onPointerCancel`
+    and `onDoubleClick`. Same `setPointerCapture` technique as the List
+    screen's row-reorder drag (`lib/useDragReorder.ts`) — works for mouse
+    and touch alike, verified with a synthetic `pointerType: 'touch'` drag
+    the same way that hook was verified.
+  - The `ClockFace` component (not `buildFace`, which is a plain function
+    with no access to the mounted DOM) holds the actual drag state and a
+    `svgRef`, and converts pointer screen coordinates into the face's own
+    SVG units via `svg.getScreenCTM().inverse()` — necessary because the
+    face is drawn at a fixed internal size but displayed scaled to fit its
+    container (confirmed the conversion is exact: a mid-drag bounding-box
+    check tracked the mouse 1:1 in screen pixels throughout).
+  - Dragging updates local state live (so the leader line visibly follows
+    the pointer); the position is only written to the segment — via
+    `setSegmentLabelPos` — on pointer-up, not on every pointermove.
+  - `.callout-label` in `global.css`: `cursor: grab` (`grabbing` on
+    `:active`), `touch-action: none` (stops touch-scroll hijacking a drag,
+    same reason the List grips need it), and `user-select: none` — without
+    it, double-clicking a label (the reset gesture) also triggered the
+    browser's native double-click-to-select-word, leaving a visible text
+    selection highlight behind after the reset.
+- A dragged label's leader line always runs as one straight line from the
+  segment's true ring position to wherever the label now sits — it doesn't
+  try to re-introduce the elbow bend that ordinary side-column callouts use,
+  regardless of which kind the segment originally was.
+- Known, accepted limitation (same as Excel): dragging one label does **not**
+  make other automatically-placed labels dodge it. If a manual drag now
+  overlaps a different label, the fix is to drag that one too. True mutual
+  collision-avoidance between manual and automatic placement was considered
+  and explicitly ruled out as unnecessary scope for what this needed to do.
+- Verified with Playwright: dragging visibly follows the pointer and updates
+  the leader line live; the final position survives a reload (confirmed via
+  the persisted `labelPos` in `localStorage`); double-click clears it back
+  to automatic (confirmed `labelPos` becomes `undefined` again, and the
+  rendering matches the pre-drag layout); a synthetic touch-type drag works
+  identically; "Copy image" correctly captures a far-dragged label (the
+  exported PNG's dimensions grow to match the expanded canvas extent, same
+  mechanism as any other callout that pushes `ext.x`/`ext.y` outward).
+
 ## Other known backlog (not urgent, not asked for — just context)
 
 - Per-anchor over/under (the fuller "over by 2:30 before the 07:29 anchor"

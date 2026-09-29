@@ -8,6 +8,11 @@ export interface SegmentSeed {
   c: CategoryId;
   pin?: boolean;
   note?: boolean;
+  /** Manually dragged callout-label position (clock-face SVG coordinates,
+   *  centred on the hub) — only set once someone drags that segment's label
+   *  off the auto-placement layout in ClockFace.tsx. Double-clicking a label
+   *  clears it back to automatic. */
+  labelPos?: { x: number; y: number };
 }
 
 /** A segment with its start time (seconds into the hour) resolved from list order. */

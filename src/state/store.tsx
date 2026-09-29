@@ -77,6 +77,8 @@ interface AppContextValue extends PersistedState {
   setSegmentCategory: (segmentId: string, categoryId: CategoryId) => void;
   setSegmentName: (segmentId: string, name: string) => void;
   setSegmentDuration: (segmentId: string, seconds: number) => void;
+  /** Sets or clears (pass null) a segment's manually-dragged callout-label position. */
+  setSegmentLabelPos: (segmentId: string, pos: { x: number; y: number } | null) => void;
   addSegment: () => void;
   removeSegment: (segmentId: string) => void;
   assign: (keys: string[], id: ClockId | null) => void;
@@ -176,6 +178,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     ),
     setSegmentDuration: (segmentId, seconds) => editOpenClock((s) =>
       s.clocks[s.openClockId].segments.map((seg) => (seg.id === segmentId ? { ...seg, d: seconds } : seg))
+    ),
+    setSegmentLabelPos: (segmentId, pos) => editOpenClock((s) =>
+      s.clocks[s.openClockId].segments.map((seg) =>
+        seg.id === segmentId ? { ...seg, labelPos: pos ?? undefined } : seg
+      )
     ),
     addSegment: () => editOpenClock((s) => [...s.clocks[s.openClockId].segments, {
       id: newId('seg'), n: 'New segment', d: 60, c: s.categoryOrder[0], pin: false, note: false,

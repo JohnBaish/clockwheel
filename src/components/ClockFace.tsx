@@ -1,8 +1,9 @@
-import { useMemo, type ReactNode } from 'react';
+import { useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import type { Segment } from '../data/segments';
 import type { Category, CategoryId } from '../data/categories';
 import { ang, polar, arcPath, px, textWidth, wrap2, LABEL_FONT } from '../lib/geometry';
 import { PINS_ENABLED } from '../config';
+import { useApp } from '../state/store';
 
 const RO = 140;
 const RI = 39;
@@ -16,6 +17,19 @@ interface ScoredSegment extends Segment {
 }
 
 interface Extent { x: number; y: number }
+
+/** Live drag state, plus the handlers a callout label's hit-target wires up
+ *  to. Kept in the ClockFace component (not here) since it needs the SVG's
+ *  own DOM node to convert pointer coordinates into the face's user-space
+ *  units — buildFace just renders whatever position this hands it. */
+interface LabelInteraction {
+  dragId: string | null;
+  dragPos: { x: number; y: number } | null;
+  onPointerDown: (segId: string, baseX: number, baseY: number) => (e: ReactPointerEvent<SVGGElement>) => void;
+  onPointerMove: (e: ReactPointerEvent<SVGGElement>) => void;
+  onPointerUp: (e: ReactPointerEvent<SVGGElement>) => void;
+  onDoubleClick: (segId: string) => () => void;
+}
 
 // A segment's angular midpoint in [0, 360) degrees. An over-length hour can
 // push t past 3600s, so this must wrap — otherwise left/right callout
@@ -50,7 +64,10 @@ function truncateHubName(name: string, maxWidth: number): string {
 // Faithful port of the design prototype's face() renderer: segments that
 // don't fit their own arc get pulled out to a callout with a leader line,
 // placed and de-collided dynamically from measured text — not by hand.
-function buildFace(segments: Segment[], hour: number, name: string, categories: Record<CategoryId, Category>) {
+function buildFace(
+  segments: Segment[], hour: number, name: string, categories: Record<CategoryId, Category>,
+  interaction: LabelInteraction,
+) {
   const arcMid = (RO + RI) / 2;
   const ext: Extent = { x: RO + 46, y: RO + 46 };
 
@@ -203,6 +220,19 @@ function buildFace(segments: Segment[], hour: number, name: string, categories: 
         offset += (w + 24) / (TURN_R * 2);
       });
     });
+    // A manually-dragged label (or the one currently being dragged) overrides
+    // wherever the automatic layout above put it — applied last, so it never
+    // throws off the gap/angle maths the other labels in this list used to
+    // find their own positions.
+    list.forEach((s, j) => {
+      if (interaction.dragId === s.id && interaction.dragPos) {
+        xs[j] = interaction.dragPos.x;
+        ys[j] = interaction.dragPos.y;
+      } else if (s.labelPos) {
+        xs[j] = s.labelPos.x;
+        ys[j] = s.labelPos.y;
+      }
+    });
     list.forEach((s, j) => {
       const mid = s.t + s.d / 2;
       const [bx, by] = turns[j];
@@ -227,21 +257,35 @@ function buildFace(segments: Segment[], hour: number, name: string, categories: 
         );
       }
       const anchor = side > 0 ? 'start' : 'end';
-      k.push(
-        <circle key={`cs${s.i}`} cx={px(ex + side * 5)} cy={px(ey)} r={3.6} fill={categories[s.c].color} stroke="rgba(32,30,29,.14)" strokeWidth={1} />
-      );
       const lines = rows[j];
       const tx = px(ex + side * 13);
-      k.push(
-        <text
-          key={`cn${s.i}`} x={tx} y={px(ey - (lines.length > 1 ? 5 : 0))}
-          dominantBaseline="middle" textAnchor={anchor} fill="var(--color-neutral-700)"
-          style={{ fontFamily: 'Figtree,sans-serif', fontWeight: 600, fontSize: '9.5px', letterSpacing: '.02em' }}
-        >
-          {lines.map((ln, q) => <tspan key={q} x={tx} dy={q ? 11 : 0}>{ln}</tspan>)}
-        </text>
-      );
       const w = Math.max(...lines.map((ln) => textWidth(ln, LABEL_FONT)));
+      // A generous invisible hit area — the swatch dot and text glyphs alone
+      // are too small and gappy to reliably grab, especially on touch.
+      const hitH = (lines.length > 1 ? 26 : 16) + 10;
+      const hitW = 13 + w + 12;
+      const hitX = side > 0 ? ex - 6 : ex - hitW + 6;
+      k.push(
+        <g
+          key={`cg${s.i}`}
+          className="callout-label"
+          onPointerDown={interaction.onPointerDown(s.id, ex, ey)}
+          onPointerMove={interaction.onPointerMove}
+          onPointerUp={interaction.onPointerUp}
+          onPointerCancel={interaction.onPointerUp}
+          onDoubleClick={interaction.onDoubleClick(s.id)}
+        >
+          <rect x={px(hitX)} y={px(ey - hitH / 2)} width={px(hitW)} height={px(hitH)} fill="transparent" />
+          <circle cx={px(ex + side * 5)} cy={px(ey)} r={3.6} fill={categories[s.c].color} stroke="rgba(32,30,29,.14)" strokeWidth={1} />
+          <text
+            x={tx} y={px(ey - (lines.length > 1 ? 5 : 0))}
+            dominantBaseline="middle" textAnchor={anchor} fill="var(--color-neutral-700)"
+            style={{ fontFamily: 'Figtree,sans-serif', fontWeight: 600, fontSize: '9.5px', letterSpacing: '.02em' }}
+          >
+            {lines.map((ln, q) => <tspan key={q} x={tx} dy={q ? 11 : 0}>{ln}</tspan>)}
+          </text>
+        </g>
+      );
       ext.x = Math.max(ext.x, Math.abs(ex) + 13 + w);
       ext.y = Math.max(ext.y, Math.abs(ey) + (lines.length > 1 ? 16 : 6));
     });
@@ -297,10 +341,70 @@ interface ClockFaceProps {
   categories: Record<CategoryId, Category>;
 }
 
+interface DragState {
+  id: string;
+  startX: number; // pointerdown position, in the face's own SVG units
+  startY: number;
+  baseX: number; // the label's position when the drag started
+  baseY: number;
+  x: number; // live position as the pointer moves
+  y: number;
+}
+
 export function ClockFace({ segments, hour, name, categories }: ClockFaceProps) {
-  const { nodes, EX, EY } = useMemo(() => buildFace(segments, hour, name, categories), [segments, hour, name, categories]);
+  const { setSegmentLabelPos } = useApp();
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [drag, setDrag] = useState<DragState | null>(null);
+
+  // Converts a pointer event's screen position into the face's own SVG user
+  // units — needed because the face is drawn at a fixed internal size but
+  // displayed scaled to fit its container, so raw pixel deltas don't match
+  // face-unit deltas except at exactly 1:1 zoom.
+  const toFacePoint = (clientX: number, clientY: number): { x: number; y: number } => {
+    const svg = svgRef.current;
+    const ctm = svg?.getScreenCTM();
+    if (!svg || !ctm) return { x: 0, y: 0 };
+    const pt = svg.createSVGPoint();
+    pt.x = clientX;
+    pt.y = clientY;
+    const p = pt.matrixTransform(ctm.inverse());
+    return { x: p.x, y: p.y };
+  };
+
+  const interaction: LabelInteraction = {
+    dragId: drag?.id ?? null,
+    dragPos: drag ? { x: drag.x, y: drag.y } : null,
+    onPointerDown: (segId, baseX, baseY) => (e) => {
+      e.currentTarget.setPointerCapture(e.pointerId);
+      const p = toFacePoint(e.clientX, e.clientY);
+      setDrag({ id: segId, startX: p.x, startY: p.y, baseX, baseY, x: baseX, y: baseY });
+    },
+    onPointerMove: (e) => {
+      if (!drag) return;
+      const p = toFacePoint(e.clientX, e.clientY);
+      setDrag({ ...drag, x: drag.baseX + (p.x - drag.startX), y: drag.baseY + (p.y - drag.startY) });
+    },
+    onPointerUp: () => {
+      setDrag((d) => {
+        if (d) setSegmentLabelPos(d.id, { x: d.x, y: d.y });
+        return null;
+      });
+    },
+    onDoubleClick: (segId) => () => setSegmentLabelPos(segId, null),
+  };
+
+  const { nodes, EX, EY } = useMemo(
+    () => buildFace(segments, hour, name, categories, interaction),
+    // interaction is a fresh object every render (it closes over `drag`), so
+    // it's deliberately left out here — `drag` is what actually needs to
+    // trigger a rebuild, and is already covered.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [segments, hour, name, categories, drag],
+  );
+
   return (
     <svg
+      ref={svgRef}
       id="clock-face-svg"
       viewBox={`${-EX} ${-EY} ${EX * 2} ${EY * 2}`}
       style={{ width: '100%', maxWidth: `${px(Math.min(760, 700 * (EX / EY)))}px`, height: 'auto', display: 'block', margin: '0 auto' }}

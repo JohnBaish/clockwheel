@@ -61,6 +61,9 @@
   color: var(--color-neutral-600); cursor: grab; touch-action: none;
 }
 
+.callout-label { cursor: grab; touch-action: none; -webkit-user-select: none; user-select: none; }
+.callout-label:active { cursor: grabbing; }
+
 @media print {
   @page { size: A4 portrait; margin: 12mm; }
   html, body { background: #fff; }
