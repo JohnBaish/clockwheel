@@ -663,6 +663,64 @@ some debugging time but was a test-script issue, not an app bug; everything
 persists across a reload; and importing the user's own pre-Backtimer export
 doesn't crash, it just falls back to the seeded empty Backtimer as designed.
 
+## backtimer.baish.net — same build, Backtimer-only presentation (2026-09-29)
+
+User asked about a separate subdomain that shows only Backtimer, none of
+the clock functions. Talked through the options first (this was an
+advisory conversation before any code): a genuinely separate app/deployment
+would mean real ongoing maintenance (keeping shared bits like drag-reorder
+and duration parsing in sync across two codebases), for very little benefit
+at this app's size — so went with the cheap version instead: **one build,
+one Vercel deployment, a second custom domain pointed at the same project**,
+with the app deciding what to show based on which hostname it was loaded
+from. No new deployment, no routing library, no server-side config at all.
+
+- `lib/hostMode.ts` (new file): `isBacktimerHost()` — true when
+  `window.location.hostname === 'backtimer.baish.net'`, or when the page
+  was loaded with `?host=backtimer` (a manual override for testing this
+  locally/in preview URLs before the real subdomain exists in DNS — this is
+  how it was verified in this session, since the sandbox obviously can't
+  resolve the real subdomain).
+- `state/store.tsx`'s `loadInitial()`: on that host, always forces
+  `screen: 'backtimer'`, overriding whatever screen a previous visit to
+  that origin happened to save — so there's no stored state that could put
+  a Backtimer-only visitor on a Clockwheel screen.
+- `components/Nav.tsx`: on that host, the links list is empty (no link to
+  "the only page there is" — the brand text already says which app this
+  is), the "New clock" button doesn't render, the brand reads "Backtimer"
+  instead of "Clockwheel", and `document.title` is set to "Backtimer". The
+  Print button (still shown, Backtimer supports printing same as List)
+  picks up the `margin-left: auto` that "New clock" used to provide, so it
+  still sits at the right edge without an empty gap.
+- Nothing else needed changing — `App.tsx`'s screen switch, `EditorHeader`,
+  and every other screen are simply unreachable on this host, since Nav is
+  the only way to navigate and nothing on the Backtimer screen itself calls
+  `setScreen`/`openClock`. Confirmed nothing else in the codebase calls
+  those either, outside Nav and EditorHeader's "Done" button (which only
+  renders on the clock/list screens, which can never be reached here).
+- **Data is automatically separate, not shared** — `backtimer.baish.net`
+  and `clockwheel.baish.net` are different origins, so they get different
+  `localStorage`. This wasn't extra work, just a consequence of how the
+  web works, and it's the right behaviour here: Backtimer was built as a
+  standalone tool with no reference to any clock's data in the first place.
+- **What's still needed, outside this repo/session**: the user adds
+  `backtimer.baish.net` as a domain on the Vercel project that already
+  serves `clockwheel.baish.net`, and adds whatever DNS record Vercel's
+  dashboard then asks for (almost always a CNAME to `cname.vercel-dns.com`
+  for a subdomain, but Vercel should be treated as the source of truth for
+  the exact value) at wherever `baish.net`'s DNS is managed. Until that's
+  done, `?host=backtimer` on the existing `clockwheel.baish.net` domain is
+  the only way to see this mode live.
+
+Verified with Playwright: normal domain (no query override) renders
+completely unchanged, desktop and mobile, full nav intact — the
+`?host=backtimer` override affects nothing unless explicitly present.
+`?host=backtimer` mode: correct title, correct brand text, zero nav links,
+no "New clock" button, Print button correctly right-aligned, Backtimer
+screen loads directly with no flash of any other screen; mobile hamburger
+menu (with the reduced set of collapsed items — just Print and the saved
+tag) still opens/closes correctly.
+
 ## Other known backlog (not urgent, not asked for — just context)
 
 - Per-anchor over/under (the fuller "over by 2:30 before the 07:29 anchor"

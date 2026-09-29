@@ -4,6 +4,7 @@ import { seedOutside, seedClocks, SEED_CLOCK_ID, CLOCK_COLORS, type Clock, type 
 import { SEED_CATEGORIES, SEED_CATEGORY_ORDER, NEXT_COLORS, type Category, type CategoryId } from '../data/categories';
 import { seedBacktimer, type BacktimerState, type BacktimerItemSeed } from '../data/backtimer';
 import { contrastInk } from '../lib/color';
+import { isBacktimerHost } from '../lib/hostMode';
 
 export type Screen = 'lib' | 'clock' | 'list' | 'week' | 'summary' | 'categories' | 'backtimer';
 
@@ -58,13 +59,19 @@ function loadInitial(): PersistedState {
     backtimer: seedBacktimer(),
     lastEditedAt: Date.now(),
   };
+  // On the Backtimer-only domain, always land on (and stay pinned to) the
+  // Backtimer screen — overriding whatever screen a previous visit to this
+  // origin happened to save, so there's no way to end up looking at a
+  // Clockwheel screen that Nav has hidden the links to.
+  const pin = (result: PersistedState): PersistedState =>
+    isBacktimerHost() ? { ...result, screen: 'backtimer' } : result;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return defaults;
+    if (!raw) return pin(defaults);
     const parsed = JSON.parse(raw);
-    return { ...defaults, ...parsed };
+    return pin({ ...defaults, ...parsed });
   } catch {
-    return defaults;
+    return pin(defaults);
   }
 }
 

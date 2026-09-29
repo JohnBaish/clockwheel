@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useApp, type Screen } from '../state/store';
 import { relativeTime } from '../lib/time';
+import { isBacktimerHost } from '../lib/hostMode';
 
 const LINKS: { screen: Screen; label: string }[] = [
   { screen: 'lib', label: 'Library' },
@@ -15,6 +16,16 @@ const LINKS: { screen: Screen; label: string }[] = [
 
 export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Screen) => void }) {
   const { lastEditedAt, createClock } = useApp();
+  // Same build, two domains (see lib/hostMode.ts) — on the Backtimer-only
+  // one, there's nowhere else to navigate to, so the rest of Clockwheel's
+  // nav simply doesn't exist here rather than existing-but-going-nowhere.
+  const backtimerOnly = isBacktimerHost();
+  // No links at all here — a link to the only page there is would just be a
+  // no-op "you are here", and the brand text already says as much.
+  const links = backtimerOnly ? [] : LINKS;
+  useEffect(() => {
+    if (backtimerOnly) document.title = 'Backtimer';
+  }, [backtimerOnly]);
   // The "ago" wording goes stale just from time passing, not just from edits —
   // this ticks "now" periodically so it stays accurate while idle.
   const [now, setNow] = useState(() => Date.now());
@@ -32,7 +43,7 @@ export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Sc
 
   return (
     <div className="nav" style={{ padding: 'var(--space-3) var(--space-6)', background: 'var(--color-surface)', flexWrap: 'wrap' }}>
-      <span className="nav-brand">Clockwheel</span>
+      <span className="nav-brand">{backtimerOnly ? 'Backtimer' : 'Clockwheel'}</span>
       <button
         className="nav-menu-toggle"
         onClick={() => setMenuOpen((o) => !o)}
@@ -42,15 +53,17 @@ export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Sc
       >
         {menuOpen ? <X size={19} /> : <Menu size={19} />}
       </button>
-      <button
-        className="btn btn-primary"
-        onClick={() => createClock()}
-        style={{ padding: '7px 16px', fontSize: '13.5px', whiteSpace: 'nowrap', marginLeft: 'auto' }}
-      >
-        New clock
-      </button>
+      {!backtimerOnly && (
+        <button
+          className="btn btn-primary"
+          onClick={() => createClock()}
+          style={{ padding: '7px 16px', fontSize: '13.5px', whiteSpace: 'nowrap', marginLeft: 'auto' }}
+        >
+          New clock
+        </button>
+      )}
       <div className={`nav-panel${menuOpen ? ' open' : ''}`}>
-        {LINKS.map((l) => (
+        {links.map((l) => (
           <a
             key={l.screen}
             href={`#${l.screen}`}
@@ -65,7 +78,7 @@ export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Sc
             className="btn btn-ghost"
             onClick={() => window.print()}
             data-noprint="1"
-            style={{ color: 'var(--color-accent-700)' }}
+            style={{ color: 'var(--color-accent-700)', marginLeft: backtimerOnly ? 'auto' : undefined }}
           >
             Print
           </button>
