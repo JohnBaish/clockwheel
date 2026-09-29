@@ -1015,3 +1015,42 @@ the most likely next thing to try).
   contexts.
 - Change history / per-segment notes / a real multi-user Share link are all
   out of scope per earlier discussion (no backend).
+
+## Four small usability fixes (2026-09-29)
+
+- **Library export filename now includes the time, not just the date.**
+  `LibraryScreen.tsx`'s `handleExport` used
+  `clockwheel-${new Date().toISOString().slice(0, 10)}.json` — two exports
+  in the same day collided/overwrote each other. Now builds a local-time
+  (not UTC — a filename is for the person reading it off their own wall
+  clock) `YYYY-MM-DD-HHmm` stamp inline with a small `pad()` helper, no new
+  dependency needed for one call site.
+- **Week screen: double-clicking an assigned cell opens that clock in
+  Clock mode.** Added `onDoubleClick={() => { if (id) openClock(id); }}`
+  to the grid cell — `openClock` already sets both `openClockId` and
+  `screen: 'clock'` in one store action (existing), so no new store code
+  needed.
+- **Week screen: the grid cells now show the assigned clock's name**, not
+  just its colour swatch. Each cell got a `<span>` with
+  `whiteSpace: nowrap; overflow: hidden; textOverflow: ellipsis`, sized to
+  the cell — long names truncate with `…` rather than overflowing into
+  neighbouring cells (verified visually at a realistic ~134px cell width).
+  Text colour uses the existing `contrastInk()` helper (already used for
+  category pills) so it reads against whichever of the rotating
+  `CLOCK_COLORS` that clock has, instead of hardcoding one text colour that
+  might not contrast against every swatch.
+- **Library: clicking a clock's name opens it**, same as the existing
+  "Open" button — just an `onClick={() => openClock(id)}` plus a
+  `.library-clock-name:hover` CSS rule (accent colour + underline) so it
+  reads as clickable, following the same hover-affordance pattern already
+  used for `.week-pick-label`/`.week-toggle-local`/`.week-picker-row`.
+
+All four verified end-to-end with a scripted Playwright pass against a
+production build (`vite preview`) rather than just a type-check: assigned
+a clock to a Week cell, confirmed the cell showed its name, double-clicked
+it and confirmed the Clock screen opened with that clock's name in the
+header field, clicked a Library card's name and confirmed the same, and
+captured the actual downloaded filename from a real Export click
+(`clockwheel-2026-09-29-1837.json`). Also renamed a clock to a
+50-character string and screenshotted the resulting Week cell to confirm
+the ellipsis truncation looks right rather than just trusting the CSS.

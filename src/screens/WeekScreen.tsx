@@ -4,14 +4,14 @@ import { DAYS } from '../data/days';
 import { cellKey, type ClockId } from '../data/clocks';
 import { hh } from '../lib/time';
 import { localKeys } from '../lib/weekStats';
-import { splitBg } from '../lib/color';
+import { splitBg, contrastInk } from '../lib/color';
 import { computeSplit } from '../lib/clockStats';
 
 const HATCH = 'repeating-linear-gradient(135deg,var(--color-neutral-200) 0 3px,var(--color-neutral-100) 3px 6px)';
 const HATCH_STRONG = 'repeating-linear-gradient(135deg,var(--color-neutral-300) 0 3px,var(--color-neutral-100) 3px 6px)';
 
 export function WeekScreen() {
-  const { clocks, clockOrder, week, outside, assign, markLocal, categories, categoryOrder } = useApp();
+  const { clocks, clockOrder, week, outside, assign, markLocal, categories, categoryOrder, openClock } = useApp();
   const cats = { byId: categories, order: categoryOrder };
   const [sel, setSel] = useState<Record<string, true>>({});
   const [drag, setDrag] = useState(false);
@@ -125,13 +125,27 @@ export function WeekScreen() {
                     title={`${dl} ${hh(i)}${out ? ' · non-local' : id ? ' · ' + clocks[id].name : ' · no clock yet'}`}
                     onMouseDown={(e) => { e.preventDefault(); setDrag(true); pickKeys([key], e.shiftKey || e.metaKey || on); }}
                     onMouseEnter={() => { setHover(key); if (drag) pickKeys([key], true); }}
+                    onDoubleClick={() => { if (id) openClock(id); }}
                     style={{
-                      height: 21, borderRadius: 7, cursor: 'pointer',
+                      height: 21, borderRadius: 7, cursor: 'pointer', overflow: 'hidden',
+                      display: 'flex', alignItems: 'center',
+                      padding: id ? '0 6px' : 0,
                       background: out ? HATCH : id ? clocks[id].color : 'transparent',
                       border: out ? '1px solid transparent' : id ? '1px solid rgba(32,30,29,.10)' : '1.5px dashed var(--color-neutral-400)',
                       boxShadow: on ? '0 0 0 2px var(--color-accent)' : 'none',
                     }}
-                  />
+                  >
+                    {id && (
+                      <span
+                        style={{
+                          font: '600 9.5px var(--font-body)', color: contrastInk(clocks[id].color),
+                          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%',
+                        }}
+                      >
+                        {clocks[id].name}
+                      </span>
+                    )}
+                  </div>
                 );
               })}
             </div>

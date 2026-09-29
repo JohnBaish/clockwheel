@@ -18,7 +18,12 @@ export function LibraryScreen() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `clockwheel-${new Date().toISOString().slice(0, 10)}.json`;
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    // Local time, not UTC — someone exporting a couple of backups in the
+    // same day wants filenames that match the clock on their own wall.
+    const stamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
+    a.download = `clockwheel-${stamp}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -76,7 +81,13 @@ export function LibraryScreen() {
                     <div style={{ position: 'absolute', left: '50%', top: -3, width: 3, height: 9, marginLeft: -1.5, borderRadius: 999, background: c.color }} />
                   </div>
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ font: '700 15.5px var(--font-body)', lineHeight: 1.2, textWrap: 'pretty' }}>{c.name}</div>
+                    <div
+                      onClick={() => openClock(id)}
+                      className="library-clock-name"
+                      style={{ font: '700 15.5px var(--font-body)', lineHeight: 1.2, textWrap: 'pretty', cursor: 'pointer' }}
+                    >
+                      {c.name}
+                    </div>
                     <div className="mono" style={{ fontSize: 12, color: 'var(--color-neutral-700)', marginTop: 3 }}>
                       {n ? `used ${n} hour${n === 1 ? '' : 's'} a week` : 'not in the week'}
                     </div>

@@ -3,6 +3,7 @@
 .week-pick-label:hover { background: var(--color-accent-100); }
 .week-toggle-local:hover { border-color: var(--color-accent); background: var(--color-accent-100); }
 .week-picker-row:hover { background: var(--color-accent-100); border-color: var(--color-accent-200) !important; }
+.library-clock-name:hover { color: var(--color-accent-700); text-decoration: underline; }
 
 /* An input that reads as plain text until you interact with it — for editing
    a value in place inside a dense table row without it looking like a form. */
