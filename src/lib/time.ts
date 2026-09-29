@@ -17,6 +17,14 @@ export function dur(seconds: number): string {
   return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 }
 
+/** Same as dur(), but handles negative input (e.g. "-2:30") — dur() alone
+ *  mishandles negatives, since JS's % keeps the dividend's sign. Used by
+ *  Backtimer, where a start time before the out time is meaningful, not
+ *  an error. */
+export function signedDur(seconds: number): string {
+  return seconds < 0 ? `-${dur(-seconds)}` : dur(seconds);
+}
+
 /** HH:00 — used for week-grid hour labels. */
 export const hh = (n: number) => `${String(n).padStart(2, '0')}:00`;
 

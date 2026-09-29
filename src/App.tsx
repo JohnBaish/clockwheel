@@ -8,6 +8,7 @@ import { LibraryScreen } from './screens/LibraryScreen';
 import { WeekScreen } from './screens/WeekScreen';
 import { SummaryScreen } from './screens/SummaryScreen';
 import { CategoriesScreen } from './screens/CategoriesScreen';
+import { BacktimerScreen } from './screens/BacktimerScreen';
 
 function Shell() {
   const { screen, setScreen } = useApp();
@@ -25,6 +26,7 @@ function Shell() {
         {screen === 'list' && <ListScreen />}
         {screen === 'week' && <WeekScreen />}
         {screen === 'categories' && <CategoriesScreen />}
+        {screen === 'backtimer' && <BacktimerScreen />}
       </div>
     </div>
   );

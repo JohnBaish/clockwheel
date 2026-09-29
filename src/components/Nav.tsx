@@ -10,6 +10,7 @@ const LINKS: { screen: Screen; label: string }[] = [
   { screen: 'week', label: 'Week' },
   { screen: 'summary', label: 'Summary' },
   { screen: 'categories', label: 'Categories' },
+  { screen: 'backtimer', label: 'Backtimer' },
 ];
 
 export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Screen) => void }) {
@@ -59,7 +60,7 @@ export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Sc
             {l.label}
           </a>
         ))}
-        {(screen === 'clock' || screen === 'list') && (
+        {(screen === 'clock' || screen === 'list' || screen === 'backtimer') && (
           <button
             className="btn btn-ghost"
             onClick={() => window.print()}

@@ -2,9 +2,10 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import type { SegmentSeed } from '../data/segments';
 import { seedOutside, seedClocks, SEED_CLOCK_ID, CLOCK_COLORS, type Clock, type ClockId } from '../data/clocks';
 import { SEED_CATEGORIES, SEED_CATEGORY_ORDER, NEXT_COLORS, type Category, type CategoryId } from '../data/categories';
+import { seedBacktimer, type BacktimerState, type BacktimerItemSeed } from '../data/backtimer';
 import { contrastInk } from '../lib/color';
 
-export type Screen = 'lib' | 'clock' | 'list' | 'week' | 'summary' | 'categories';
+export type Screen = 'lib' | 'clock' | 'list' | 'week' | 'summary' | 'categories' | 'backtimer';
 
 interface PersistedState {
   screen: Screen;
@@ -16,6 +17,7 @@ interface PersistedState {
   sumSel: ClockId;
   categories: Record<CategoryId, Category>;
   categoryOrder: CategoryId[];
+  backtimer: BacktimerState;
   lastEditedAt: number;
 }
 
@@ -53,6 +55,7 @@ function loadInitial(): PersistedState {
     sumSel: SEED_CLOCK_ID,
     categories: SEED_CATEGORIES,
     categoryOrder: SEED_CATEGORY_ORDER,
+    backtimer: seedBacktimer(),
     lastEditedAt: Date.now(),
   };
   try {
@@ -91,6 +94,12 @@ interface AppContextValue extends PersistedState {
   /** Returns null on success, or a message explaining why it refused. */
   deleteCategory: (id: CategoryId) => string | null;
   categoryUsageCount: (id: CategoryId) => number;
+  setBacktimerOutTime: (seconds: number) => void;
+  addBacktimerItem: () => void;
+  removeBacktimerItem: (id: string) => void;
+  setBacktimerItemName: (id: string, name: string) => void;
+  setBacktimerItemDuration: (id: string, seconds: number) => void;
+  reorderBacktimerItems: (fromIndex: number, toIndex: number) => void;
   /** All persisted state, wrapped and pretty-printed for a downloadable backup file. */
   exportState: () => string;
   /** Loads a previously exported file back in. Returns null on success, or a
@@ -127,6 +136,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const updated: Clock = { ...clock, segments: updater(s), lastEditedAt: Date.now() };
       return { ...s, clocks: { ...s.clocks, [s.openClockId]: updated } };
     });
+
+  // Backtimer isn't tied to any one clock — it's a single standalone tool,
+  // like Week — so its edits just replace its own slice of state directly.
+  const editBacktimer = (updater: (s: PersistedState) => BacktimerItemSeed[]) =>
+    setEdited((s) => ({ ...s, backtimer: { ...s.backtimer, items: updater(s) } }));
 
   const value = useMemo<AppContextValue>(() => ({
     ...state,
@@ -242,6 +256,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
       return null;
     },
     categoryUsageCount: (id) => categoryUsageCountFor(id, state.clocks),
+    setBacktimerOutTime: (seconds) => setEdited((s) => ({ ...s, backtimer: { ...s.backtimer, outTime: seconds } })),
+    addBacktimerItem: () => editBacktimer((s) => [...s.backtimer.items, { id: newId('bt'), n: 'New item', d: 60 }]),
+    removeBacktimerItem: (id) => editBacktimer((s) => s.backtimer.items.filter((it) => it.id !== id)),
+    setBacktimerItemName: (id, name) => editBacktimer((s) =>
+      s.backtimer.items.map((it) => (it.id === id ? { ...it, n: name } : it))
+    ),
+    setBacktimerItemDuration: (id, seconds) => editBacktimer((s) =>
+      s.backtimer.items.map((it) => (it.id === id ? { ...it, d: seconds } : it))
+    ),
+    reorderBacktimerItems: (fromIndex, toIndex) => editBacktimer((s) => {
+      const items = [...s.backtimer.items];
+      const [moved] = items.splice(fromIndex, 1);
+      items.splice(toIndex, 0, moved);
+      return items;
+    }),
     exportState: () => JSON.stringify({ app: 'clockwheel', version: 2, exportedAt: new Date().toISOString(), state }, null, 2),
     importState: (json) => {
       let parsed: unknown;

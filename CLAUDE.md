@@ -585,6 +585,84 @@ placement.
   exported PNG's dimensions grow to match the expanded canvas extent, same
   mechanism as any other callout that pushes `ext.x`/`ext.y` outward).
 
+## New screen: Backtimer (2026-09-29)
+
+User asked for a whole new page, alongside Library/Clock/List/etc., for
+backtiming — working out what time a running order's items each need to
+start so the last one lands exactly on a target "out time". Explicitly
+asked to be checked with questions before starting, given the size; two
+real decisions got made up front rather than assumed:
+- **Single tool, not a mini-library** (like Week, not like the clock
+  Library) — one Backtimer, not several named/saved ones.
+- **"Add item" appends to the bottom of the display**, which is also the
+  *earliest* row (see below on ordering) — matching how a producer actually
+  builds one: start from the out time, add what comes right before it, then
+  what comes before that, each new row landing further down as you go
+  further back in time. (The alternative — new rows joining the top — was
+  offered too, but this is what was picked.)
+
+**Data model** (`data/backtimer.ts`, new file):
+- `BacktimerItemSeed { id, n, d }` — same shape as `SegmentSeed`, minus a
+  category (not needed here).
+- `BacktimerState { outTime, items }` — `outTime` is seconds, minutes:seconds
+  only, no hour (this tool isn't tied to any clock's hour).
+- **Order in `items` IS display order** — deliberately not reversed at
+  render time. `items[0]` is the top row, the last thing before `outTime`;
+  each row after it is progressively earlier. This is the opposite
+  convention from `data/segments.ts` (where array order is chronological and
+  the Clock face/List both read it forward) — worth remembering if the two
+  ever need to interact.
+- `withBackTimes(items, outTime)` computes each row's start/end by counting
+  *backward*: the mirror image of `withTimes()`'s forward cumulative sum.
+  A row's `end` is always the row above's `start` (or `outTime`, for the top
+  row). Deliberately not clamped at zero — a row's `start` can go negative,
+  which is the actual point of the tool (it's telling you you're overrunning
+  and by how much), so `lib/time.ts` gained `signedDur()` (`dur()` itself
+  mishandles negative seconds, since JS's `%` keeps the dividend's sign).
+
+**Store** (`state/store.tsx`): `backtimer: BacktimerState` added to
+`PersistedState` (defaults via `seedBacktimer()` — an old export/localStorage
+without this key just falls back to it via the existing `{...defaults,
+...parsed}` merge, no migration needed, same pattern as every other field
+added this way this session). A new `editBacktimer()` helper mirrors
+`editOpenClock()` but writes directly into `state.backtimer` rather than a
+specific clock's segments, since Backtimer isn't `openClockId`-scoped. Six
+new actions (`setBacktimerOutTime`, `addBacktimerItem`,
+`removeBacktimerItem`, `setBacktimerItemName`, `setBacktimerItemDuration`,
+`reorderBacktimerItems`) — same shape as the equivalent segment actions.
+
+**Screen** (`screens/BacktimerScreen.tsx`, new file): built by closely
+mirroring `ListScreen.tsx` — same duration-parsing/editing pattern, same
+Tab-to-next-row and arrow-key row navigation, same `useIsNarrow(720)` split
+between a desktop `<table>` and mobile `.list-cards`, same
+`useDragReorder()` for drag-to-reorder (unmodified — it doesn't care what
+the rows represent, just their count and a reorder callback), same
+`data-noprint`/`.print-only` wiring. Differences: no category column (not
+needed), an editable "Out time" field in the header instead of a fixed
+clock hour, a "Starts" time column instead of List's "Time" (computed via
+`withBackTimes`, shown via `signedDur()`, styled in the accent colour when
+negative), and a header tag that explicitly calls out an overrunning bottom
+row ("starts -3:00 — before the top of the hour") rather than leaving a
+lone minus sign to be noticed on its own.
+
+**Nav/routing**: `Screen` union gained `'backtimer'`; added to `Nav.tsx`'s
+`LINKS` (last, per the request) and to the Print-button visibility check
+(alongside clock/list); `App.tsx` renders `<BacktimerScreen />` for it,
+with no `EditorHeader` (that's clock-name/hour chrome that doesn't apply
+here) — Backtimer's own header lives inside the screen component itself.
+
+Verified with Playwright: correct backward maths on desktop (a 3-item
+sequence out at 29:30 landing on exactly the expected start times);
+negative-overage styling and header warning when items exceed the out
+time; drag-to-reorder on both a real mouse sequence (desktop table) and a
+synthetic touch-type pointer sequence (mobile cards) — note the touch test
+needed real delays between dispatched pointer events, not one synchronous
+burst, or React never gets a chance to re-render between them and every
+`onPointerMove` reads a stale (pre-drag) closure and no-ops, which cost
+some debugging time but was a test-script issue, not an app bug; everything
+persists across a reload; and importing the user's own pre-Backtimer export
+doesn't crash, it just falls back to the seeded empty Backtimer as designed.
+
 ## Other known backlog (not urgent, not asked for — just context)
 
 - Per-anchor over/under (the fuller "over by 2:30 before the 07:29 anchor"
