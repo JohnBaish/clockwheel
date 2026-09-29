@@ -900,6 +900,81 @@ regardless of resends. Asked the user to test with the link in a context
 it's never been sent in before, to isolate "still actually broken" from
 "just an old cached card" — outcome not yet known as of this entry.
 
+## Follow-up: vercel.json's host-based rewrite doesn't fire for "/" — trying Edge Middleware instead (2026-09-29, unresolved)
+
+The per-domain link-preview fix above didn't actually work once deployed —
+user confirmed on a second, different phone (ruling out per-device or
+Apple-side caching — iMessage's "typing a link" preview is generated live
+by whichever phone is composing, not from a shared server cache, so two
+fresh phones agreeing means the live server is genuinely still returning
+Clockwheel's tags for `backtimer.baish.net`, not that something's cached).
+
+Diagnosed step by step, since this session still has no outbound network
+access and can't just fetch the live site to check directly:
+- Confirmed the deploy that added `backtimer.html`/`vercel.json` (and every
+  one since) shows "Ready" in Vercel's dashboard — not a failed build.
+- Asked the user to visit `backtimer.baish.net/backtimer.html` and
+  `clockwheel.baish.net/backtimer.html` directly (typed URLs, not shared
+  links). Both loaded correctly and both tabs read "Backtimer" — proving
+  the file itself is present and correct in the deployment, on both
+  domains, when addressed by its real name.
+- That isolates the fault to exactly one thing: **`vercel.json`'s
+  `rewrites` rule for `source: "/"` never fires**, even though the
+  destination file it points to is right there and working. Best
+  explanation (not independently verified against Vercel's docs, since
+  those are equally unreachable from here): a request for the literal path
+  `/` already matches a real file — `index.html` — via Vercel's own default
+  "serve the file that exists" behavior for static deployments, and that
+  resolution likely happens before, or instead of, evaluating a custom
+  `has`-conditioned rewrite. A rewrite conditioned on Host might work fine
+  for a path that *wouldn't* otherwise resolve to anything, but `/` isn't
+  that case.
+- Correction to this file's own earlier (wrong) diagnostic: the fact that
+  the *app itself* has always behaved correctly on `backtimer.baish.net`
+  (locked to the Backtimer screen) was never actually evidence that the
+  right HTML file was being served — `index.html` and `backtimer.html`
+  both boot the identical JS bundle, which does its own independent
+  `window.location.hostname` check (`lib/hostMode.ts`) regardless of which
+  of the two static shells loaded it. That check would look identical
+  either way, so it couldn't have told us anything about which file the
+  rewrite was actually choosing.
+
+**Attempted fix (unverified — needs the user to check after this
+deploys):** `middleware.ts`, new file at the project root. Vercel Edge
+Middleware runs on every matching request *before* static files are
+resolved at all, which should sidestep the precedence problem a
+declarative rewrite apparently has for `/`. Deliberately written using
+only standard `Request`/`Response`/`fetch` — no `@vercel/edge` or
+`next/server` import — because this is a plain Vite project (not Next.js),
+and this session couldn't verify the exact non-Next helper API
+(`rewrite()`/`next()` equivalents) against live documentation while
+offline. Instead, on a `backtimer.baish.net` request it just `fetch()`es
+this same deployment's own `/backtimer.html` and returns that `Response`
+directly — using nothing beyond web standards should make it more likely
+to actually behave as written, at the cost of being less idiomatic than
+whatever Vercel's own helpers would offer. `config.matcher: '/'` scopes it
+to just the root path, leaving asset requests untouched. The existing
+`vercel.json` rewrite was left in place rather than removed — harmless if
+unused, and no reason to touch it while this is still unverified.
+`middleware.ts` sits outside `src/`, so it's not picked up by either
+tsconfig (`tsconfig.app.json` only includes `src`, `tsconfig.node.json`
+only `vite.config.ts`) — confirmed `npm run build`/`npm run lint` are
+unaffected by its presence.
+
+**Not yet confirmed working.** Next step is the user checking
+`backtimer.baish.net/` again (a fresh/never-sent link, same test as
+before) once this deploys. If Middleware *also* doesn't fix it, the
+likely next things to try, roughly in order: (1) an actual `redirect`
+(not rewrite) in `vercel.json` with the same `has: host` condition — a
+much simpler, more battle-tested mechanism, at the cost of visibly
+changing the URL to include `/backtimer.html`; (2) revisiting whether
+`@vercel/edge`'s real (not guessed) rewrite helper behaves differently
+than a raw `fetch()` pass-through; (3) asking the user to check Vercel's
+own deployment logs for `middleware.ts` specifically (Vercel's dashboard
+shows whether Middleware compiled and is actually attached to a
+deployment, which would immediately confirm or rule out a syntax/detection
+problem this session has no way to see from here).
+
 ## Other known backlog (not urgent, not asked for — just context)
 
 - Per-anchor over/under (the fuller "over by 2:30 before the 07:29 anchor"
