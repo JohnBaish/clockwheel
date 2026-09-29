@@ -871,6 +871,35 @@ notably iMessage, cache a link's preview the first time it's sent to a
 given conversation, so a stale "Clockwheel" card seen before this shipped
 may need a fresh conversation/link to pick up the fix, not just a resend).
 
+## Follow-up: Clockwheel's link-preview wording (2026-09-29)
+
+Small wording tweak: the Clockwheel description said "clockwheels" — user
+asked for "clocks" instead, to stop echoing the product's own name back
+inside its own description. Changed in three places in `index.html`
+(`meta[name=description]`, `og:description`, `twitter:description`) from
+"Build broadcast radio clockwheels and print-ready hour clocks." to "Build
+broadcast radio clocks, ready to print for any hour." — and regenerated
+`public/og-clockwheel.png`, since the tagline is baked into that image as
+rendered text, not read from the meta tag. Backtimer's copy was
+user-confirmed already good and untouched.
+
+Also worth logging: right after shipping the per-domain preview fix, the
+user reported still seeing the old "Clockwheel" card when sharing the
+`backtimer.baish.net` link. Couldn't verify server-side myself — this
+session's sandbox has no outbound network access at all (confirmed by
+trying to fetch both the live site and Vercel's own docs, both blocked at
+the egress proxy, not application-level) — so there's no way to `curl` the
+live HTML or otherwise confirm from here whether `vercel.json`'s rewrite is
+actually matching in production. Best guess, not confirmed: this is the
+link-preview caching behaviour already flagged when this was first built —
+iMessage and similar caches a URL's preview card server-side (Apple's
+servers, not the device) the first time it's shared, independent of
+whatever the site serves afterwards, so a `backtimer.baish.net` link sent
+before this fix shipped could keep showing the stale card indefinitely
+regardless of resends. Asked the user to test with the link in a context
+it's never been sent in before, to isolate "still actually broken" from
+"just an old cached card" — outcome not yet known as of this entry.
+
 ## Other known backlog (not urgent, not asked for — just context)
 
 - Per-anchor over/under (the fuller "over by 2:30 before the 07:29 anchor"
