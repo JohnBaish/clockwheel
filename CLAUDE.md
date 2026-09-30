@@ -1108,3 +1108,14 @@ himself in a separate doc and will share it here; next step is swapping
 the `SECTIONS` placeholder content (and the intro paragraph) for his real
 text, and adjusting the section structure/headings if his version doesn't
 map one-to-one onto the six tabs.
+
+## Nav reordered to Library, Categories, List, Clock, Week, Summary, Backtimer, Guide (2026-09-30)
+
+John's requested reading order. Guide confirmed to go last, after checking
+where it had been placed (first, ahead of Library) before making the
+change. Purely a reorder of `Nav.tsx`'s `LINKS` array — no other logic
+depends on that array's order. In particular, the auto-land-on-Guide
+behaviour for a first-ever visit (`loadInitial()` in `state/store.tsx`)
+is driven by a separate check, not by `LINKS` position, so it still fires
+correctly with Guide moved to the end — verified with a fresh-localStorage
+Playwright load after the reorder.

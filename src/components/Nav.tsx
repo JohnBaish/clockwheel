@@ -5,14 +5,14 @@ import { relativeTime } from '../lib/time';
 import { isBacktimerHost } from '../lib/hostMode';
 
 const LINKS: { screen: Screen; label: string }[] = [
-  { screen: 'guide', label: 'Guide' },
   { screen: 'lib', label: 'Library' },
-  { screen: 'clock', label: 'Clock' },
+  { screen: 'categories', label: 'Categories' },
   { screen: 'list', label: 'List' },
+  { screen: 'clock', label: 'Clock' },
   { screen: 'week', label: 'Week' },
   { screen: 'summary', label: 'Summary' },
-  { screen: 'categories', label: 'Categories' },
   { screen: 'backtimer', label: 'Backtimer' },
+  { screen: 'guide', label: 'Guide' },
 ];
 
 export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Screen) => void }) {
