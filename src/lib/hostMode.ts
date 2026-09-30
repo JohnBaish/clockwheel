@@ -1,10 +1,12 @@
-// Clockmaker (renamed from Clockwheel 2026-09-30 — the domain below hasn't
-// followed yet, that's a separate DNS step) is one build serving two
-// domains: the full app at clockwheel.baish.net, and a Backtimer-only
-// presentation at backtimer.baish.net (same deployment, same code — just a
-// different custom domain pointed at the same Vercel project). Which one a
-// visitor gets is decided purely by hostname, checked at runtime; there's
-// no separate build or routing config involved.
+// Clockmaker (renamed from Clockwheel 2026-09-30; clockmaker.baish.net went
+// live the same day, alongside the older clockwheel.baish.net, which still
+// resolves to the same project) is one build serving multiple domains: the
+// full app at clockmaker.baish.net/clockwheel.baish.net, and a
+// Backtimer-only presentation at backtimer.baish.net (same deployment,
+// same code — just different custom domains pointed at the same Vercel
+// project). Which presentation a visitor gets is decided purely by
+// hostname, checked at runtime; there's no separate build or routing
+// config involved.
 const BACKTIMER_HOST = 'backtimer.baish.net';
 
 /** True when the app should present itself as a standalone Backtimer tool

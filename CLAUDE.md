@@ -1434,3 +1434,31 @@ mixed case in the markup since the CSS transforms it to caps regardless,
 so the source stays a normal name rather than a hardcoded shout. This page
 is now feature-complete on the code side; only John's DNS/Vercel-domain
 step remains before it's actually reachable.
+
+## clockmaker.baish.net is live — link-preview tags follow-up (2026-09-30)
+
+John's DNS work landed: `clockmaker.baish.net` now resolves (confirmed via
+the CNAME already visible in his DNS panel screenshot, matching
+`backtimer`/`clockwheel`'s target, plus his own confirmation it's working).
+This was the deferred half of the Clockwheel → Clockmaker rename — at the
+time, `index.html`'s `og:url`/`og:image` were deliberately left pointing at
+`clockwheel.baish.net` since the new domain didn't exist yet.
+
+- `public/og-clockwheel.png` → renamed to `public/og-clockmaker.png` (`git mv`,
+  history preserved) — same image, just the filename catching up now that
+  there's a stable domain to serve it from.
+- `index.html`: `og:image`/`twitter:image` now
+  `https://clockmaker.baish.net/og-clockmaker.png`; `og:url` now
+  `https://clockmaker.baish.net/`. Comment above them rewritten — no longer
+  explaining a deferred TODO, just stating where they point and why.
+- `hostMode.ts`'s top comment updated similarly: was written assuming only
+  `clockwheel.baish.net` existed; now notes both domains resolve to the
+  same project (`clockwheel.baish.net` wasn't removed — John didn't ask for
+  that, and its DNS record is still in place per his own screenshot — it's
+  just no longer the primary/branded one).
+
+Not touched: `clockwheel.baish.net` itself keeps working (nothing in this
+app treats it specially either way — both it and `clockmaker.baish.net`
+fall through to the same "else" branch in `hostMode.ts`/`middleware.ts`
+that serves the normal app). Whether to eventually retire that domain is
+John's call, not something this session assumed.
