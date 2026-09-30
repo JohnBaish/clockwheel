@@ -18,7 +18,7 @@ const LINKS: { screen: Screen; label: string }[] = [
 export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Screen) => void }) {
   const { lastEditedAt, createClock } = useApp();
   // Same build, two domains (see lib/hostMode.ts) — on the Backtimer-only
-  // one, there's nowhere else to navigate to, so the rest of Clockwheel's
+  // one, there's nowhere else to navigate to, so the rest of Clockmaker's
   // nav simply doesn't exist here rather than existing-but-going-nowhere.
   const backtimerOnly = isBacktimerHost();
   // No links at all here — a link to the only page there is would just be a
@@ -44,7 +44,7 @@ export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Sc
 
   return (
     <div className="nav" style={{ padding: 'var(--space-3) var(--space-6)', background: 'var(--color-surface)', flexWrap: 'wrap' }}>
-      <span className="nav-brand">{backtimerOnly ? 'Backtimer' : 'Clockwheel'}</span>
+      <span className="nav-brand">{backtimerOnly ? 'Backtimer' : 'Clockmaker'}</span>
       <button
         className="nav-menu-toggle"
         onClick={() => setMenuOpen((o) => !o)}

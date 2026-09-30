@@ -37,12 +37,12 @@ export function GuideScreen() {
     <div style={{ padding: '0 var(--space-6) var(--space-6)' }}>
       <div style={{ padding: 'var(--space-3) 0' }}>
         <div className="card-kicker">Start here</div>
-        <h2 style={{ margin: '1px 0 0', lineHeight: 1.05 }}>How to use Clockwheel</h2>
+        <h2 style={{ margin: '1px 0 0', lineHeight: 1.05 }}>How to use Clockmaker</h2>
       </div>
 
       <div className="card" style={{ maxWidth: 720, display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', padding: 'var(--space-5)' }}>
         <p style={{ margin: 0, fontSize: 15, lineHeight: 1.5 }}>
-          Placeholder intro paragraph — replace with your own wording explaining what Clockwheel is for and how it fits into the day-to-day.
+          Placeholder intro paragraph — replace with your own wording explaining what Clockmaker is for and how it fits into the day-to-day.
         </p>
         {SECTIONS.map((s) => (
           <div key={s.heading}>

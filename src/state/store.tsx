@@ -27,6 +27,13 @@ interface PersistedState {
 // incompatible and would crash if merged — so it's simply left behind
 // under the old key rather than migrated, which also happens to be exactly
 // the clean start that prompted this rewrite.
+//
+// Deliberately NOT renamed to match the app's Clockwheel → Clockmaker rename
+// (2026-09-30) — this key is never shown to anyone, and changing it would
+// make loadInitial() below find nothing and treat every existing user as
+// brand new, silently orphaning all their real saved data under the old
+// key. An internal identifier outliving a product's display name is normal
+// and intentional, not a bug to "fix" later.
 const STORAGE_KEY = 'clockwheel-state-v2';
 
 function newId(prefix: string): string {
@@ -62,7 +69,7 @@ function loadInitial(): PersistedState {
   // On the Backtimer-only domain, always land on (and stay pinned to) the
   // Backtimer screen — overriding whatever screen a previous visit to this
   // origin happened to save, so there's no way to end up looking at a
-  // Clockwheel screen that Nav has hidden the links to.
+  // Clockmaker screen that Nav has hidden the links to.
   const pin = (result: PersistedState): PersistedState =>
     isBacktimerHost() ? { ...result, screen: 'backtimer' } : result;
   try {
@@ -296,9 +303,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
       } catch {
         return "That file isn't valid JSON.";
       }
+      // wrapper.app is checked against the literal string 'clockwheel', not
+      // 'clockmaker' — that's the file format's own internal tag, unrelated
+      // to the app's current display name, so every export (before or after
+      // the 2026-09-30 rename) is stamped and read the same way. Changing
+      // this would make older backups (and, until every user has re-exported,
+      // most backups for a long while) unreadable for no real benefit, since
+      // nobody ever sees this raw string.
       const wrapper = parsed as Record<string, unknown>;
       if (typeof wrapper !== 'object' || wrapper === null || wrapper.app !== 'clockwheel' || typeof wrapper.state !== 'object' || wrapper.state === null) {
-        return "That doesn't look like a Clockwheel export file.";
+        return "That doesn't look like a Clockmaker export file.";
       }
       const incoming = wrapper.state as Partial<PersistedState>;
       if (
@@ -307,7 +321,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         typeof incoming.categories !== 'object' || incoming.categories === null ||
         !Array.isArray(incoming.categoryOrder)
       ) {
-        return 'That file is missing data Clockwheel needs — it may be corrupted.';
+        return 'That file is missing data Clockmaker needs — it may be corrupted.';
       }
       setState((s) => {
         const merged: PersistedState = { ...s, ...incoming, lastEditedAt: Date.now(), screen: 'lib' };

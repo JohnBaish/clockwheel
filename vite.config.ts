@@ -10,7 +10,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       // Two HTML entry points sharing the same app (src/main.tsx) — index.html
-      // (Clockwheel) and backtimer.html (Backtimer-branded, for the
+      // (Clockmaker) and backtimer.html (Backtimer-branded, for the
       // backtimer.baish.net domain). Both need building so vercel.json has a
       // real file to rewrite to; see index.html's head comment for the rest
       // of how the two domains/files/runtime check fit together.

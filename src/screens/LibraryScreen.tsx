@@ -23,7 +23,7 @@ export function LibraryScreen() {
     // Local time, not UTC — someone exporting a couple of backups in the
     // same day wants filenames that match the clock on their own wall.
     const stamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
-    a.download = `clockwheel-${stamp}.json`;
+    a.download = `clockmaker-${stamp}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };

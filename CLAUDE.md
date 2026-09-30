@@ -1,4 +1,9 @@
-# Clockwheel — implementation status
+# Clockmaker — implementation status
+
+(Renamed from Clockwheel 2026-09-30 — see the dated entry further down for
+what that did and didn't touch. Historical entries throughout this file
+that say "Clockwheel" are accurate records of what the app was called at
+the time they were written; they're deliberately not rewritten.)
 
 A React + TypeScript rebuild of the Organic-design broadcast clock builder
 (`../project/Clock and List.dc.html` is the original Claude Design handoff
@@ -1254,3 +1259,68 @@ Follow-up round after John actually saw the footer live.
 
 All of the above verified end-to-end with Playwright against a production
 build, in both the desktop-table and mobile-card (narrow) layouts.
+
+## Renamed Clockwheel → Clockmaker (2026-09-30)
+
+John's reasoning: "Clockwheel" looks less like a wheel now that the UI has
+moved on, some people may only ever use the List layout (not the circular
+Clock face the old name evoked), and a word ending "-er" reads as a
+"doing" word — a maker's tool, not a noun for the object it produces.
+
+**What actually changed** (all cosmetic, user-facing text only):
+`Nav.tsx`'s brand span, `index.html`'s `<title>`/`og:title`/`twitter:title`,
+`GuideScreen.tsx`'s placeholder heading and intro paragraph, two
+`importState` error messages in `store.tsx`, and a handful of code
+comments (`hostMode.ts`, `vite.config.ts`, `Nav.tsx`, `store.tsx`) for
+accuracy. `LibraryScreen.tsx`'s export button now downloads
+`clockmaker-YYYY-MM-DD-HHmm.json` instead of `clockwheel-...json` — purely
+the filename a browser saves, which nothing in the app ever reads back, so
+changing it has zero effect on whether any file (old or new) imports.
+
+**What deliberately did NOT change, and why** — this was the actual point
+of thinking it through before touching anything:
+- **`STORAGE_KEY = 'clockwheel-state-v2'`** (`store.tsx`) — the
+  `localStorage` key everything is actually saved under. Never shown to
+  anyone. Changing it would make `loadInitial()` find nothing under the
+  new key and treat every existing user (including John, mid-project) as
+  brand new — not deleting their old data, just silently never looking at
+  it again. Left exactly as-is, permanently; a comment now says so
+  explicitly at the declaration, so nobody "fixes" this later by mistake.
+- **`app: 'clockwheel'`** — the tag stamped into every exported backup
+  JSON's wrapper object, and checked on import
+  (`wrapper.app !== 'clockwheel'`). Also never shown to anyone. Left as the
+  literal string `'clockwheel'` on both the write side (`exportState`) and
+  the read side (`importState`'s check) — so every backup, from before this
+  rename, after it, or in the gap between renaming the code and someone
+  actually re-exporting, is stamped and read identically. Only the
+  *human-readable* wording around that check changed ("Clockmaker export
+  file" instead of "Clockwheel export file").
+- **The domain.** `clockwheel.baish.net` is unchanged — John's doing the
+  DNS side separately, in his own time, and it wasn't this session's place
+  to guess a new domain name or pre-emptively point anything at a domain
+  that doesn't exist yet (that would just break the thing it was meant to
+  fix). So: `og:url` and `og:image` in `index.html` still read
+  `https://clockwheel.baish.net/...` — deliberate, commented in place — and
+  the actual link-preview image `public/og-clockwheel.png` was
+  regenerated in place (same filename, same URL) with "Clockmaker" in the
+  artwork instead of "Clockwheel", so the *currently live* domain shows
+  correct-looking branding immediately, without waiting on DNS. Follow-up
+  once the new domain exists: update `og:url`/`og:image` to match it (and
+  probably rename the image file at that point, since nothing will still
+  depend on the old path).
+- **The GitHub repo name** (`JohnBaish/clockwheel`) and whatever Vercel
+  calls the project internally — recommended against renaming either.
+  Neither is ever visible to an end user; renaming a GitHub repo mid-flight
+  risks Vercel's git integration needing to be reconnected for no visible
+  benefit. Treated the same as `STORAGE_KEY` — an internal codename that's
+  fine to permanently outlive the product's current display name.
+
+**One expected side effect during the gap before DNS moves:** visiting
+`clockwheel.baish.net` now shows a site titled/branded "Clockmaker" — the
+domain and the displayed name won't match until John's DNS work is done.
+Flagged to him in advance; not a bug.
+
+Not touched: Backtimer's own branding (`backtimer.html`'s tags, its
+footer text, `BACKTIMER_HOST` in `hostMode.ts`) — already fully
+independent of the word "Clockwheel"/"Clockmaker" either way, confirmed
+by the original audit before making any change.
