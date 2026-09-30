@@ -1521,3 +1521,36 @@ fill, not the hover state bleeding through.
 Starts/Time's `.time-chip` was left completely untouched throughout this —
 John was explicit that only Dur needed fixing, and that Starts/Time would
 be revisited separately afterward if needed at all.
+
+## Starts/Time reverted to pre-chip appearance; Dur's redesign kept (2026-09-30)
+
+The promised revisit: John asked to see the actual pre-change screenshot
+(not just take it on trust that his memory of "before" was right) before
+deciding. Built a real comparison rather than guessing — added a temporary
+`git worktree` at `484bc32` (the commit immediately before `.time-chip`
+was introduced), symlinked `node_modules` into it to skip a fresh install,
+built and served it on a separate port, and screenshotted List and
+Backtimer there. Sent both the "before" and current screenshots side by
+side. Verdict: preferred the original Starts/Time look; happy with Dur's
+new outlined-border treatment as shipped.
+
+Reverted Starts/Time to the exact pre-`.time-chip` markup — pulled directly
+from `git show 484bc32:...` rather than reconstructed from memory, so it's
+provably identical to before, not just "close":
+- `ListScreen.tsx`: desktop table's Time `<td>` is a plain
+  `<td className="mono" style={{...}}>` again (was briefly a `<td><span
+  className="mono time-chip">...</span></td>`); the narrow-card Time
+  `<span>` just lost the `time-chip` class (it was already a span, no
+  structural change needed there).
+- `BacktimerScreen.tsx`: identical treatment for the Starts column, both
+  desktop and narrow layouts.
+- `global.css`: deleted the now-completely-unused `.time-chip` class and
+  its explanatory comment outright, rather than leaving dead CSS behind.
+
+Dur's `.outlined-input` (permanent border, darkens on hover, accent
+border + fill when focused) is untouched by any of this — confirmed by
+measuring its computed border-color post-revert, still showing the
+resting-state neutral border as expected. Verified with Playwright against
+a fresh build: zero `.time-chip` elements remain anywhere, Time/Starts
+cells have a fully transparent background again, Dur's border is
+unaffected.

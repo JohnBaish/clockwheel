@@ -186,7 +186,7 @@ export function BacktimerScreen() {
                   </button>
                 </div>
                 <div className="list-card-row" style={{ marginTop: 6 }}>
-                  <span className="mono time-chip" style={{ fontSize: 12.5, fontWeight: 700, color: it.start < 0 ? 'var(--color-accent-700)' : 'var(--color-neutral-700)' }}>
+                  <span className="mono" style={{ fontSize: 12.5, fontWeight: 700, color: it.start < 0 ? 'var(--color-accent-700)' : 'var(--color-neutral-700)' }}>
                     {dur(wrapHour(it.start))}
                   </span>
                   <input
@@ -243,10 +243,8 @@ export function BacktimerScreen() {
                 >
                   <IconGrip size={14} />
                 </td>
-                <td>
-                  <span className="mono time-chip" style={{ fontWeight: 700, color: it.start < 0 ? 'var(--color-accent-700)' : 'var(--color-neutral-700)' }}>
-                    {dur(wrapHour(it.start))}
-                  </span>
+                <td className="mono" style={{ fontWeight: 700, color: it.start < 0 ? 'var(--color-accent-700)' : 'var(--color-neutral-700)' }}>
+                  {dur(wrapHour(it.start))}
                 </td>
                 <td>
                   <input
