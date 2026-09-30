@@ -11,7 +11,7 @@ const NARROW = 720;
 export function BacktimerScreen() {
   const {
     backtimer, setBacktimerOutTime, addBacktimerItem, removeBacktimerItem,
-    setBacktimerItemName, setBacktimerItemDuration, reorderBacktimerItems,
+    setBacktimerItemName, setBacktimerItemDuration, reorderBacktimerItems, resetBacktimer,
   } = useApp();
   const seed = backtimer.items;
   const rows = withBackTimes(seed, backtimer.outTime);
@@ -80,6 +80,14 @@ export function BacktimerScreen() {
     else handleRowArrow(e, i, focusDuration);
   };
 
+  // Wipes the whole Backtimer, not just one item — unlike everything else on
+  // this page, there's no library of saved Backtimers behind it to fall back
+  // on, so this asks first rather than following the rest of the app's
+  // no-confirmation pattern for destructive actions.
+  const handleClear = () => {
+    if (window.confirm('Clear all items and reset the out time back to 60:00?')) resetBacktimer();
+  };
+
   return (
     <div style={{ padding: '0 var(--space-6) var(--space-6)' }}>
       <div data-noprint="1" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 'var(--space-3)', flexWrap: 'wrap' }}>
@@ -106,6 +114,9 @@ export function BacktimerScreen() {
         )}
         <button className="btn btn-ghost" onClick={() => addBacktimerItem()} style={{ marginLeft: 'auto', color: 'var(--color-accent-700)' }}>
           <IconPlus size={15} />Add item
+        </button>
+        <button className="btn btn-ghost" onClick={handleClear} style={{ color: 'var(--color-neutral-700)' }}>
+          Clear
         </button>
       </div>
       <div className="print-only" style={{ font: '400 22px var(--font-heading)', marginBottom: 'var(--space-3)' }}>
@@ -254,6 +265,29 @@ export function BacktimerScreen() {
           </tbody>
         </table>
       )}
+
+      <div
+        data-noprint="1"
+        style={{
+          marginTop: 'var(--space-6)', paddingTop: 'var(--space-3)',
+          borderTop: '1px solid var(--color-divider)',
+          fontSize: 12, lineHeight: 1.6, color: 'var(--color-neutral-700)', textAlign: 'center',
+        }}
+      >
+        Thanks for visiting. Backtimer is a free-to-use personal project by John Baish. It is not
+        supported by the BBC. Nothing you type here is sent anywhere; your data is only saved in
+        your own browser and you can{' '}
+        <button
+          onClick={handleClear}
+          style={{
+            background: 'none', border: 'none', padding: 0, margin: 0, font: 'inherit',
+            color: 'var(--color-accent-700)', textDecoration: 'underline', cursor: 'pointer',
+          }}
+        >
+          clear it
+        </button>
+        {' '}at any time. Contact: backtimer@baish.net.
+      </div>
     </div>
   );
 }

@@ -1119,3 +1119,73 @@ behaviour for a first-ever visit (`loadInitial()` in `state/store.tsx`)
 is driven by a separate check, not by `LINKS` position, so it still fires
 correctly with Guide moved to the end — verified with a fresh-localStorage
 Playwright load after the reorder.
+
+## Fonts self-hosted instead of loaded from Google's CDN (2026-09-30)
+
+Follow-up to a UK GDPR/PECR conversation with John (not code — just
+discussing what the app does with data before he opens it up to other
+users). One concrete finding from actually checking the code: `organic.css`
+was loading Caprasimo and Figtree live from `fonts.googleapis.com`, which
+means every visitor's browser contacted Google directly on every page
+load, handing over their IP address with no way to know it was happening.
+This is a well-known specific gotcha in this space (a German court ruled
+on exactly this pattern in 2022) and is trivial to remove entirely rather
+than reason about.
+
+Fixed by switching to `@fontsource/caprasimo` and `@fontsource/figtree`
+(new `dependencies`), which ship the actual font files and bundle them at
+build time instead of fetching them live. `organic.css`'s `@import url(...)` of
+Google's CSS2 endpoint became four `@import` lines pulling in exactly the
+weights the old URL asked for (Caprasimo 400; Figtree 400/600/700) —
+`@fontsource/<font>/<weight>.css`. Vite resolves these like any other
+node_modules CSS import and inlines the referenced `.woff2`/`.woff` files
+as hashed assets under `dist/assets/`, so the built site is fully
+self-contained.
+
+Verified with Playwright against a production build: zero requests to any
+non-localhost origin on page load (previously this would have shown
+`fonts.googleapis.com`/`fonts.gstatic.com`), and `document.fonts` reports
+both Caprasimo 400 and Figtree 400 as `status: "loaded"` from local
+(200-status, localhost) `.woff2` files — confirmed visually too, headings
+still render in Caprasimo. No visual change, same weights as before.
+
+## Backtimer: legal/contact footer + a Clear button (2026-09-30)
+
+Backtimer is being circulated to trial users before Clockwheel is, so
+John wanted its "nothing is sent anywhere, here's who to contact" notice
+in place first — Clockwheel's equivalent is going into the Guide screen's
+text, which he's writing separately, and can wait.
+
+- `state/store.tsx`: new `resetBacktimer` action —
+  `setEdited((s) => ({ ...s, backtimer: seedBacktimer() }))` — wipes the
+  out time back to 60:00 and empties the item list. Unlike every other
+  destructive action in this app (`removeSegment`, `removeBacktimerItem`,
+  `deleteCategory`, …), which all act without a confirmation prompt, this
+  one is guarded by a `window.confirm()` in `BacktimerScreen.tsx`
+  (`handleClear`) — the first `window.confirm` anywhere in the codebase.
+  Justified because there's no library of saved Backtimers to fall back
+  on the way there is for clocks: this wipes the *only* copy of whatever
+  someone's typed in, so it's meaningfully more destructive than anything
+  else a stray click could do here.
+- A "Clear" button sits top-right, next to the existing "Add item" button.
+- A footer notice, exact wording as given, sits below the table/cards
+  (marked `data-noprint="1"` — it's not part of the printed schedule):
+  "Thanks for visiting. Backtimer is a free-to-use personal project by
+  John Baish. It is not supported by the BBC. Nothing you type here is
+  sent anywhere; your data is only saved in your own browser and you can
+  clear it at any time. Contact: backtimer@baish.net." The words "clear
+  it" are a `<button>` styled as inline underlined text (not a separate
+  component — just enough CSS reset to look like a text link) calling the
+  same `handleClear`, so both entry points share one confirm-then-reset
+  path. The email address is deliberately plain text, not a `mailto:`
+  link, per John's instruction.
+- Because `BacktimerScreen` is the exact same component regardless of
+  which domain rendered it (`App.tsx` just checks `screen === 'backtimer'`
+  — see `lib/hostMode.ts` for how the domain-specific bits elsewhere in
+  the app work), this footer needed no host-conditional logic at all to
+  appear on both `backtimer.baish.net` and Clockwheel's own Backtimer tab.
+
+Verified with Playwright: the exact notice text renders in both contexts;
+no `mailto:` link exists anywhere on the page; clicking Clear (or "clear
+it") after dismissing the confirm leaves the item list untouched; accepting
+it resets to 0 items / 60:00 out time.

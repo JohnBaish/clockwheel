@@ -1,5 +1,14 @@
 /* Organic — design-system tokens and component classes. This file is the source of truth for the system's look; retune it here and see readme.md. */
-@import url('https://fonts.googleapis.com/css2?family=Caprasimo:wght@400&family=Figtree:wght@400;600;700&display=swap');
+/* Self-hosted via @fontsource (bundled at build time from node_modules,
+   served from this site) instead of loading live from Google's CDN — that
+   used to mean every visitor's browser contacted Google directly on every
+   page load, handing over their IP address with no way to know it was
+   happening. Same fonts, same weights (Caprasimo 400; Figtree 400/600/700),
+   nothing visually different — see CLAUDE.md for the fuller reasoning. */
+@import '@fontsource/caprasimo/400.css';
+@import '@fontsource/figtree/400.css';
+@import '@fontsource/figtree/600.css';
+@import '@fontsource/figtree/700.css';
 
 :root {
   --color-bg: #f5ead8;
