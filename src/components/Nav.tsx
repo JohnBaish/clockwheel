@@ -5,6 +5,7 @@ import { relativeTime } from '../lib/time';
 import { isBacktimerHost } from '../lib/hostMode';
 
 const LINKS: { screen: Screen; label: string }[] = [
+  { screen: 'guide', label: 'Guide' },
   { screen: 'lib', label: 'Library' },
   { screen: 'clock', label: 'Clock' },
   { screen: 'list', label: 'List' },

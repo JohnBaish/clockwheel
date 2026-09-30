@@ -9,6 +9,7 @@ import { WeekScreen } from './screens/WeekScreen';
 import { SummaryScreen } from './screens/SummaryScreen';
 import { CategoriesScreen } from './screens/CategoriesScreen';
 import { BacktimerScreen } from './screens/BacktimerScreen';
+import { GuideScreen } from './screens/GuideScreen';
 
 function Shell() {
   const { screen, setScreen } = useApp();
@@ -20,6 +21,7 @@ function Shell() {
       <div style={{ width: '100%', maxWidth: '1100px', margin: '0 auto' }}>
         {screen === 'week' && <WeekHeader />}
         {isEditor && <EditorHeader />}
+        {screen === 'guide' && <GuideScreen />}
         {screen === 'lib' && <LibraryScreen />}
         {screen === 'summary' && <SummaryScreen />}
         {screen === 'clock' && <ClockScreen />}

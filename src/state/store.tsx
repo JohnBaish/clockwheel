@@ -6,7 +6,7 @@ import { seedBacktimer, type BacktimerState, type BacktimerItemSeed } from '../d
 import { contrastInk } from '../lib/color';
 import { isBacktimerHost } from '../lib/hostMode';
 
-export type Screen = 'lib' | 'clock' | 'list' | 'week' | 'summary' | 'categories' | 'backtimer';
+export type Screen = 'guide' | 'lib' | 'clock' | 'list' | 'week' | 'summary' | 'categories' | 'backtimer';
 
 interface PersistedState {
   screen: Screen;
@@ -67,7 +67,11 @@ function loadInitial(): PersistedState {
     isBacktimerHost() ? { ...result, screen: 'backtimer' } : result;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return pin(defaults);
+    // A truly first-ever visit (nothing saved yet) lands on the Guide
+    // instead of the Library, so someone new sees it before diving in.
+    // Once they navigate anywhere, `screen` gets persisted like everything
+    // else, so this only ever fires the once.
+    if (!raw) return pin({ ...defaults, screen: 'guide' });
     const parsed = JSON.parse(raw);
     return pin({ ...defaults, ...parsed });
   } catch {

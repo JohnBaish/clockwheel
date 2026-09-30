@@ -1064,3 +1064,47 @@ instead of `"Daytime 1"`. Existing users (anyone with saved state already)
 are unaffected; this only changes what a first-time visitor sees. Verified
 with a fresh (no localStorage) Playwright page load against a production
 build, confirming the Library card reads "Example".
+
+## New Guide screen, placeholder text (2026-09-30)
+
+John wants an intro screen for Clockwheel explaining how to use it,
+written in his own words — this adds the screen and its plumbing with
+clearly-labelled placeholder copy, ready for his text to replace it later.
+
+- `src/screens/GuideScreen.tsx` (new): a `.card`-based page — kicker
+  ("Start here") + `<h2>How to use Clockwheel</h2>`, an intro paragraph,
+  then one `<h3>`/paragraph pair per existing tab (Library, Clock, List,
+  Week, Summary, Categories), all currently reading "Placeholder — …". A
+  `Go to Library` primary button at the end calls `setScreen('lib')`. Not
+  meant to be the final shape — John may want to restructure once he's
+  actually writing, this is a reasonable starting layout, not a spec.
+- `state/store.tsx`: `Screen` type gained `'guide'` (added first in the
+  union, matches its nav position). `loadInitial()` now special-cases the
+  *no-`localStorage`-at-all* branch to return `screen: 'guide'` instead of
+  the regular `defaults.screen` ('lib') — everywhere else (existing state,
+  parse errors, backtimer pinning) is untouched. This piggybacks on the
+  exact same "is this a first-ever visit" check the Example-clock seeding
+  already relies on, so the two stay in sync for free: once someone
+  navigates anywhere, `screen` gets persisted like the rest of the state,
+  so this only ever fires once per browser — after that, Guide is still
+  reachable, just not automatic.
+- `components/Nav.tsx`: added `{ screen: 'guide', label: 'Guide' }` as the
+  *first* entry in `LINKS`, ahead of Library. Nothing else needed for the
+  "not on backtimer.baish.net" requirement — `Nav` already reduces `links`
+  to `[]` on `isBacktimerHost()`, so a new `LINKS` entry is automatically
+  excluded there with no extra flag.
+- `src/App.tsx`: added the `GuideScreen` import and
+  `{screen === 'guide' && <GuideScreen />}` alongside the other screens.
+
+Verified end-to-end with Playwright against a production build: a fresh
+browser on the Clockwheel domain lands on Guide with a working "Go to
+Library" button; reloading afterward stays on Library (doesn't re-show
+Guide); the Guide nav link still opens it on demand; and a fresh browser
+on `?host=backtimer` (same host-mode check `backtimer.baish.net` uses) has
+no Guide link and never renders the Guide screen at all.
+
+**Not done yet — waiting on John:** the actual wording. He's writing it
+himself in a separate doc and will share it here; next step is swapping
+the `SECTIONS` placeholder content (and the intro paragraph) for his real
+text, and adjusting the section structure/headings if his version doesn't
+map one-to-one onto the six tabs.
