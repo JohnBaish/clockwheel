@@ -52,6 +52,25 @@
 .plain-input:hover { border-color: var(--color-neutral-300); }
 .plain-input:focus-visible { border-color: var(--color-accent); outline: none; background: var(--color-surface); }
 
+/* A .plain-input variant for Dur specifically, at John's request: instead
+   of staying invisible until hover (the default .plain-input behaviour
+   above), it shows permanently the border .plain-input would otherwise
+   only show on hover, then darkens further on hover itself — a third,
+   more prominent step before :focus-visible's accent border + filled
+   background kicks in once you're actually editing it. Compound selector
+   (two classes) so it wins over the plain .plain-input rules above without
+   having to touch those — nothing else using .plain-input (segment/item
+   names, the clock name field, Backtimer's out time) is affected.
+   :focus-visible is repeated here (not just inherited from the plain
+   .plain-input rule above) at matching specificity to :hover, declared
+   after it — clicking to edit leaves the mouse hovering over the field at
+   the same time it becomes focused, so without this the two classes'
+   higher-specificity :hover would otherwise win that tie and hide the
+   accent "now editing" border behind the merely-darker hover one. */
+.plain-input.outlined-input { border-color: var(--color-neutral-300); }
+.plain-input.outlined-input:hover { border-color: var(--color-neutral-500); }
+.plain-input.outlined-input:focus-visible { border-color: var(--color-accent); background: var(--color-surface); }
+
 /* Hidden on screen, shown only in a printed page — the opposite of
    [data-noprint] — for identifying text a screen doesn't otherwise need
    (e.g. which clock/hour a printed List belongs to). */

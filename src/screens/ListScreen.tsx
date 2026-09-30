@@ -156,7 +156,7 @@ export function ListScreen() {
                   {categorySelect(s)}
                   <input
                     ref={(el) => { durInputs.current[s.id] = el; }}
-                    className="plain-input mono"
+                    className="plain-input mono outlined-input"
                     style={{ width: 56, textAlign: 'right', marginLeft: 'auto', flex: 'none' }}
                     value={durDrafts[s.id] ?? dur(s.d)}
                     onFocus={(e) => { setDurDrafts((d) => ({ ...d, [s.id]: dur(s.d) })); e.target.select(); }}
@@ -230,7 +230,7 @@ export function ListScreen() {
                 <td>
                   <input
                     ref={(el) => { durInputs.current[s.id] = el; }}
-                    className="plain-input mono"
+                    className="plain-input mono outlined-input"
                     value={durDrafts[s.id] ?? dur(s.d)}
                     onFocus={(e) => { setDurDrafts((d) => ({ ...d, [s.id]: dur(s.d) })); e.target.select(); }}
                     onChange={(e) => setDurDrafts((d) => ({ ...d, [s.id]: e.target.value }))}

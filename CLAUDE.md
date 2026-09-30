@@ -1462,3 +1462,62 @@ app treats it specially either way — both it and `clockmaker.baish.net`
 fall through to the same "else" branch in `hostMode.ts`/`middleware.ts`
 that serves the normal app). Whether to eventually retire that domain is
 John's call, not something this session assumed.
+
+## Time-chip follow-up, round 2: it was actually meant for Dur, not Starts/Time (2026-09-30)
+
+John reported not seeing the read-only chip change at all, even after a
+hard refresh. Investigation confirmed the code was genuinely live (checked
+both this working tree and the GitHub-connected one Vercel deploys from,
+rebuilt fresh, measured computed styles in a real browser) — the design
+just wasn't what he'd actually meant. Two clarifying rounds:
+
+1. First clarification: he wanted the *box* on Dur (the editable column),
+   not Starts/Time — reversed from the initial read of his original
+   message. Started applying `.time-chip` (pale permanent pill) to Dur
+   inputs too.
+2. Second clarification, before that above work was even committed: not
+   `.time-chip`'s look at all — he doesn't want Dur *permanently* looking
+   like Starts/Time's shaded pill. He wants Dur's *current hover state*
+   (the border `.plain-input:hover` already shows) to become its
+   *permanent* resting look, and then hovering to go one step further —
+   either matching the existing editing/focus look, or a darker version of
+   the new resting state, whichever reads better. Chose the latter: reusing
+   the focus look for mere hover would blur the distinction between "about
+   to click" and "now actually editing," which is worth keeping legible.
+
+**What actually shipped:** new `.outlined-input` class (`global.css`),
+applied alongside `.plain-input` on all four Dur inputs (List desktop +
+narrow, Backtimer desktop + narrow) — NOT a new standalone class, a
+modifier compounded onto `.plain-input` specifically so it doesn't touch
+`.plain-input` itself, which is shared by segment/item name fields, the
+clock name field, and Backtimer's out-time field — none of which were
+asked for or should look any different.
+```
+.plain-input.outlined-input { border-color: var(--color-neutral-300); }
+.plain-input.outlined-input:hover { border-color: var(--color-neutral-500); }
+.plain-input.outlined-input:focus-visible { border-color: var(--color-accent); background: var(--color-surface); }
+```
+Three-step progression: resting (light border, what used to be hover-only)
+→ hover (darker border) → focus/editing (accent border + filled
+background, unchanged from before).
+
+**A real bug caught by actually testing, not just eyeballing a
+screenshot:** the first version omitted that third `:focus-visible` line,
+relying on the existing single-class `.plain-input:focus-visible` rule
+inherited from above. That rule has lower specificity (one class) than
+`.plain-input.outlined-input:hover` (two classes) — and clicking a field
+with a mouse leaves the cursor *hovering over it while it's also focused*,
+which is the normal way anyone edits Dur. Measuring the actual computed
+`border-color` in a headless browser (not just looking at a screenshot)
+caught that the darker hover border was silently winning over the accent
+focus border in exactly that everyday case — the "now editing" cue would
+have almost never actually appeared. Fixed by repeating the
+`:focus-visible` rule at matching specificity, declared after `:hover`, so
+it wins the tie when both pseudo-classes are true simultaneously. Re-verified
+after the fix: hovering shows the darker border, and clicking to edit
+(mouse still resting on the field) correctly shows the accent border +
+fill, not the hover state bleeding through.
+
+Starts/Time's `.time-chip` was left completely untouched throughout this —
+John was explicit that only Dur needed fixing, and that Starts/Time would
+be revisited separately afterward if needed at all.

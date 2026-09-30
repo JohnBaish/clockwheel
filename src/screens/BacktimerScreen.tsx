@@ -191,7 +191,7 @@ export function BacktimerScreen() {
                   </span>
                   <input
                     ref={(el) => { durInputs.current[it.id] = el; }}
-                    className="plain-input mono"
+                    className="plain-input mono outlined-input"
                     style={{ width: 56, textAlign: 'right', marginLeft: 'auto', flex: 'none' }}
                     value={durDrafts[it.id] ?? dur(it.d)}
                     onFocus={(e) => { setDurDrafts((d) => ({ ...d, [it.id]: dur(it.d) })); e.target.select(); }}
@@ -262,7 +262,7 @@ export function BacktimerScreen() {
                 <td>
                   <input
                     ref={(el) => { durInputs.current[it.id] = el; }}
-                    className="plain-input mono"
+                    className="plain-input mono outlined-input"
                     value={durDrafts[it.id] ?? dur(it.d)}
                     onFocus={(e) => { setDurDrafts((d) => ({ ...d, [it.id]: dur(it.d) })); e.target.select(); }}
                     onChange={(e) => setDurDrafts((d) => ({ ...d, [it.id]: e.target.value }))}
