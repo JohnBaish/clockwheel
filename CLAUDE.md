@@ -1054,3 +1054,13 @@ captured the actual downloaded filename from a real Export click
 (`clockwheel-2026-09-29-1837.json`). Also renamed a clock to a
 50-character string and screenshotted the resulting Week cell to confirm
 the ellipsis truncation looks right rather than just trusting the CSS.
+
+## Seed clock renamed "Daytime 1" → "Example" (2026-09-30)
+
+`data/clocks.ts`'s `seedClocks()` — the one clock a brand-new browser
+starts with, since `loadInitial()` in `state/store.tsx` only calls it when
+`localStorage` has no saved state at all — is now named `"Example"`
+instead of `"Daytime 1"`. Existing users (anyone with saved state already)
+are unaffected; this only changes what a first-time visitor sees. Verified
+with a fresh (no localStorage) Playwright page load against a production
+build, confirming the Library card reads "Example".
