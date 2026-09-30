@@ -4,7 +4,7 @@ import { withBackTimes, normalizeOutTime } from '../data/backtimer';
 import { dur, parseDur, parseOutTime, wrapHour } from '../lib/time';
 import { useDragReorder } from '../lib/useDragReorder';
 import { useIsNarrow } from '../lib/responsive';
-import { IconGrip, IconPlus, IconTrash } from '../lib/icons';
+import { IconGrip, IconPlus, IconTrash, IconArrowUpDown } from '../lib/icons';
 
 const NARROW = 720;
 
@@ -12,9 +12,17 @@ export function BacktimerScreen() {
   const {
     backtimer, setBacktimerOutTime, addBacktimerItem, removeBacktimerItem,
     setBacktimerItemName, setBacktimerItemDuration, reorderBacktimerItems, resetBacktimer,
+    toggleBacktimerReversed,
   } = useApp();
   const seed = backtimer.items;
-  const rows = withBackTimes(seed, backtimer.outTime);
+  // `computed` is always in the one true order items are stored/calculated
+  // in (latest thing first, working backwards) — `rows` is what's actually
+  // rendered, optionally flipped for display by the Reverse button. Keeping
+  // both around means the "in the hour before" check below can stay anchored
+  // to the real earliest item regardless of which way the list is facing.
+  const computed = withBackTimes(seed, backtimer.outTime);
+  const reversed = !!backtimer.reversed;
+  const rows = reversed ? [...computed].reverse() : computed;
   const total = seed.reduce((a, it) => a + it.d, 0);
   const isNarrow = useIsNarrow(NARROW);
   const [outDraft, setOutDraft] = useState<string | null>(null);
@@ -23,8 +31,16 @@ export function BacktimerScreen() {
   const durInputs = useRef<Record<string, HTMLInputElement | null>>({});
   const prevCount = useRef(seed.length);
 
+  // The drag hook works entirely in on-screen row positions, but reordering
+  // has to happen on the real (unreversed) item array — when flipped, visual
+  // position i is the mirror image of its real index, so translate before
+  // committing.
+  const commitReorder = (from: number, to: number) => {
+    const toRealIndex = (i: number) => (reversed ? rows.length - 1 - i : i);
+    reorderBacktimerItems(toRealIndex(from), toRealIndex(to));
+  };
   const { dragIndex, overIndex, setItemRef, onPointerDown, onPointerMove, onPointerUp, onPointerCancel } =
-    useDragReorder(rows.length, reorderBacktimerItems);
+    useDragReorder(rows.length, commitReorder);
 
   useEffect(() => {
     if (seed.length > prevCount.current) {
@@ -107,9 +123,9 @@ export function BacktimerScreen() {
         </div>
         <span className="tag tag-neutral mono">{rows.length} item{rows.length === 1 ? '' : 's'} · drag to reorder</span>
         <span className="tag tag-neutral mono">{dur(total)} total</span>
-        {rows.length > 0 && rows[rows.length - 1].start < 0 && (
+        {computed.length > 0 && computed[computed.length - 1].start < 0 && (
           <span className="tag" style={{ background: 'var(--color-accent-100)', color: 'var(--color-accent-800)' }}>
-            starts {dur(wrapHour(rows[rows.length - 1].start))} — in the hour before this one
+            starts {dur(wrapHour(computed[computed.length - 1].start))} — in the hour before this one
           </span>
         )}
         <button className="btn btn-ghost" onClick={() => addBacktimerItem()} style={{ marginLeft: 'auto', color: 'var(--color-accent-700)' }}>
@@ -126,7 +142,8 @@ export function BacktimerScreen() {
       {isNarrow ? (
         rows.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--space-6)', color: 'var(--color-neutral-700)' }}>
-            No items yet — add the last thing before your out time first.
+            No items yet — check and change your out time above, then add the name and duration
+            of the items before it, working backwards.
           </div>
         ) : (
           <div className="list-cards">
@@ -202,7 +219,8 @@ export function BacktimerScreen() {
             {rows.length === 0 && (
               <tr>
                 <td colSpan={5} style={{ textAlign: 'center', padding: 'var(--space-6)', color: 'var(--color-neutral-700)' }}>
-                  No items yet — add the last thing before your out time first.
+                  No items yet — check and change your out time above, then add the name and
+                  duration of the items before it, working backwards.
                 </td>
               </tr>
             )}
@@ -266,17 +284,30 @@ export function BacktimerScreen() {
         </table>
       )}
 
+      {rows.length > 0 && (
+        <div data-noprint="1" style={{ display: 'flex', justifyContent: 'center', marginTop: 'var(--space-4)' }}>
+          <button
+            className="btn btn-ghost"
+            onClick={() => toggleBacktimerReversed()}
+            title={reversed ? 'Show latest thing first, working backwards' : 'Show earliest thing first, in chronological order'}
+            style={{ color: 'var(--color-neutral-700)' }}
+          >
+            <IconArrowUpDown size={14} />Reverse
+          </button>
+        </div>
+      )}
+
       <div
         data-noprint="1"
         style={{
-          marginTop: 'var(--space-6)', paddingTop: 'var(--space-3)',
+          marginTop: 64, paddingTop: 'var(--space-3)',
           borderTop: '1px solid var(--color-divider)',
           fontSize: 12, lineHeight: 1.6, color: 'var(--color-neutral-700)', textAlign: 'center',
         }}
       >
-        Thanks for visiting. Backtimer is a free-to-use personal project by John Baish. It is not
-        supported by the BBC. Nothing you type here is sent anywhere; your data is only saved in
-        your own browser and you can{' '}
+        Backtimer is a free-to-use personal project by John Baish. It is not supported by the BBC.
+        Nothing you type here is sent anywhere; your data is only saved in your own browser and you
+        can{' '}
         <button
           onClick={handleClear}
           style={{

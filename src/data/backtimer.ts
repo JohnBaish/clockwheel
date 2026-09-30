@@ -15,10 +15,18 @@ export interface BacktimerState {
    *  this tool has no hour of its own, unlike a Clock). */
   outTime: number;
   items: BacktimerItemSeed[];
+  /** Display only — flips whether the screen shows items in the order
+   *  above (latest thing on top, working backwards) or chronologically
+   *  (earliest on top). Doesn't touch `items`' own order or how times are
+   *  computed; see BacktimerScreen's `rows` vs `displayRows`. Optional
+   *  because it was added after Backtimer already shipped — loadInitial()'s
+   *  shallow merge means anyone with saved state from before this had no
+   *  such field, so reads treat missing as `false` rather than assuming it. */
+  reversed?: boolean;
 }
 
 export function seedBacktimer(): BacktimerState {
-  return { outTime: 3600, items: [] };
+  return { outTime: 3600, items: [], reversed: false };
 }
 
 /** An out time of exactly 0 always means the top of the hour, not its

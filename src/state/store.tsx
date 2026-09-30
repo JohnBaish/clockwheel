@@ -113,6 +113,8 @@ interface AppContextValue extends PersistedState {
   reorderBacktimerItems: (fromIndex: number, toIndex: number) => void;
   /** Wipes the Backtimer back to its starting state (60:00 out time, no items). */
   resetBacktimer: () => void;
+  /** Flips between backwards (latest thing on top) and chronological (earliest on top) display. */
+  toggleBacktimerReversed: () => void;
   /** All persisted state, wrapped and pretty-printed for a downloadable backup file. */
   exportState: () => string;
   /** Loads a previously exported file back in. Returns null on success, or a
@@ -285,6 +287,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       return items;
     }),
     resetBacktimer: () => setEdited((s) => ({ ...s, backtimer: seedBacktimer() })),
+    toggleBacktimerReversed: () => setEdited((s) => ({ ...s, backtimer: { ...s.backtimer, reversed: !s.backtimer.reversed } })),
     exportState: () => JSON.stringify({ app: 'clockwheel', version: 2, exportedAt: new Date().toISOString(), state }, null, 2),
     importState: (json) => {
       let parsed: unknown;

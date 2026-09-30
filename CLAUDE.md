@@ -1189,3 +1189,68 @@ Verified with Playwright: the exact notice text renders in both contexts;
 no `mailto:` link exists anywhere on the page; clicking Clear (or "clear
 it") after dismissing the confirm leaves the item list untouched; accepting
 it resets to 0 items / 60:00 out time.
+
+## Backtimer: copy tweaks, footer spacing, and a Reverse (display order) button (2026-09-30)
+
+Follow-up round after John actually saw the footer live.
+
+- Empty-state copy (both the mobile-card and desktop-table branches) is now
+  "No items yet — check and change your out time above, then add the name
+  and duration of the items before it, working backwards." — replacing
+  "add the last thing before your out time first."
+- Footer: dropped the opening "Thanks for visiting." (John's own call,
+  after seeing it live — read as implying he had something to gain from
+  visits) and gave it noticeably more breathing room above the divider
+  (`marginTop` 'var(--space-6)' → a flat `64` — "a few lines," not the
+  existing spacing scale's next step up, which would have been too small
+  a jump from --space-6's 26.4px to --space-8's 35.2px).
+- **New Reverse button** (`toggleBacktimerReversed` in `store.tsx`,
+  persisted as `backtimer.reversed`), sitting on its own centered row
+  between the list and the footer — deliberately not grouped with
+  Add item/Clear, since it's a view preference rather than a data-editing
+  action. Only rendered when there's at least one row (nothing to flip
+  otherwise).
+  - `reversed` is **display-only** — it never touches `items`' stored
+    order or how times are calculated. `BacktimerScreen` now computes
+    `computed = withBackTimes(seed, outTime)` (the one true order,
+    latest-thing-first) and derives `rows = reversed ? [...computed].reverse() : computed`
+    for everything that renders. The "starts in the hour before this one"
+    warning stays anchored to `computed`'s last element specifically —
+    that's about the underlying data (which item is genuinely earliest),
+    not about which end of the list is currently on top, so it must NOT
+    read from the flipped `rows`.
+  - The one place a flip isn't free: drag-reorder. `useDragReorder` always
+    works in on-screen row positions and calls back with those same
+    positions; when `reversed`, visual position `i` is the mirror of the
+    real array index (`rows.length - 1 - i`), so `commitReorder` in
+    `BacktimerScreen.tsx` translates both the `from` and `to` index through
+    that mirror before calling `reorderBacktimerItems`. Verified by name:
+    added Item A/B/C in that order (so array order is A,B,C — "Add item"
+    still always appends), reversed the display (confirmed C,B,A on
+    screen), dragged the top row to the bottom (confirmed B,A,C — i.e. C
+    moved to the end while B/A's relative order held), then un-reversed
+    and confirmed the underlying array is genuinely now C,A,B — the
+    mirror-image of what the reversed view showed post-drag, proving the
+    translation, not just the display, was correct.
+  - "Add item" / Tab-past-the-last-row-adds-a-new-one deliberately keep
+    their existing meaning ("append the next-earliest item to the real
+    array") regardless of `reversed` — not reinterpreted as "append at
+    whichever end is on screen." The new row's input still autofocuses
+    (existing behaviour, unchanged), and focusing an off-screen input
+    scrolls it into view regardless of which end of a reversed list it
+    lands on, so this doesn't strand anyone typing.
+  - `reversed` is optional on the `BacktimerState` type
+    (`reversed?: boolean`) rather than required, because it was added
+    after Backtimer already had real persisted users — `loadInitial()`'s
+    shallow `{...defaults, ...parsed}` merge doesn't backfill new fields
+    on an already-saved nested object like `backtimer`, so existing saved
+    state has no such key at all. Every read treats a missing value as
+    `false` (`!!backtimer.reversed`) rather than assuming the field exists.
+  - `resetBacktimer()`/Clear already resets to `seedBacktimer()` wholesale,
+    which now includes `reversed: false` — confirmed Clear also un-reverses
+    as part of wiping everything else back to its starting state.
+  - New `IconArrowUpDown` in `lib/icons.tsx` (lucide-react's
+    `ArrowUpDown`), following the file's existing `withStroke` pattern.
+
+All of the above verified end-to-end with Playwright against a production
+build, in both the desktop-table and mobile-card (narrow) layouts.
