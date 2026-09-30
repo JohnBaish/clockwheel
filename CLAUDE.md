@@ -1423,9 +1423,14 @@ saga above), applied to one more host string.
    still need to add it as a domain in Vercel/DNS too if he wants it to
    actually resolve, same as the bare domain.
 
-**Still open — needs John, not a technical blocker:** the "John's Blog"
-card's `href` is a literal `"#"` placeholder. This session doesn't know
-and can't guess the blog's real URL (likely a `.blogspot.com` address,
-since that's what a Blogspot blog keeps even after a custom-domain mapping
-elsewhere changes) — asked John for it; swap it in once he replies, and
-this page is otherwise ready to ship as soon as DNS points here.
+**Follow-up (2026-09-30):** John gave the blog URL —
+`https://jbaish.blogspot.com/` — confirming the guess above about Blogspot
+custom-domain mappings; swapped in for the `"#"` placeholder. He also
+asked to flip the header's visual hierarchy: `<h1>` (heavy Caprasimo) is
+now "baish.net" (lowercase, matches how he writes the domain elsewhere),
+and `.card-kicker` (small, muted, accent-coloured, already
+`text-transform: uppercase` in CSS) now holds "John Baish" — written in
+mixed case in the markup since the CSS transforms it to caps regardless,
+so the source stays a normal name rather than a hardcoded shout. This page
+is now feature-complete on the code side; only John's DNS/Vercel-domain
+step remains before it's actually reachable.
