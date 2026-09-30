@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>John Baish</title>
+    <meta name="description" content="Backtimer, Clockmaker, and John's blog archive." />
+    <!-- Root domain (baish.net) landing page — served by middleware.ts when
+         the Host header is baish.net or www.baish.net (see its comments and
+         CLAUDE.md's "baish.net root landing page" entry). Deliberately no
+         React/app JS: src/landing.ts imports just the design-system CSS so
+         this matches Clockmaker/Backtimer's look at a fraction of the
+         weight. Update the three links below if any of the three
+         destinations' URLs ever change. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="John Baish" />
+    <meta property="og:description" content="Backtimer, Clockmaker, and John's blog archive." />
+    <meta property="og:url" content="https://baish.net/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="John Baish" />
+    <meta name="twitter:description" content="Backtimer, Clockmaker, and John's blog archive." />
+    <script type="module" src="/src/landing.ts"></script>
+    <style>
+      body {
+        min-height: 100vh; display: flex; align-items: center; justify-content: center;
+        padding: var(--space-6) var(--space-4);
+      }
+      .landing-wrap { width: 100%; max-width: 560px; display: flex; flex-direction: column; gap: var(--space-3); }
+      .landing-header { text-align: center; margin-bottom: var(--space-3); }
+      .landing-header h1 { font-size: 32px; margin: 2px 0 0; }
+    </style>
+  </head>
+  <body>
+    <div class="landing-wrap">
+      <div class="landing-header">
+        <div class="card-kicker">baish.net</div>
+        <h1>John Baish</h1>
+      </div>
+
+      <a class="card link-card" href="https://backtimer.baish.net/">
+        <div class="card-title">Backtimer</div>
+        <p class="card-body">Work out exactly when each item needs to start to hit your out time.</p>
+      </a>
+
+      <a class="card link-card" href="https://clockmaker.baish.net/">
+        <div class="card-title">Clockmaker</div>
+        <p class="card-body">Build broadcast radio clocks, ready to print for any hour.</p>
+      </a>
+
+      <a class="card link-card" href="#">
+        <div class="card-title">John's Blog</div>
+        <p class="card-body">Daily blog entries from 2006 to 2010, featuring small tech and retail innovations and fun things, all of them outdated now but archived for nostalgia and curiosity value.</p>
+      </a>
+    </div>
+  </body>
+</html>

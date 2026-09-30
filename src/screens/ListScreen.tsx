@@ -150,7 +150,7 @@ export function ListScreen() {
                   </button>
                 </div>
                 <div className="list-card-row" style={{ marginTop: 6 }}>
-                  <span className="mono" style={{ fontSize: 12.5, color: 'var(--color-neutral-700)' }}>
+                  <span className="mono time-chip" style={{ fontSize: 12.5, color: 'var(--color-neutral-700)' }}>
                     {clockOf(clock.hour, s.t)}
                   </span>
                   {categorySelect(s)}
@@ -210,8 +210,10 @@ export function ListScreen() {
                 >
                   <IconGrip size={14} />
                 </td>
-                <td className="mono" style={{ fontWeight: PINS_ENABLED && s.pin ? 700 : 400, color: PINS_ENABLED && s.pin ? '#201e1d' : 'var(--color-neutral-700)' }}>
-                  {clockOf(clock.hour, s.t)}
+                <td>
+                  <span className="mono time-chip" style={{ fontWeight: PINS_ENABLED && s.pin ? 700 : 400, color: PINS_ENABLED && s.pin ? '#201e1d' : 'var(--color-neutral-700)' }}>
+                    {clockOf(clock.hour, s.t)}
+                  </span>
                 </td>
                 <td>
                   <input

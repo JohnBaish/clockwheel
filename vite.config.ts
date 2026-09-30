@@ -9,14 +9,17 @@ export default defineConfig({
   plugins: [react()],
   build: {
     rollupOptions: {
-      // Two HTML entry points sharing the same app (src/main.tsx) — index.html
-      // (Clockmaker) and backtimer.html (Backtimer-branded, for the
-      // backtimer.baish.net domain). Both need building so vercel.json has a
-      // real file to rewrite to; see index.html's head comment for the rest
-      // of how the two domains/files/runtime check fit together.
+      // Three HTML entry points — index.html and backtimer.html share the
+      // full app (src/main.tsx); landing.html (the baish.net root domain)
+      // is deliberately separate and lighter, importing just the CSS via
+      // src/landing.ts, not the React app. All three need building so
+      // middleware.ts has real files to serve per-domain; see index.html's
+      // head comment and middleware.ts for how domains/files/runtime checks
+      // fit together.
       input: {
         main: `${root}index.html`,
         backtimer: `${root}backtimer.html`,
+        landing: `${root}landing.html`,
       },
     },
   },

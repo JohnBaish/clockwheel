@@ -1324,3 +1324,108 @@ Not touched: Backtimer's own branding (`backtimer.html`'s tags, its
 footer text, `BACKTIMER_HOST` in `hostMode.ts`) — already fully
 independent of the word "Clockwheel"/"Clockmaker" either way, confirmed
 by the original audit before making any change.
+
+## Time columns get a permanent "read-only" chip (2026-09-30)
+
+John noticed List's Time column and Backtimer's Starts column looked the
+same as the genuinely editable Dur column, because `.table tbody tr:hover`
+lights up the whole row's background — hovering a Time value drew a pale
+box that looked exactly like an invitation to click, even though nothing
+happens if you do. His own proposed fix: make that pale box permanent for
+Time specifically (not row-triggered), darkening further only on direct
+hover, so it reads as a static value rather than an editable one at a
+glance — the opposite state to `.plain-input`, which shows nothing until
+you're about to interact with it.
+
+Implemented pretty much exactly as he described: new `.time-chip` class
+(`global.css`) — `background: var(--color-neutral-100)`, pill-shaped,
+`:hover` steps to `var(--color-neutral-200)`. No `cursor: pointer` — there's
+nothing to click, so the cursor staying the default arrow matters as much
+as the visual treatment. Wrapped around the computed time value specifically
+(not the whole `<td>`) in all four places it appears: `ListScreen.tsx`'s
+desktop table Time column and narrow-card time span, and the equivalent
+pair in `BacktimerScreen.tsx`'s Starts column. Existing conditional
+styling (bold+dark for a pinned segment in List, accent color for a
+Backtimer item that's rolled into the hour before) moved from the `<td>`
+onto the new `<span>` — same logic, just now colouring the chip's text
+rather than a bare `<td>`.
+
+## baish.net root domain: a simple 3-link landing page (2026-09-30)
+
+John wants people who wander to bare `baish.net` out of curiosity (rather
+than a specific subdomain) to land somewhere useful instead of the old
+Blogspot default it currently resolves to. Asked for a simple page, in
+keeping with Clockmaker's look, linking to Backtimer, Clockmaker (even
+though that subdomain doesn't exist yet — deliberate, per John), and his
+blog.
+
+**New files:**
+- `landing.html` (project root, sibling to `index.html`/`backtimer.html`) —
+  three whole-card links (`.card.link-card`), each with a title and one
+  line of description. Not built on the React app at all — no `#root` div,
+  no app-mounting script. Its OG/meta tags point at `https://baish.net/`
+  directly (unlike Clockmaker's og:url during its own rename — baish.net
+  *already* resolves somewhere today, John's just repointing it, so unlike
+  a subdomain that doesn't exist at all yet, this URL will be correct the
+  moment his DNS change lands, not before and not in some broken interim).
+- `src/landing.ts` — the entry script `landing.html`'s `<script type="module">`
+  points at. Only imports `organic.css`/`global.css` — deliberately not
+  `main.tsx` — so the fonts/colors/`.card` styling match the rest of the
+  site without pulling in React or any app code. Confirmed in the build
+  output: `landing.html` loads a ~0.7kB CSS-import shim, not the ~260kB
+  React bundle `index.html`/`backtimer.html` load.
+- New `.link-card` class (`global.css`): `.card` (organic.css) plus a
+  link-specific hover/focus state (accent border + faint accent tint) —
+  built on the existing card styling rather than a bespoke one, and this
+  is the one place in the app where that hover *should* imply "click me",
+  unlike the time-chip above.
+
+**Routing (extends the same pattern `backtimer.baish.net` already uses):**
+- `vite.config.ts`: added `landing.html` as a third `rollupOptions.input`
+  entry, so it gets built as its own real file Vercel/middleware can serve.
+- `middleware.ts`: refactored the inline backtimer-specific logic into a
+  shared `serveStatic(path, request)` helper (fetches this deployment's own
+  static file and rebuilds the Response with just the header it needs —
+  same header-corruption fix from the backtimer.baish.net saga, now shared
+  rather than duplicated), then added
+  `if (host === 'baish.net' || host === 'www.baish.net') return serveStatic('/landing.html', request)`
+  alongside the existing backtimer branch. `www.` handled defensively even
+  though nothing points there yet — costs nothing, and someone typing the
+  www. prefix out of habit shouldn't hit a different result than someone
+  who doesn't.
+
+**What this session could and couldn't verify:** `landing.html` itself
+(content, links, hover state) was checked directly with Playwright against
+a production build — screenshots taken, all three links and their exact
+href targets confirmed, `.link-card` hover state confirmed. What could
+NOT be verified here: the actual host-based routing in production, since
+`vite preview` doesn't run Vercel Edge Middleware at all — that only
+executes on Vercel's real infrastructure. Confidence here rests on this
+being the identical pattern already proven working for
+`backtimer.baish.net` in production (same session, see the link-preview
+saga above), applied to one more host string.
+
+**Left for John — advice given, not yet actioned:**
+1. **Same Vercel project, not a new one.** A Vercel project already serves
+   multiple custom domains simultaneously (`clockwheel.baish.net` and
+   `backtimer.baish.net` both point at this one project today) — adding
+   `baish.net` as a third custom domain on the *same* project is the same
+   action John's already done twice, not a new kind of setup.
+2. **The exact DNS record is Vercel's to give, not this session's to
+   guess.** A subdomain (`backtimer.baish.net`) usually wants a CNAME; an
+   apex/root domain (`baish.net` itself, no subdomain) technically can't
+   have one — Vercel's own domain-settings page will show the specific
+   record type and value it wants once John adds `baish.net` there. Not
+   asserted here from memory, since this session has no live access to
+   confirm today's exact value and a wrong guess would be worse than no
+   answer.
+3. **`www.baish.net`** — code already handles it (see above); John would
+   still need to add it as a domain in Vercel/DNS too if he wants it to
+   actually resolve, same as the bare domain.
+
+**Still open — needs John, not a technical blocker:** the "John's Blog"
+card's `href` is a literal `"#"` placeholder. This session doesn't know
+and can't guess the blog's real URL (likely a `.blogspot.com` address,
+since that's what a Blogspot blog keeps even after a custom-domain mapping
+elsewhere changes) — asked John for it; swap it in once he replies, and
+this page is otherwise ready to ship as soon as DNS points here.

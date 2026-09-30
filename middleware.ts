@@ -13,24 +13,31 @@
 // live docs (no outbound network access while this was written).
 export const config = { matcher: '/' };
 
+// Fetches this same deployment's own static file and rebuilds a fresh
+// Response with only the header it actually needs, rather than returning
+// the upstream fetch's Response object unchanged. An earlier version did
+// the latter for backtimer.html and it carried over content-encoding/
+// content-length/transfer-encoding headers that described the *original*
+// fetch — Vercel's edge re-serving that same Response under a different
+// request produced a corrupted/truncated body (no link preview at all,
+// since crawlers found no readable <meta> tags). Rebuilding it plain
+// avoids that; shared here since landing.html needs the same treatment.
+async function serveStatic(path: string, request: Request): Promise<Response> {
+  const upstream = await fetch(new URL(path, request.url));
+  const body = await upstream.text();
+  return new Response(body, {
+    status: upstream.status,
+    headers: { 'content-type': 'text/html; charset=utf-8' },
+  });
+}
+
 export default async function middleware(request: Request) {
   const host = request.headers.get('host') ?? '';
-  if (host === 'backtimer.baish.net') {
-    const upstream = await fetch(new URL('/backtimer.html', request.url));
-    // Read the body out and rebuild a fresh Response with only the header
-    // it actually needs. An earlier version of this middleware returned
-    // `upstream` directly, carrying over its content-encoding/
-    // content-length/transfer-encoding headers unchanged — those describe
-    // the original fetch, not this response, and Vercel's edge re-serving
-    // that same Response object under a different request produced a
-    // corrupted/truncated body (no link preview at all, since crawlers
-    // found no readable <meta> tags). Rebuilding it plain avoids that.
-    const body = await upstream.text();
-    return new Response(body, {
-      status: upstream.status,
-      headers: { 'content-type': 'text/html; charset=utf-8' },
-    });
-  }
+  if (host === 'backtimer.baish.net') return serveStatic('/backtimer.html', request);
+  // www.baish.net included defensively — nothing currently points there,
+  // but it costs nothing to handle the same as the bare domain in case a
+  // visitor (or an old bookmark/link) types the www. prefix out of habit.
+  if (host === 'baish.net' || host === 'www.baish.net') return serveStatic('/landing.html', request);
   // Anything else (clockwheel.baish.net, this session's own preview
   // deployments, etc.) falls through to Vercel's normal handling —
   // returning nothing/undefined here is what "don't intercept this

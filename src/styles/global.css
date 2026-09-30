@@ -5,6 +5,39 @@
 .week-picker-row:hover { background: var(--color-accent-100); border-color: var(--color-accent-200) !important; }
 .library-clock-name:hover { color: var(--color-accent-700); text-decoration: underline; }
 
+/* A computed, read-only time value (List's Time column, Backtimer's Starts
+   column) — permanently boxed, unlike an editable field (.plain-input,
+   below), which stays invisible until you hover/focus it. The two states
+   are deliberately opposite: editable fields show nothing until you're
+   about to interact, read-only values show something all the time and
+   just deepen slightly on hover — there's no click to invite, so the
+   cursor stays the default arrow rather than a pointer. */
+.time-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--color-neutral-100);
+  transition: background-color .12s ease;
+}
+.time-chip:hover { background: var(--color-neutral-200); }
+
+/* Landing page (baish.net root) — three whole-card links out to the other
+   sites. Built on top of .card (organic.css) rather than a bespoke style,
+   so it inherits the same surface/spacing as everywhere else; only the
+   link-specific hover/focus affordance is added here. */
+.link-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid transparent;
+  transition: border-color .12s ease, background-color .12s ease;
+}
+.link-card:hover, .link-card:focus-visible {
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 6%, var(--color-surface));
+  outline: none;
+}
+
 /* An input that reads as plain text until you interact with it — for editing
    a value in place inside a dense table row without it looking like a form. */
 .plain-input {
