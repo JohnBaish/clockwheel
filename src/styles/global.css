@@ -81,6 +81,12 @@
     gap: var(--space-2); width: 100%; order: 10;
   }
   .nav-panel.open { display: flex; }
+  /* Backtimer-only's nav-panel only ever holds Print and the saved-tag —
+     nothing worth hiding behind a hamburger (Nav.tsx skips rendering the
+     toggle entirely in that case). Keeping it `display: contents` here too
+     means it just wraps onto its own line under the brand, the same way it
+     would lay out on a wide screen, rather than collapsing. */
+  .nav-panel.nav-panel-static { display: contents; }
 }
 
 /* List screen's narrow-width alternative to its desktop <table> — one

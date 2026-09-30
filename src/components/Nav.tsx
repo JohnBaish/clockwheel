@@ -45,15 +45,17 @@ export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Sc
   return (
     <div className="nav" style={{ padding: 'var(--space-3) var(--space-6)', background: 'var(--color-surface)', flexWrap: 'wrap' }}>
       <span className="nav-brand">{backtimerOnly ? 'Backtimer' : 'Clockmaker'}</span>
-      <button
-        className="nav-menu-toggle"
-        onClick={() => setMenuOpen((o) => !o)}
-        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-        aria-expanded={menuOpen}
-        data-noprint="1"
-      >
-        {menuOpen ? <X size={19} /> : <Menu size={19} />}
-      </button>
+      {!backtimerOnly && (
+        <button
+          className="nav-menu-toggle"
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}
+          data-noprint="1"
+        >
+          {menuOpen ? <X size={19} /> : <Menu size={19} />}
+        </button>
+      )}
       {!backtimerOnly && (
         <button
           className="btn btn-primary"
@@ -63,7 +65,7 @@ export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Sc
           New clock
         </button>
       )}
-      <div className={`nav-panel${menuOpen ? ' open' : ''}`}>
+      <div className={`nav-panel${menuOpen ? ' open' : ''}${backtimerOnly ? ' nav-panel-static' : ''}`}>
         {links.map((l) => (
           <a
             key={l.screen}

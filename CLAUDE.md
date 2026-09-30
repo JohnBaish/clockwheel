@@ -1554,3 +1554,31 @@ resting-state neutral border as expected. Verified with Playwright against
 a fresh build: zero `.time-chip` elements remain anywhere, Time/Starts
 cells have a fully transparent background again, Dur's border is
 unaffected.
+
+## Backtimer-only nav skips the hamburger on narrow screens (2026-09-30)
+
+John's observation: `backtimer.baish.net`'s nav already has no links (see
+`lib/hostMode.ts`/`Nav.tsx` — `links = backtimerOnly ? [] : LINKS`), so the
+narrow-screen hamburger there was only ever hiding two things behind an
+extra tap — Print and the saved-tag. Not worth the toggle for two items.
+
+- `Nav.tsx`: the `.nav-menu-toggle` button now only renders when
+  `!backtimerOnly` (previously rendered unconditionally, with only its CSS
+  visibility gated by the breakpoint). `.nav-panel` gets an extra
+  `nav-panel-static` class when `backtimerOnly`.
+- `global.css`: inside the existing `@media (max-width: 720px)` block,
+  `.nav-panel.nav-panel-static { display: contents; }` — same rule the
+  wide-screen default already uses, just also applied below the
+  breakpoint for this one case. Two classes beats the plain `.nav-panel`
+  narrow-screen rule's one-class specificity, no `!important` needed.
+- Net effect: Print and the saved-tag now sit directly under the
+  "Backtimer" brand as their own line (`.nav`'s existing `flexWrap: 'wrap'`
+  handles that naturally — no new layout code needed), rather than being
+  hidden until a hamburger tap. Clockmaker's own narrow nav (all 8 links +
+  Print + saved-tag) is completely untouched — still collapses behind the
+  hamburger exactly as before, verified by opening it and confirming the
+  the link list appears.
+- Verified end-to-end with Playwright at a 390px-wide viewport: standalone
+  Backtimer shows zero `.nav-menu-toggle` elements and Print/saved are both
+  visible without clicking anything; Clockmaker still shows exactly one
+  hamburger, with its links hidden until clicked and visible after.
