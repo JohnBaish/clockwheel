@@ -1602,3 +1602,10 @@ built and screenshotted it first. It renders cleanly with no visible
 artifacts, so shipped as asked; flagging the mechanism here in case a
 future font swap ever needs an italic or bold weight added deliberately
 (a synthesized style can look rough on some faces, just not this one).
+
+**Follow-up, same day:** John reported it looked "a bit mushy" on his own
+browser once actually live — screen rendering of a synthesized faux-
+italic/bold can vary by device/browser in ways a single screenshot here
+doesn't catch. Reverted to plain text, no span/style at all — "Clockmaker
+(Under development)" now reads in exactly the same regular weight/style
+throughout, inheriting `.card-title` with nothing added on top.
