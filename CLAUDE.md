@@ -1577,8 +1577,28 @@ extra tap — Print and the saved-tag. Not worth the toggle for two items.
   hidden until a hamburger tap. Clockmaker's own narrow nav (all 8 links +
   Print + saved-tag) is completely untouched — still collapses behind the
   hamburger exactly as before, verified by opening it and confirming the
-  the link list appears.
+  link list appears.
 - Verified end-to-end with Playwright at a 390px-wide viewport: standalone
   Backtimer shows zero `.nav-menu-toggle` elements and Print/saved are both
   visible without clicking anything; Clockmaker still shows exactly one
   hamburger, with its links hidden until clicked and visible after.
+
+## baish.net landing page: "(Under development)" next to Clockmaker (2026-10-01)
+
+`landing.html`'s Clockmaker card title: `Clockmaker <span style="font-style:
+italic; font-weight: bold;">(Under development)</span>` — inline style, not
+a new class, matching this file's existing minimal-CSS approach (no
+dedicated stylesheet beyond `src/landing.ts`'s import of the shared design
+system). Inherits `.card-title`'s font-family/size/colour, just adding
+italic + bold on top.
+
+Worth noting since it's not obvious from the markup alone: `@fontsource/
+caprasimo` (the self-hosted font — see the earlier Clockwheel→Clockmaker
+font rename entry) only ships one weight/style (400, upright) — there's no
+real italic or bold Caprasimo design to switch to. Requesting them anyway
+makes the browser synthesize both (faux-slant, faux-embolden) rather than
+rendering actual italic/bold glyphs. Didn't assume this would look fine —
+built and screenshotted it first. It renders cleanly with no visible
+artifacts, so shipped as asked; flagging the mechanism here in case a
+future font swap ever needs an italic or bold weight added deliberately
+(a synthesized style can look rough on some faces, just not this one).
