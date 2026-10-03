@@ -92,6 +92,8 @@ interface AppContextValue extends PersistedState {
   createClock: () => void;
   /** Clones a clock into a new one and returns the new clock's id. */
   duplicateClock: (id: ClockId) => ClockId;
+  /** Deletes a clock entirely, clearing any Week assignments that pointed to it. */
+  removeClock: (id: ClockId) => void;
   renameClock: (id: ClockId, name: string) => void;
   setClockHour: (id: ClockId, hour: number) => void;
   reorderSegments: (fromIndex: number, toIndex: number) => void;
@@ -194,6 +196,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
       });
       return newClockId;
     },
+    removeClock: (id) => setEdited((s) => {
+      const clocks = { ...s.clocks };
+      delete clocks[id];
+      const clockOrder = s.clockOrder.filter((c) => c !== id);
+      const week = { ...s.week };
+      Object.keys(week).forEach((k) => { if (week[k] === id) delete week[k]; });
+      const openClockId = s.openClockId === id ? (clockOrder[0] ?? s.openClockId) : s.openClockId;
+      const sumSel = s.sumSel === id ? (clockOrder[0] ?? s.sumSel) : s.sumSel;
+      return { ...s, clocks, clockOrder, week, openClockId, sumSel };
+    }),
     renameClock: (id, name) => setEdited((s) => ({
       ...s, clocks: { ...s.clocks, [id]: { ...s.clocks[id], name, lastEditedAt: Date.now() } },
     })),

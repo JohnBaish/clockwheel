@@ -5,13 +5,23 @@ import { splitBg, wheelBg, mixLine } from '../lib/color';
 import { computeSplit, newsJunctionCount } from '../lib/clockStats';
 
 export function LibraryScreen() {
-  const { clocks, clockOrder, week, outside, categories, categoryOrder, duplicateClock, openClock, exportState, importState } = useApp();
+  const { clocks, clockOrder, week, outside, categories, categoryOrder, duplicateClock, openClock, removeClock, exportState, importState } = useApp();
   const cats = { byId: categories, order: categoryOrder };
   const keys = localKeys(outside);
   const countUsage = (id: string) => keys.filter((k) => week[k] === id).length;
   const unused = clockOrder.filter((id) => !countUsage(id)).length;
   const [error, setError] = useState<string | null>(null);
   const fileInput = useRef<HTMLInputElement | null>(null);
+
+  const handleDelete = (id: string, name: string) => {
+    const n = countUsage(id);
+    const warning = n
+      ? ` It's currently assigned to ${n} hour${n === 1 ? '' : 's'} in the Week schedule — those hours will become unassigned.`
+      : '';
+    if (window.confirm(`Delete "${name}"? This can't be undone.${warning}`)) {
+      removeClock(id);
+    }
+  };
 
   const handleExport = () => {
     const blob = new Blob([exportState()], { type: 'application/json' });
@@ -103,6 +113,7 @@ export function LibraryScreen() {
                 <div style={{ display: 'flex', gap: 6, marginTop: 'auto', paddingTop: 2 }}>
                   <button className="btn btn-ghost" onClick={() => openClock(id)} style={{ padding: '6px 14px', fontSize: '12.5px', flex: 1, color: 'var(--color-accent-700)', borderColor: 'var(--color-divider)' }}>Open</button>
                   <button className="btn btn-secondary" onClick={() => duplicateClock(id)} style={{ padding: '6px 14px', fontSize: '12.5px' }}>Duplicate</button>
+                  <button className="btn btn-ghost" onClick={() => handleDelete(id, c.name)} style={{ padding: '6px 14px', fontSize: '12.5px', color: 'var(--color-neutral-700)' }}>Delete</button>
                 </div>
               </div>
             );

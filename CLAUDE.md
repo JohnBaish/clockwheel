@@ -1822,3 +1822,51 @@ Verified with Playwright: the link resolves, opens in a new tab, and
 has the expected `rel`; "About Clockmaker" renders as an `h3` like the
 other six sections; the old footer text appears exactly once on the
 page (inside the card now, not twice or in a stray div below it).
+
+## Delete a clock from the Library (2026-10-04)
+
+John asked whether there was a way to delete a clock at all — there
+wasn't; Library cards only ever had Open and Duplicate. He confirmed two
+follow-up design questions with a plain "yes": warn if the clock is
+currently assigned to any Week hours, and confirm before deleting, the
+same way Backtimer's Clear already does.
+
+- `state/store.tsx`: new `removeClock(id)` action. Deletes the clock from
+  `clocks`/`clockOrder`, clears every `week[key]` entry that pointed at
+  it (so a deleted clock can't be left dangling as an assignment nobody
+  can see or edit), and — matching the same defensive pattern
+  `importState` already uses when an imported file's `openClockId` no
+  longer exists — reassigns `openClockId` and/or `sumSel` to the first
+  remaining clock if either was pointing at the one just deleted.
+  Deleting the very last clock leaves both pointing at a now-nonexistent
+  id, which is fine: `clockOrder` is empty too, and both Library and
+  Summary already have an explicit `clockOrder.length === 0` branch
+  ("No clocks yet") that never reads `clocks[openClockId]`/`clocks[sumSel]`
+  in that state.
+- `LibraryScreen.tsx`: a third button, "Delete", next to Open/Duplicate
+  on each card — plain `btn-ghost` in neutral grey, not accent-coloured,
+  so it doesn't read as the primary action of the row. `handleDelete`
+  reuses the same `countUsage(id)` already computed for each card's
+  "used N hours a week" tag, and builds the confirm text around it:
+  `Delete "Name"? This can't be undone.` alone when unused, or with
+  ` It's currently assigned to N hour(s) in the Week schedule — those
+  hours will become unassigned.` appended when it's in use. One
+  `window.confirm()` — same mechanism as Backtimer's Clear, no new UI
+  pattern introduced.
+- No per-category-style hard block on deleting an in-use clock (unlike
+  `deleteCategory`, which refuses outright while a category's still
+  referenced) — deliberately different, because blocking would trap
+  someone who genuinely wants to retire a clock that happens to still be
+  scheduled; the warning plus confirm is the whole safeguard, same
+  weight as Backtimer's Clear wiping real typed-in data.
+
+Verified end-to-end with Playwright: duplicated the seed clock so there
+were two; deleting the unused one shows a plain confirm with no warning
+sentence, and dismissing it leaves both clocks untouched; assigned the
+duplicate to one Week cell, then deleting it shows the warning
+correctly naming "1 hour", and accepting it removes the clock *and*
+clears that Week cell back to unassigned (checked by hostname-free
+title-attribute read, not just that the card vanished); deleting the
+last remaining clock leaves Library showing its existing "No clocks
+yet" empty state with no crash, and Summary's clock picker/table don't
+blow up either on zero clocks.
