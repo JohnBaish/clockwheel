@@ -327,7 +327,16 @@ export function BacktimerScreen() {
           >
             clear it
           </button>
-          {' '}at any time. Contact: backtimer@baish.net.
+          {' '}at any time. A companion set of tools to build and visualise clock hours is available at{' '}
+          <a
+            href="https://clockmaker.baish.net"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'var(--color-accent-700)', textDecoration: 'underline' }}
+          >
+            https://clockmaker.baish.net
+          </a>
+          . Contact: backtimer@baish.net.
         </div>
       )}
     </div>

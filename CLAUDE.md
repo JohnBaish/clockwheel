@@ -2100,3 +2100,34 @@ the table sideways to see Days and Last changed →" — directly above the
 table, only when `useIsNarrow(720)` is true; nothing changes at desktop
 widths. Verified the hint renders exactly once at 390px and exactly
 zero times at 1200px.
+
+## Clockmaker's "(Under development)" dropped from the landing page; Backtimer footer now points to it (2026-10-04)
+
+Two small follow-ups once John was happy with Clockmaker's state.
+
+- `landing.html`: the Clockmaker card's title was `Clockmaker (Under
+  development)` (added 2026-10-01, then quickly reverted from a bold-
+  italic treatment back to plain text the same day — see that entry
+  above). Now just `Clockmaker`, since it's no longer accurate — John's
+  letting people use it. `card-body` copy ("Build broadcast radio
+  clocks, ready to print for any hour.") was already fine and untouched.
+- `BacktimerScreen.tsx`'s standalone footer gained one sentence, placed
+  exactly where asked — after "...you can clear it at any time." and
+  before "Contact: backtimer@baish.net.": "A companion set of tools to
+  build and visualise clock hours is available at
+  https://clockmaker.baish.net." The URL is a real link (`target=
+  "_blank" rel="noopener noreferrer"`, same accent-colour/underline
+  treatment as the "clear it" link right before it in the same sentence,
+  and the same treatment `GuideScreen.tsx` already uses for its own
+  backtimer.baish.net link). Still wrapped in the existing
+  `isBacktimerHost()` check, so — like the rest of this footer — it only
+  ever appears on the standalone `backtimer.baish.net` domain, never
+  inside Clockmaker's own Backtimer tab.
+
+Verified with Playwright: landing page's Clockmaker card reads exactly
+"Clockmaker" with no trace of "Under development" anywhere on the page;
+standalone Backtimer's footer contains the new sentence with a working,
+correctly-attributed link to clockmaker.baish.net, sitting between the
+existing "clear it at any time" and "Contact:" text exactly as asked;
+confirmed Clockmaker's own Backtimer tab still shows none of this
+footer at all, matching its existing standalone-only scope.
