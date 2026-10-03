@@ -1,6 +1,9 @@
+import type { ReactNode } from 'react';
 import { useApp } from '../state/store';
 
-const SECTIONS: { heading: string; body: string }[] = [
+const linkStyle = { color: 'var(--color-accent-700)', textDecoration: 'underline' };
+
+const SECTIONS: { heading: string; body: ReactNode }[] = [
   {
     heading: 'Library',
     body: 'Every clock you’ve built lives here. Click to open or duplicate it. Everything you build here is saved automatically, but only in this browser, on this device — there’s no account and nothing is sent anywhere. If you want to move your work to a different browser or computer, or just want a backup, use Export to download everything as one file. Import loads that file back in — but it replaces whatever’s currently here, so use it to restore or move your work, not to combine two sets of clocks.',
@@ -27,7 +30,22 @@ const SECTIONS: { heading: string; body: string }[] = [
   },
   {
     heading: 'Backtimer',
-    body: 'This is a separate tool for working backwards from a fixed moment, which doesn’t have to be the end of the hour. Set the out time, then add items and durations; Backtimer works out when each one needs to start. Reverse flips the display between working backwards and forwards. Backtimer also exists as a standalone web app, for people who don’t need the whole Clockmaker functionality, at https://backtimer.baish.net.',
+    body: (
+      <>
+        This is a separate tool for working backwards from a fixed moment, which doesn’t have to be the end of the
+        hour. Set the out time, then add items and durations; Backtimer works out when each one needs to start.
+        Reverse flips the display between working backwards and forwards. Backtimer also exists as a standalone web
+        app, for people who don’t need the whole Clockmaker functionality, at{' '}
+        <a href="https://backtimer.baish.net" target="_blank" rel="noopener noreferrer" style={linkStyle}>
+          https://backtimer.baish.net
+        </a>
+        .
+      </>
+    ),
+  },
+  {
+    heading: 'About Clockmaker',
+    body: 'Clockmaker is a free-to-use personal project by John Baish. Nothing you type here is sent anywhere, because your data is only saved in your browser. Contact: clockmaker@baish.net.',
   },
 ];
 
@@ -58,18 +76,6 @@ export function GuideScreen() {
             Go to Library
           </button>
         </div>
-      </div>
-
-      <div
-        data-noprint="1"
-        style={{
-          maxWidth: 720, marginTop: 'var(--space-5)', paddingTop: 'var(--space-3)',
-          borderTop: '1px solid var(--color-divider)',
-          fontSize: 12, lineHeight: 1.6, color: 'var(--color-neutral-700)', textAlign: 'center',
-        }}
-      >
-        Clockmaker is a free-to-use personal project by John Baish. Nothing you type here is sent anywhere,
-        because your data is only saved in your browser. Contact: clockmaker@baish.net.
       </div>
     </div>
   );

@@ -1793,3 +1793,32 @@ Verified all three with Playwright against a built `vite preview`: Guide
 page shows the real section text and no leftover "Placeholder" string
 anywhere on the page; standalone Backtimer's footer still has the
 "free-to-use personal project" sentence but no longer the BBC one.
+
+## Guide: linked Backtimer URL, "About Clockmaker" as a real section (2026-10-04)
+
+Two follow-ups John asked for right after seeing the Guide page above.
+
+**The `https://backtimer.baish.net` mention in the Backtimer section is
+now a real link** (`target="_blank" rel="noopener noreferrer"`, styled
+with the same accent colour/underline treatment as the "clear it" link
+in Backtimer's own footer). Since only one section needed this, `body`
+on `SECTIONS` is now typed `ReactNode` instead of `string` — every other
+section still just passes a plain string, which renders fine either way.
+
+**"About Clockmaker" is no longer a footer.** John wants it to read like
+every other part of the Guide — same `h3` + `p` treatment, inside the
+main card, no divider/no muted-small-centered footer styling — because
+he's now deliberately differentiating this from Backtimer's standalone
+footer rather than mirroring it (that footer is Backtimer-specific
+UI chrome; this is just another paragraph of guidance). So the separate
+`<div data-noprint="1">` block below the card is gone, and "About
+Clockmaker" is simply the last entry in the `SECTIONS` array, same shape
+as Library/Categories/etc. Text unchanged: "Clockmaker is a free-to-use
+personal project by John Baish. Nothing you type here is sent anywhere,
+because your data is only saved in your browser. Contact:
+clockmaker@baish.net." It now sits right above "Go to Library".
+
+Verified with Playwright: the link resolves, opens in a new tab, and
+has the expected `rel`; "About Clockmaker" renders as an `h3` like the
+other six sections; the old footer text appears exactly once on the
+page (inside the card now, not twice or in a stray div below it).
