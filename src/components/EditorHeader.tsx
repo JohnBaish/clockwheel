@@ -64,7 +64,7 @@ export function EditorHeader() {
 
   return (
     <div data-noprint="1" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: 'var(--space-3) var(--space-4)', flexWrap: 'wrap' }}>
-      <div style={{ flex: 'none', maxWidth: 420 }}>
+      <div style={{ maxWidth: 420, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <span className="card-kicker" style={{ margin: 0 }}>The</span>
           <select
@@ -87,7 +87,7 @@ export function EditorHeader() {
           onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); (e.target as HTMLTextAreaElement).blur(); } }}
           style={{
             font: '400 32px var(--font-heading)', lineHeight: 1.05, margin: '1px 0 0', padding: '0 6px',
-            display: 'block', resize: 'none', overflow: 'hidden', wordBreak: 'break-word',
+            display: 'block', resize: 'none', overflow: 'hidden', wordBreak: 'break-word', width: '100%',
           }}
         />
       </div>

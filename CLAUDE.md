@@ -1995,8 +1995,8 @@ own second line instead of overflowing. Verified by measuring
 `document.body.scrollWidth` against the viewport at 390px before (30px
 of real horizontal overflow) and after (0) on both Clock and List.
 
-**Also found, flagged, not yet fixed — pre-existing, unrelated to
-Print.** The same narrow-screen check turned up a second, separate
+**Also found and, per John's go-ahead, now fixed — pre-existing, unrelated
+to Print.** The same narrow-screen check turned up a second, separate
 source of the same 30px overflow: the clock name field
 (`EditorHeader.tsx`'s `<textarea rows={1}>`) has never had an explicit
 width — a bare `<textarea>` falls back to its default `cols="20"`
@@ -2005,5 +2005,26 @@ roughly 400px wide regardless of the actual name's length, bumping
 against the `maxWidth: 420` already on its containing block
 (`git log` confirms this div/textarea pairing dates to Print's original
 2026-09-27 commit — well before today, not something this session's
-relocation work touched or introduced). Not fixed yet, pending whether
-John wants it addressed now or separately.
+relocation work touched or introduced).
+
+Fixed with the same flexbox idiom already used two lines below it for
+the tags block (`minWidth: 0` — a flex item's default `min-width: auto`
+refuses to shrink below its content's min-content size, which is
+exactly what was pinning this one wide): the name-block div dropped
+`flex: 'none'` (which disabled shrinking outright via `flex-shrink: 0`)
+in favour of the default `flex: 0 1 auto` plus an explicit
+`minWidth: 0`, and the textarea itself gained `width: '100%'` so it
+tracks whatever width its now-properly-shrinkable container actually
+has, instead of falling back to its own oversized intrinsic default.
+`maxWidth: 420` stayed exactly as it was — still the same desktop cap,
+confirmed unchanged by screenshot comparison before/after.
+
+Verified: zero horizontal overflow at 390px on both Clock and List, with
+the default short "Example" name; re-tested with a deliberately long
+50-character name typed in at 390px — the field correctly wraps onto
+multiple lines within the viewport (no new overflow), confirming this
+fix reinforces rather than conflicts with the existing 40-char-cap/
+auto-grow-height wrapping behaviour from the 2026-09-28 "name field now
+wraps" entry above. Also re-screenshotted the same long name at desktop
+width to confirm no regression there — field still caps at 420px and
+wraps exactly as before.
