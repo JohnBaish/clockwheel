@@ -1609,3 +1609,52 @@ italic/bold can vary by device/browser in ways a single screenshot here
 doesn't catch. Reverted to plain text, no span/style at all — "Clockmaker
 (Under development)" now reads in exactly the same regular weight/style
 throughout, inheriting `.card-title` with nothing added on top.
+
+## Real favicons for Clockmaker and Backtimer, replacing a leftover placeholder (2026-10-03)
+
+John noticed Backtimer's browser tab showed what he thought might be the
+Vercel logo. Checked `public/favicon.svg` directly rather than guessing —
+it wasn't Vercel's logo (that's a plain black triangle), but it also had
+nothing to do with either app: a purple-to-blue gradient lightning bolt,
+almost certainly an unswapped default from whatever scaffold/template this
+project originally started from (same `public/` directory `index.html`,
+`backtimer.html`, and `landing.html` all pointed at — see the top of this
+file's own "original Claude Design handoff" reference). Confirmed by
+actually rendering it at 128/32/16px before saying anything, rather than
+asserting what it was from the raw SVG markup alone.
+
+**Design:** rather than inventing new iconography, reused the clock-face
+language already established in `public/og-clockmaker.png`/
+`og-backtimer.png` (circle, hour hand, minute hand, "10:10" position — the
+classic near-symmetric clock-logo angle, chosen because it stays legible
+at favicon sizes where most other hand positions don't) and the app's own
+Organic palette (`#f5ead8` cream, `#c67139` terracotta, `#201e1d` ink).
+The two are the *same* glyph with inverted fill, specifically so they're
+obviously related but easy to tell apart in a row of browser tabs:
+- `public/favicon.svg` (Clockmaker + the baish.net landing page, which
+  wasn't asked about specifically but had no reason to go back to the old
+  placeholder either): cream disc, terracotta ring, ink hour hand,
+  terracotta minute hand.
+- `public/favicon-backtimer.svg` (new file): solid terracotta disc, ink
+  hour hand, cream minute hand — the inverse, so it reads as "the other
+  one" at a glance rather than needing to be studied.
+- `backtimer.html`'s `<link rel="icon">` now points at
+  `/favicon-backtimer.svg` instead of the shared `/favicon.svg`;
+  `index.html` and `landing.html` are unchanged (both already pointed at
+  `/favicon.svg`, which is where the redesign landed).
+
+Hand-written SVG (not a screenshot/raster export like the OG images) —
+appropriate for a favicon specifically, since it needs to stay crisp at
+arbitrary small sizes a browser might request, not just the handful this
+session happened to preview.
+
+Before showing anything, rendered both at 128/32/16px — including actual
+16px, the real Chrome-tab size — and in simulated light- and dark-theme
+tab strips, since "looks fine as a big preview" doesn't guarantee "reads
+correctly as a 16px tab icon," and favicon legibility was the entire point
+of this request. Sent that comparison for approval before touching any
+real file; John confirmed before anything was wired in. Verified
+end-to-end after wiring: built, served, and fetched each of the three
+HTML entries' actual `<link rel="icon">` target at runtime, confirming the
+right file loads for each and that no trace of the old lightning-bolt SVG
+(`863bff`) remains anywhere.
