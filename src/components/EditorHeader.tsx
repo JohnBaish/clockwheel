@@ -4,6 +4,7 @@ import { dur, hourBalance } from '../lib/time';
 import { songCount } from '../lib/clockStats';
 import { withTimes } from '../data/segments';
 import { copyClockImage, copyListImage } from '../lib/exportImage';
+import { IconPrint } from '../lib/icons';
 import { PINS_ENABLED } from '../config';
 
 const HOURS = Array.from({ length: 24 }, (_, h) => h);
@@ -96,6 +97,14 @@ export function EditorHeader() {
         <span className="tag tag-neutral mono">{songs} song{songs === 1 ? '' : 's'}</span>
       </div>
       <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center', flex: 'none' }}>
+        <button
+          className="btn btn-ghost"
+          onClick={() => window.print()}
+          data-noprint="1"
+          style={{ color: 'var(--color-accent-700)' }}
+        >
+          <IconPrint size={15} />Print
+        </button>
         <button
           className="btn btn-secondary"
           onClick={() => openClock(duplicateClock(clock.id))}

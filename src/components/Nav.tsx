@@ -76,17 +76,7 @@ export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Sc
             {l.label}
           </a>
         ))}
-        {(screen === 'clock' || screen === 'list' || screen === 'backtimer') && (
-          <button
-            className="btn btn-ghost"
-            onClick={() => window.print()}
-            data-noprint="1"
-            style={{ color: 'var(--color-accent-700)', marginLeft: backtimerOnly ? 'auto' : undefined }}
-          >
-            Print
-          </button>
-        )}
-        <span className="tag tag-neutral mono" data-noprint="1">saved {relativeTime(lastEditedAt, now)}</span>
+        <span className="tag tag-neutral mono" data-noprint="1" style={{ marginLeft: backtimerOnly ? 'auto' : undefined }}>saved {relativeTime(lastEditedAt, now)}</span>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { GripVertical, Pin, Plus, MessageSquareText, Trash2, ArrowUpDown, type LucideProps } from 'lucide-react';
+import { GripVertical, Pin, Plus, MessageSquareText, Trash2, ArrowUpDown, Printer, type LucideProps } from 'lucide-react';
 
 const STROKE_WIDTH = 2.75;
 
@@ -14,6 +14,7 @@ export const IconPlus = withStroke(Plus);
 export const IconNote = withStroke(MessageSquareText);
 export const IconTrash = withStroke(Trash2);
 export const IconArrowUpDown = withStroke(ArrowUpDown);
+export const IconPrint = withStroke(Printer);
 
 // The legend swatch on the Clock screen draws the pin marker exactly as it
 // appears on the clock face (spoke + dot), not the Lucide pin glyph.

@@ -1913,3 +1913,67 @@ assignment reads "Example" / "8 songs" / "Not assigned", in that order;
 assigning it to one Week hour and re-checking shows "Used 1 hour a week"
 with a capital U; confirmed "news junction" no longer appears anywhere
 on the Library screen.
+
+## Print moved out of the nav, into each screen's own header; added to Guide (2026-10-04)
+
+John's observation: Print sitting in the nav bar (visible only on
+Clock/List/Backtimer, appearing/disappearing as you navigate) read as
+disconnected from the content it actually acted on. Proposed, and John
+approved, relocating it into each screen's own action row — same place
+Duplicate/Copy image (Clock+List) and Add item/Clear (Backtimer) already
+live — and giving it a small icon so it reads consistently with
+Backtimer's existing "+ Add item" icon-plus-label pattern. Also added a
+Print button to Guide for the first time, since Print now lives per-screen
+rather than behind one shared nav-bar condition that would have needed a
+fourth screen name added to it.
+
+- `lib/icons.tsx`: new `IconPrint` (lucide-react's `Printer`, same
+  `withStroke()` wrapper every other icon here uses).
+- `components/EditorHeader.tsx` (shared by Clock+List): a new `btn-ghost`
+  Print button, accent-coloured text, first in the existing right-aligned
+  group ahead of Duplicate/Copy image/Done — deliberately `btn-ghost`
+  rather than `btn-secondary` like Duplicate/Copy image, so it still
+  reads as the lightest-weight action of the four, matching the weight
+  it had as a nav-bar ghost button before.
+- `screens/BacktimerScreen.tsx`: Print added to the existing toolbar row,
+  immediately before "Add item" — it, not Add item, now carries the
+  `marginLeft: 'auto'` that pins the Print/Add item/Clear trio to the
+  right edge.
+- `screens/GuideScreen.tsx`: new — Guide's header (previously just the
+  "Start here" kicker + `<h2>`) is now a flex row with Print added at
+  the right, `marginLeft: 'auto'`. The "Go to Library" button at the
+  bottom of the card picked up `data-noprint="1"` on its wrapping div
+  (it had none before, since Guide never had anything to print) — Print
+  itself prints exactly as described earlier for the Categories/List
+  text additions, i.e. the card's actual content, so the on-screen-only
+  button needed explicitly excluding.
+- `components/Nav.tsx`: the old nav-bar Print button (the
+  `screen === 'clock' || screen === 'list' || screen === 'backtimer'`
+  conditional block) is gone outright, not just hidden — Print no longer
+  has any presence in the nav at all, on any screen. One knock-on fix:
+  that old button carried `marginLeft: backtimerOnly ? 'auto' : undefined`
+  to keep itself (and, by extension, the saved-tag following it) pinned
+  to the right edge of the Backtimer-only nav's wrapped second line
+  (`.nav-brand`'s own `margin-right: auto` only pushes items on its own
+  flex line, not a line wrapped below it — see the 2026-09-30
+  "Backtimer-only nav skips the hamburger" entry for why that distinction
+  matters here). With Print gone, that `marginLeft: 'auto'` moved onto
+  the saved-tag itself, so it still sits flush right under the
+  "Backtimer" brand on that host rather than drifting left now that
+  nothing precedes it.
+
+Nothing about *how* printing itself works changed — same `window.print()`
+call, same `data-noprint`/`.print-only`/`.print-clock-card` CSS this
+project has used since Print was first built (2026-09-27 entry above);
+this was purely about where the trigger button lives and what it looks
+like.
+
+Verified with Playwright on a built `vite preview`: exactly one Print
+button renders on each of Clock/List/Backtimer/Guide and zero on
+Library/Week/Summary/Categories (where Print was never relevant);
+`emulateMedia({ media: 'print' })` on all four confirms both `.nav` and
+the new Print button itself are hidden in the printed output on every
+one of them (not just that the button looks right on screen); the
+standalone `?host=backtimer` nav was re-checked and the saved-tag still
+sits right-aligned on its own line with no Print button anywhere in the
+nav, matching the pre-existing layout contract from the 2026-09-30 entry.

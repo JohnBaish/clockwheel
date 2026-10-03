@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { useApp } from '../state/store';
+import { IconPrint } from '../lib/icons';
 
 const linkStyle = { color: 'var(--color-accent-700)', textDecoration: 'underline' };
 
@@ -54,9 +55,19 @@ export function GuideScreen() {
 
   return (
     <div style={{ padding: '0 var(--space-6) var(--space-6)' }}>
-      <div style={{ padding: 'var(--space-3) 0' }}>
-        <div className="card-kicker">Start here</div>
-        <h2 style={{ margin: '1px 0 0', lineHeight: 1.05 }}>How to use Clockmaker</h2>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: 'var(--space-3) 0', flexWrap: 'wrap' }}>
+        <div>
+          <div className="card-kicker">Start here</div>
+          <h2 style={{ margin: '1px 0 0', lineHeight: 1.05 }}>How to use Clockmaker</h2>
+        </div>
+        <button
+          className="btn btn-ghost"
+          onClick={() => window.print()}
+          data-noprint="1"
+          style={{ marginLeft: 'auto', color: 'var(--color-accent-700)' }}
+        >
+          <IconPrint size={15} />Print
+        </button>
       </div>
 
       <div className="card" style={{ maxWidth: 720, display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', padding: 'var(--space-6)' }}>
@@ -71,7 +82,7 @@ export function GuideScreen() {
             <p style={{ margin: 0, fontSize: 14.5, lineHeight: 1.5, color: 'var(--color-neutral-700)' }}>{s.body}</p>
           </div>
         ))}
-        <div>
+        <div data-noprint="1">
           <button className="btn btn-primary" onClick={() => setScreen('lib')} style={{ padding: '9px 20px', fontSize: '13.5px' }}>
             Go to Library
           </button>

@@ -4,7 +4,7 @@ import { withBackTimes, normalizeOutTime } from '../data/backtimer';
 import { dur, parseDur, parseOutTime, wrapHour } from '../lib/time';
 import { useDragReorder } from '../lib/useDragReorder';
 import { useIsNarrow } from '../lib/responsive';
-import { IconGrip, IconPlus, IconTrash, IconArrowUpDown } from '../lib/icons';
+import { IconGrip, IconPlus, IconTrash, IconArrowUpDown, IconPrint } from '../lib/icons';
 import { isBacktimerHost } from '../lib/hostMode';
 
 const NARROW = 720;
@@ -129,7 +129,15 @@ export function BacktimerScreen() {
             starts {dur(wrapHour(computed[computed.length - 1].start))} — in the hour before this one
           </span>
         )}
-        <button className="btn btn-ghost" onClick={() => addBacktimerItem()} style={{ marginLeft: 'auto', color: 'var(--color-accent-700)' }}>
+        <button
+          className="btn btn-ghost"
+          onClick={() => window.print()}
+          data-noprint="1"
+          style={{ marginLeft: 'auto', color: 'var(--color-accent-700)' }}
+        >
+          <IconPrint size={15} />Print
+        </button>
+        <button className="btn btn-ghost" onClick={() => addBacktimerItem()} style={{ color: 'var(--color-accent-700)' }}>
           <IconPlus size={15} />Add item
         </button>
         <button className="btn btn-ghost" onClick={handleClear} style={{ color: 'var(--color-neutral-700)' }}>
