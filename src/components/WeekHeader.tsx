@@ -15,9 +15,6 @@ export function WeekHeader() {
         <span className="tag tag-neutral mono">{assigned} of {slots} active hours assigned</span>
         <span className="tag tag-neutral mono">{gaps} unassigned</span>
       </div>
-      <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center', flex: 'none' }}>
-        <button className="btn btn-primary" style={{ padding: '8px 18px', fontSize: '13.5px', whiteSpace: 'nowrap' }}>Save</button>
-      </div>
     </div>
   );
 }

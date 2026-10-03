@@ -6,6 +6,7 @@ import { hh } from '../lib/time';
 import { localKeys } from '../lib/weekStats';
 import { splitBg, contrastInk } from '../lib/color';
 import { computeSplit } from '../lib/clockStats';
+import { useIsNarrow } from '../lib/responsive';
 
 const HATCH = 'repeating-linear-gradient(135deg,var(--color-neutral-200) 0 3px,var(--color-neutral-100) 3px 6px)';
 const HATCH_STRONG = 'repeating-linear-gradient(135deg,var(--color-neutral-300) 0 3px,var(--color-neutral-100) 3px 6px)';
@@ -40,10 +41,16 @@ export function WeekScreen() {
   const outLabel = allOut ? 'Active' : 'Inactive';
   const keys = localKeys(outside);
   const usedClocks = clockOrder.filter((id) => keys.some((k) => week[k] === id));
-  const hoverClock = hover ? week[hover] : undefined;
-  const hoverLabel = hover
-    ? `${DAYS.find((d) => d[0] === hover.split('-')[0])![1]} ${hh(+hover.split('-')[1])} · ${
-        hoverClock ? clocks[hoverClock].name : outside[hover] ? 'inactive' : 'no clock yet'
+  const isNarrow = useIsNarrow(720);
+  // On a mouse, hover drives this; on a touchscreen hover doesn't fire the
+  // same way, so a single selected cell (tapping one is itself a select)
+  // falls back to showing the same info — otherwise narrow cells with no
+  // room for their clock's name in-line would have no way to identify it.
+  const activeKey = hover ?? (selKeys.length === 1 ? selKeys[0] : null);
+  const activeClock = activeKey ? week[activeKey] : undefined;
+  const hoverLabel = activeKey
+    ? `${DAYS.find((d) => d[0] === activeKey.split('-')[0])![1]} ${hh(+activeKey.split('-')[1])} · ${
+        activeClock ? clocks[activeClock].name : outside[activeKey] ? 'inactive' : 'no clock yet'
       }`
     : '';
 
@@ -129,13 +136,13 @@ export function WeekScreen() {
                     style={{
                       height: 21, borderRadius: 7, cursor: 'pointer', overflow: 'hidden',
                       display: 'flex', alignItems: 'center',
-                      padding: id ? '0 6px' : 0,
+                      padding: id && !isNarrow ? '0 6px' : 0,
                       background: out ? HATCH : id ? clocks[id].color : 'transparent',
                       border: out ? '1px solid transparent' : id ? '1px solid rgba(32,30,29,.10)' : '1.5px dashed var(--color-neutral-400)',
                       boxShadow: on ? '0 0 0 2px var(--color-accent)' : 'none',
                     }}
                   >
-                    {id && (
+                    {id && !isNarrow && (
                       <span
                         style={{
                           font: '600 9.5px var(--font-body)', color: contrastInk(clocks[id].color),

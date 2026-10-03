@@ -2028,3 +2028,75 @@ auto-grow-height wrapping behaviour from the 2026-09-28 "name field now
 wraps" entry above. Also re-screenshotted the same long name at desktop
 width to confirm no regression there — field still caps at 420px and
 wraps exactly as before.
+
+## Comprehensive narrow-screen audit; dead Save button removed; Week/Summary phone fixes (2026-10-04)
+
+John asked for a full narrow-screen pass across every screen this
+session hadn't already checked (Library, Categories, Week, Summary),
+plus the standalone Backtimer domain and the baish.net landing page —
+on top of the Clock/List fixes already shipped above. Checked each with
+real content (multiple clocks, an import error banner, an assigned Week
+cell, a Backtimer item) at 390px, both for raw horizontal overflow
+(`document.body.scrollWidth` vs. viewport) and by actually looking at
+the screenshots, not just the overflow number.
+
+**Clean, no changes needed:** Library (one card and three), Categories,
+the error banner, standalone Backtimer (nav and an added item), and the
+`baish.net` landing page.
+
+**Found and removed: a dead "Save" button on Week.** `WeekHeader.tsx`
+had a `btn-primary` "Save" button, top-right, with no `onClick` at all —
+confirmed via `git log --follow` that it's had no handler since the
+very first commit (`07de92e`, the original scaffold), predating every
+other part of this app. Since the whole app autosaves on every change
+(the nav's "saved Xs ago" tag is the only save-state indicator anywhere)
+and there's no concept of unsaved state for this button to meaningfully
+gate, it was simply removed — along with the now-empty wrapper div that
+existed only to hold it. Confirmed desktop Week looks byte-for-byte the
+same minus the button (the header's other two tags just reflow to fill
+the space `margin-left: auto` used to reserve).
+
+**Week's grid cells are unreadable on a phone — fixed.** A clock named
+"Daytime Mix" truncated to "Da…" in a ~45px-wide cell; indistinguishable
+from any other clock starting "Da…". Considered and rejected making the
+whole 7-day grid horizontally scrollable (the same pattern Summary's
+table already uses) — planning a week by swiping a dense grid sideways
+felt like a worse interaction than what shipped instead:
+- `WeekScreen.tsx` now checks `useIsNarrow(720)` (same hook/breakpoint
+  `ListScreen.tsx`/`BacktimerScreen.tsx` already use) and, only below
+  that width, stops rendering the in-cell name `<span>` and its padding
+  — a filled cell becomes a plain colour block, same visual language the
+  empty/inactive states already use (dashed border / hatch), rather than
+  cramming illegible text into it. Desktop is completely unaffected —
+  verified by renaming a clock to "Daytime Mix" and confirming the
+  in-cell text still renders in full at 1200px.
+- The status line above the grid (`hoverLabel`, previously driven only
+  by `onMouseEnter` — mouse-only, no equivalent on a touchscreen) now
+  falls back to the single selected cell when nothing's being hovered:
+  `activeKey = hover ?? (selKeys.length === 1 ? selKeys[0] : null)`.
+  Tapping a cell already calls `pickKeys` via the existing
+  `onMouseDown` handler (touch reliably triggers this), so this one
+  change makes tapping any cell on a phone show its full day/hour/clock
+  name at the top of the screen — the same information the in-cell text
+  used to carry, just relocated somewhere there's room to show it in
+  full. The full-name colour legend below the grid was already there
+  and needed no change; between the two, there's no longer any clock
+  identifiable only by a truncated 2-character fragment.
+- Verified with Playwright: renamed the seed clock to "Daytime Mix",
+  assigned it to a cell at 390px, confirmed zero `<span>` elements exist
+  inside that cell (plain colour block) and zero horizontal overflow;
+  tapped the cell and confirmed the status line read
+  "Mon 06:00 · Daytime Mix" in full; re-ran the same scenario at 1200px
+  and confirmed the in-cell text is back, reading "Daytime Mix"
+  unabridged, with no Save button and no other visual change.
+
+**Summary's hidden columns on a phone now have a hint.** The table was
+already properly horizontally scrollable (`overflow: auto`,
+`scrollWidth` 691 vs. `clientWidth` 355 at 390px — confirmed by
+scrolling it programmatically and screenshotting Days/Last changed
+rendering correctly once scrolled to), but nothing told anyone that.
+`SummaryScreen.tsx` now shows a small `data-noprint="1"` line — "Swipe
+the table sideways to see Days and Last changed →" — directly above the
+table, only when `useIsNarrow(720)` is true; nothing changes at desktop
+widths. Verified the hint renders exactly once at 390px and exactly
+zero times at 1200px.

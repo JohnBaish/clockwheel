@@ -4,10 +4,12 @@ import { DAYS } from '../data/days';
 import { splitBg } from '../lib/color';
 import { computeSplit } from '../lib/clockStats';
 import { relativeTime } from '../lib/time';
+import { useIsNarrow } from '../lib/responsive';
 
 export function SummaryScreen() {
   const { clocks, clockOrder, week, outside, sumSel, setSumSel, openClock, categories, categoryOrder } = useApp();
   const cats = { byId: categories, order: categoryOrder };
+  const isNarrow = useIsNarrow(720);
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 30_000);
@@ -48,7 +50,13 @@ export function SummaryScreen() {
           {clockOrder.length === 0 ? (
             <div style={{ padding: 'var(--space-6)', textAlign: 'center', color: 'var(--color-neutral-700)' }}>No clocks yet.</div>
           ) : (
-            <table className="table" style={{ width: '100%' }}>
+            <>
+              {isNarrow && (
+                <div data-noprint="1" style={{ fontSize: 12, color: 'var(--color-neutral-700)', marginBottom: 6 }}>
+                  Swipe the table sideways to see Days and Last changed →
+                </div>
+              )}
+              <table className="table" style={{ width: '100%' }}>
               <thead>
                 <tr>
                   <th style={{ textAlign: 'left' }}>Clock</th>
@@ -91,7 +99,8 @@ export function SummaryScreen() {
                   );
                 })}
               </tbody>
-            </table>
+              </table>
+            </>
           )}
         </div>
       </div>
