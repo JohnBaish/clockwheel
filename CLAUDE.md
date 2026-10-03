@@ -1701,3 +1701,41 @@ Checked for accidental collisions before renaming — confirmed "active"/
 "inactive" weren't already used for something unrelated elsewhere in the
 app (the only hits were `document.activeElement`, an unrelated browser
 API reference, not UI text).
+
+## Backtimer footer notice: standalone-only (2026-10-04)
+
+John's asked whether the "free-to-use personal project... not supported
+by the BBC... Contact: backtimer@baish.net" footer could appear only on
+the actual `backtimer.baish.net` domain, not Clockmaker's own Backtimer
+tab — he's writing a Clockmaker-wide privacy notice for the Guide screen
+separately, so this footer duplicating similar ground inside Clockmaker
+itself was redundant.
+
+`BacktimerScreen.tsx`'s footer `<div>` (the notice text, the "clear it"
+link, everything below the Reverse button) is now wrapped in
+`{isBacktimerHost() && (...)}` — same host check `Nav.tsx` already uses to
+decide whether to show the full nav or go Backtimer-only. The Reverse
+button and the Clear button up near Add Item are untouched and still show
+in both contexts; only the footer notice itself is now standalone-only.
+Verified with Playwright: Clockmaker's own Backtimer tab no longer shows
+any trace of the footer text; `?host=backtimer` (the same override used
+throughout this project to test the standalone presentation without real
+DNS) still shows it in full.
+
+**Also answered, no code change needed:** John asked whether Backtimer's
+Clear button, when used from inside Clockmaker, wipes just Backtimer or
+everything. Checked `resetBacktimer` in `store.tsx` —
+`setEdited((s) => ({ ...s, backtimer: seedBacktimer() }))` — and it only
+ever replaces the `backtimer` key; `clocks`, `categories`, `week`, etc.
+are structurally untouched by the spread. Confirmed this wasn't just a
+reading of the code but true in practice: built a clock, used Backtimer's
+Clear, and the clock was still present in Library afterward. Already
+correct, nothing to change here.
+
+**Raised, not yet actioned — his own open question, not a decision made
+here:** whether Clockmaker should get an equivalent "clear everything"
+function of its own. Given the asymmetry in stakes — Backtimer's state is
+one disposable out-time-and-a-list, while Clockmaker's could be months of
+real clocks — this isn't being built speculatively. Worth a proper
+back-and-forth with John on whether it's wanted at all before writing any
+of it.

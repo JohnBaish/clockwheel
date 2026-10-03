@@ -5,6 +5,7 @@ import { dur, parseDur, parseOutTime, wrapHour } from '../lib/time';
 import { useDragReorder } from '../lib/useDragReorder';
 import { useIsNarrow } from '../lib/responsive';
 import { IconGrip, IconPlus, IconTrash, IconArrowUpDown } from '../lib/icons';
+import { isBacktimerHost } from '../lib/hostMode';
 
 const NARROW = 720;
 
@@ -297,28 +298,30 @@ export function BacktimerScreen() {
         </div>
       )}
 
-      <div
-        data-noprint="1"
-        style={{
-          marginTop: 64, paddingTop: 'var(--space-3)',
-          borderTop: '1px solid var(--color-divider)',
-          fontSize: 12, lineHeight: 1.6, color: 'var(--color-neutral-700)', textAlign: 'center',
-        }}
-      >
-        Backtimer is a free-to-use personal project by John Baish. It is not supported by the BBC.
-        Nothing you type here is sent anywhere; your data is only saved in your own browser and you
-        can{' '}
-        <button
-          onClick={handleClear}
+      {isBacktimerHost() && (
+        <div
+          data-noprint="1"
           style={{
-            background: 'none', border: 'none', padding: 0, margin: 0, font: 'inherit',
-            color: 'var(--color-accent-700)', textDecoration: 'underline', cursor: 'pointer',
+            marginTop: 64, paddingTop: 'var(--space-3)',
+            borderTop: '1px solid var(--color-divider)',
+            fontSize: 12, lineHeight: 1.6, color: 'var(--color-neutral-700)', textAlign: 'center',
           }}
         >
-          clear it
-        </button>
-        {' '}at any time. Contact: backtimer@baish.net.
-      </div>
+          Backtimer is a free-to-use personal project by John Baish. It is not supported by the BBC.
+          Nothing you type here is sent anywhere; your data is only saved in your own browser and you
+          can{' '}
+          <button
+            onClick={handleClear}
+            style={{
+              background: 'none', border: 'none', padding: 0, margin: 0, font: 'inherit',
+              color: 'var(--color-accent-700)', textDecoration: 'underline', cursor: 'pointer',
+            }}
+          >
+            clear it
+          </button>
+          {' '}at any time. Contact: backtimer@baish.net.
+        </div>
+      )}
     </div>
   );
 }
