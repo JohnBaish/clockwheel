@@ -96,7 +96,7 @@ export function EditorHeader() {
         {PINS_ENABLED && <span className="tag tag-neutral mono">{anchors} anchors held</span>}
         <span className="tag tag-neutral mono">{songs} song{songs === 1 ? '' : 's'}</span>
       </div>
-      <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center', flex: 'none' }}>
+      <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
         <button
           className="btn btn-ghost"
           onClick={() => window.print()}

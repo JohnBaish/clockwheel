@@ -1977,3 +1977,33 @@ one of them (not just that the button looks right on screen); the
 standalone `?host=backtimer` nav was re-checked and the saved-tag still
 sits right-aligned on its own line with no Print button anywhere in the
 nav, matching the pre-existing layout contract from the 2026-09-30 entry.
+
+**Follow-up, same day — narrow-screen regression caught and fixed.**
+John asked whether this looked right on phones. Checking at 390px wide
+surfaced a real bug this change introduced: `EditorHeader.tsx`'s
+right-aligned button group (now Print + Duplicate + Copy image + Done —
+four buttons, one more than before) had `flex: 'none'` on the group
+itself, which sets `flex-shrink: 0` — so the browser never constrained
+the group's width to fit the row at all, and it rendered as one
+unbroken line wide enough to push "Done" off the right edge of the
+screen entirely. Adding `flexWrap: 'wrap'` alone didn't fix it (a flex
+item that refuses to shrink never gets narrow enough for its own
+`flex-wrap` to have anything to wrap against) — the actual fix was
+dropping `flex: 'none'` so the group can shrink to the row's available
+width, at which point `flexWrap: 'wrap'` correctly drops Done onto its
+own second line instead of overflowing. Verified by measuring
+`document.body.scrollWidth` against the viewport at 390px before (30px
+of real horizontal overflow) and after (0) on both Clock and List.
+
+**Also found, flagged, not yet fixed — pre-existing, unrelated to
+Print.** The same narrow-screen check turned up a second, separate
+source of the same 30px overflow: the clock name field
+(`EditorHeader.tsx`'s `<textarea rows={1}>`) has never had an explicit
+width — a bare `<textarea>` falls back to its default `cols="20"`
+intrinsic width, which at this field's 32px heading font renders
+roughly 400px wide regardless of the actual name's length, bumping
+against the `maxWidth: 420` already on its containing block
+(`git log` confirms this div/textarea pairing dates to Print's original
+2026-09-27 commit — well before today, not something this session's
+relocation work touched or introduced). Not fixed yet, pending whether
+John wants it addressed now or separately.
