@@ -307,7 +307,7 @@ export function BacktimerScreen() {
             fontSize: 12, lineHeight: 1.6, color: 'var(--color-neutral-700)', textAlign: 'center',
           }}
         >
-          Backtimer is a free-to-use personal project by John Baish. It is not supported by the BBC.
+          Backtimer is a free-to-use personal project by John Baish.
           Nothing you type here is sent anywhere; your data is only saved in your own browser and you
           can{' '}
           <button

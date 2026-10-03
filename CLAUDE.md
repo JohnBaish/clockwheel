@@ -1738,4 +1738,58 @@ function of its own. Given the asymmetry in stakes — Backtimer's state is
 one disposable out-time-and-a-list, while Clockmaker's could be months of
 real clocks — this isn't being built speculatively. Worth a proper
 back-and-forth with John on whether it's wanted at all before writing any
-of it.
+of it. John has since decided against it ("Let's leave it, it's probably
+not necessary") — closed, not just deferred.
+
+## Real Guide text, corner-clipping fix, Backtimer BBC sentence (2026-10-04)
+
+John sent over his actual Guide copy (a `.docx`) now that he's about to
+let people start using Clockmaker. Three things landed together:
+
+**`GuideScreen.tsx` now carries John's real text**, replacing every
+placeholder paragraph: the intro, and one heading+body pair per section —
+Library, Categories, List, Clock, Week, Summary, Backtimer — in that
+order (note this isn't the same order as the nav bar; it's John's own
+walkthrough order, with Backtimer last since it's a separate tool). Text
+was extracted from the `.docx` by unzipping it and parsing
+`word/document.xml` directly with Python's stdlib `xml.etree.ElementTree`
+— neither `pandoc` nor `python-docx` is available in this environment, so
+this was the fallback. One extraction artifact needed fixing by hand: the
+"Backtimer" heading and its body paragraph had no separator in the raw
+XML ("BacktimerThis is a separate tool...") unlike every other section,
+which was obviously a parsing quirk and not something John wrote that
+way — split back into heading + body to match the other six.
+
+Added a new closing block below the main card, **"About Clockmaker"**
+(no visible heading — same quiet treatment as Backtimer's standalone
+footer): "Clockmaker is a free-to-use personal project by John Baish.
+Nothing you type here is sent anywhere, because your data is only saved
+in your browser. Contact: clockmaker@baish.net." Styled to match
+`BacktimerScreen.tsx`'s footer exactly (small/muted/centered, divider
+above, `data-noprint="1"`) for visual consistency between the two tools'
+"about" notices, even though this one isn't host-gated — Clockmaker
+doesn't have Backtimer's standalone-vs-embedded split, so it always
+shows.
+
+**Fixed the rounded-corner clipping bug** John flagged earlier ("the 'P'
+and half the 'l' at the start of 'Placeholder' hang over white space
+rather than being within the nice arc of the darker background box"):
+the `.card`'s padding was `var(--space-5)`, not generous enough at the
+top-left for text to clear the curve. Bumped to `var(--space-6)` — same
+design, just enough inset that the first line of real body text now
+sits inside the arc instead of overhanging it. Verified visually with a
+Playwright screenshot of just the card, not just by reading the CSS
+numbers.
+
+**`BacktimerScreen.tsx`**: removed "It is not supported by the BBC."
+from the standalone footer notice — one sentence out of the existing
+paragraph, nothing else touched. Footer now reads "Backtimer is a
+free-to-use personal project by John Baish. Nothing you type here is
+sent anywhere; your data is only saved in your own browser and you can
+clear it at any time. Contact: backtimer@baish.net." Still host-gated
+the same as before (standalone-only, per the previous entry above).
+
+Verified all three with Playwright against a built `vite preview`: Guide
+page shows the real section text and no leftover "Placeholder" string
+anywhere on the page; standalone Backtimer's footer still has the
+"free-to-use personal project" sentence but no longer the BBC one.
