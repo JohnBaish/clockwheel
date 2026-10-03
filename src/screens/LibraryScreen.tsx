@@ -2,7 +2,7 @@ import { useRef, useState, type ChangeEvent } from 'react';
 import { useApp } from '../state/store';
 import { localKeys } from '../lib/weekStats';
 import { splitBg, wheelBg, mixLine } from '../lib/color';
-import { computeSplit, newsJunctionCount } from '../lib/clockStats';
+import { computeSplit, songCount } from '../lib/clockStats';
 
 export function LibraryScreen() {
   const { clocks, clockOrder, week, outside, categories, categoryOrder, duplicateClock, openClock, removeClock, exportState, importState } = useApp();
@@ -99,10 +99,10 @@ export function LibraryScreen() {
                       {c.name}
                     </div>
                     <div className="mono" style={{ fontSize: 12, color: 'var(--color-neutral-700)', marginTop: 3 }}>
-                      {n ? `used ${n} hour${n === 1 ? '' : 's'} a week` : 'not in the week'}
+                      {(() => { const sc = songCount(c.segments, categories); return `${sc} song${sc === 1 ? '' : 's'}`; })()}
                     </div>
                     <div className="mono" style={{ fontSize: 12, color: 'var(--color-neutral-700)' }}>
-                      {(() => { const nj = newsJunctionCount(c.segments, categories); return `${nj} news junction${nj === 1 ? '' : 's'}`; })()}
+                      {n ? `Used ${n} hour${n === 1 ? '' : 's'} a week` : 'Not assigned'}
                     </div>
                   </div>
                 </div>

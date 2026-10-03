@@ -1870,3 +1870,46 @@ title-attribute read, not just that the card vanished); deleting the
 last remaining clock leaves Library showing its existing "No clocks
 yet" empty state with no crash, and Summary's clock picker/table don't
 blow up either on zero clocks.
+
+## Guide copy additions; Library card now shows song count, "Not assigned"/"Used" (2026-10-04)
+
+Three small John-authored wording/display changes, all text or display
+order — no new behaviour.
+
+- **`GuideScreen.tsx`'s Categories section**: "You can delete the
+  example ones." → "You can delete the example ones, but we suggest you
+  keep “Music” because it drives a song count function." — flagging that
+  the "Music"-named category isn't just an example like the others,
+  since `songCount()` (`lib/clockStats.ts`) keys off a category literally
+  named "Music" (case-insensitive) to drive both EditorHeader's "N songs"
+  tag and, as of this same change, the Library card's own song-count line
+  below.
+- **`GuideScreen.tsx`'s List section**: inserted a new sentence right
+  after "Build your hour here.": "First, name your clock, then choose
+  the hour to which it relates in the dropdown just above the name —
+  this hour will appear in the centre of the circle of your finished
+  clock." Describes the small "The [hour ▾] hour" control that sits
+  above the name field in `EditorHeader.tsx` (shared by Clock and List),
+  which the List section hadn't mentioned at all before.
+- **`LibraryScreen.tsx`'s per-card display, reworked per explicit
+  instruction** (name, then song count, then week-usage — in that
+  order, replacing the old name/usage/news-junction-count layout):
+  - Swapped `newsJunctionCount` for `songCount` as the card's second
+    line (now reading e.g. "8 songs") — the news-junction count is
+    gone from Library entirely, not just reordered; nothing else in the
+    app still shows it (EditorHeader already switched from news
+    junctions to songs back on 2026-09-27).
+  - The usage line (now third, was second) is the same `countUsage(id)`
+    computation as before, just reworded: "not in the week" →
+    "Not assigned" (capital N), "used N hour(s) a week" → "Used N
+    hour(s) a week" (capital U). The header's own separate summary chip
+    ("N not in the week" / "all in use") was left exactly as-is — John
+    asked specifically about the per-card line, not that chip, and
+    there was no reason to assume he meant both.
+
+Verified with Playwright: Guide page contains both new sentences intact;
+a Library card with no segments in the "Music" category and no Week
+assignment reads "Example" / "8 songs" / "Not assigned", in that order;
+assigning it to one Week hour and re-checking shows "Used 1 hour a week"
+with a capital U; confirmed "news junction" no longer appears anywhere
+on the Library screen.

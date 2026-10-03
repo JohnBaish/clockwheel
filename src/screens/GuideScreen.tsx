@@ -10,11 +10,11 @@ const SECTIONS: { heading: string; body: ReactNode }[] = [
   },
   {
     heading: 'Categories',
-    body: 'This is where you create the labels which will be shown on your clocks, each with its own colour. You can delete the example ones. Any category used for any clock lives in this common list, each with its own colour. Add, rename, reorder or change their colour here, and the change shows up everywhere a category appears. You can’t delete one that’s still in use anywhere — Clockmaker will tell you how many segments are holding it, so you can reassign them first.',
+    body: 'This is where you create the labels which will be shown on your clocks, each with its own colour. You can delete the example ones, but we suggest you keep “Music” because it drives a song count function. Any category used for any clock lives in this common list, each with its own colour. Add, rename, reorder or change their colour here, and the change shows up everywhere a category appears. You can’t delete one that’s still in use anywhere — Clockmaker will tell you how many segments are holding it, so you can reassign them first.',
   },
   {
     heading: 'List',
-    body: 'Build your hour here. Click into a segment’s name to change it and add the duration, pick a category from the dropdown, and Tab will take you onto a new line. Drag the handle on the left to reorder the items. The time on the left is not clickable, it’s calculated from the items you enter. The running total at the top tells you at a glance whether the hour’s over, under or exactly on 60:00.',
+    body: 'Build your hour here. First, name your clock, then choose the hour to which it relates in the dropdown just above the name — this hour will appear in the centre of the circle of your finished clock. Click into a segment’s name to change it and add the duration, pick a category from the dropdown, and Tab will take you onto a new line. Drag the handle on the left to reorder the items. The time on the left is not clickable, it’s calculated from the items you enter. The running total at the top tells you at a glance whether the hour’s over, under or exactly on 60:00.',
   },
   {
     heading: 'Clock',
