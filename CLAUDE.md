@@ -1658,3 +1658,46 @@ end-to-end after wiring: built, served, and fetched each of the three
 HTML entries' actual `<link rel="icon">` target at runtime, confirming the
 right file loads for each and that no trace of the old lightning-bolt SVG
 (`863bff`) remains anywhere.
+
+## Week screen: "Local"/"Non-local" renamed to "Active"/"Inactive" (2026-10-03)
+
+John's own page heading for this screen has always read "Schedule"
+(`WeekHeader.tsx`'s `<h2>`, distinct from the nav tab's label "Week") —
+worth noting since he referred to it as "Schedule" and that's genuinely
+what the screen calls itself, not a mismatch to chase down.
+
+Audited with a full case-insensitive search for "local" across `src/`
+before touching anything, specifically to separate what's user-visible
+from what's just an internal name — same principle as `STORAGE_KEY`
+surviving the Clockwheel→Clockmaker rename. Seven user-facing strings
+changed, pure word-for-word swaps with zero logic changes (confirmed by
+testing, not just reading the diff):
+- `WeekHeader.tsx`: "X of Y local hours assigned" → "...active hours..."
+- `WeekScreen.tsx`: the "Local hours" section label above the grid → "Active hours"
+- `WeekScreen.tsx`: "mark them local or non-local" (description line) → "active or inactive"
+- `WeekScreen.tsx`: each cell's hover tooltip ("· non-local") → "· inactive"
+- `WeekScreen.tsx`: the hover status line top-right of the grid → "inactive"
+- `WeekScreen.tsx`: the legend swatch label → "inactive"
+- `WeekScreen.tsx`: `outLabel` — the toggle button's own text. This one's
+  the trickiest of the seven to get right, since it doesn't show the
+  *current* state of the selection, it shows what clicking it would *do*
+  (`allOut ? 'Local' : 'Non-local'` → `allOut ? 'Active' : 'Inactive'`) —
+  select a currently-inactive block and the button reads "Active" (click
+  to activate them); select an active one and it reads "Inactive". Verified
+  this round-trips correctly post-rename with Playwright: selected a
+  default (inactive) cell, confirmed the button said "Active", clicked it,
+  re-selected the same cell, confirmed the button now said "Inactive".
+
+**Deliberately left unchanged** — internal names nobody using the app
+ever sees: the `outside` state field, `markLocal`/`doMarkLocal`,
+`localKeys()` (`lib/weekStats.ts`), `DEFAULT_LOCAL` (`data/clocks.ts`),
+the `.week-toggle-local` CSS class. Also left alone: `GuideScreen.tsx`'s
+placeholder copy ("mark which hours are local vs. non-local") — John is
+replacing that screen's entire text himself in a separate document he's
+actively writing, so editing dead placeholder prose bound for deletion
+wasn't worth doing.
+
+Checked for accidental collisions before renaming — confirmed "active"/
+"inactive" weren't already used for something unrelated elsewhere in the
+app (the only hits were `document.activeElement`, an unrelated browser
+API reference, not UI text).

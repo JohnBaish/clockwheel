@@ -37,13 +37,13 @@ export function WeekScreen() {
   const selKeys = Object.keys(sel);
   const hasSel = selKeys.length > 0;
   const allOut = selKeys.length > 0 && selKeys.every((k) => outside[k]);
-  const outLabel = allOut ? 'Local' : 'Non-local';
+  const outLabel = allOut ? 'Active' : 'Inactive';
   const keys = localKeys(outside);
   const usedClocks = clockOrder.filter((id) => keys.some((k) => week[k] === id));
   const hoverClock = hover ? week[hover] : undefined;
   const hoverLabel = hover
     ? `${DAYS.find((d) => d[0] === hover.split('-')[0])![1]} ${hh(+hover.split('-')[1])} · ${
-        hoverClock ? clocks[hoverClock].name : outside[hover] ? 'non-local' : 'no clock yet'
+        hoverClock ? clocks[hoverClock].name : outside[hover] ? 'inactive' : 'no clock yet'
       }`
     : '';
 
@@ -79,8 +79,8 @@ export function WeekScreen() {
   return (
     <div style={{ padding: '0 var(--space-4) var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', background: 'var(--color-surface)', borderRadius: 'calc(var(--radius-lg)*1.1)', padding: '9px var(--space-4)', boxShadow: 'var(--shadow-sm)' }}>
-        <span style={{ font: '700 11px var(--font-body)', letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--color-neutral-700)', flex: 'none' }}>Local hours</span>
-        <span style={{ fontSize: 13, color: 'var(--color-neutral-700)' }} data-noprint="1">Set per day: select any hours in the grid and mark them local or non-local. Select a cell and press Ctrl/Cmd+C to copy its clock, then select another and press Ctrl/Cmd+V to paste.</span>
+        <span style={{ font: '700 11px var(--font-body)', letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--color-neutral-700)', flex: 'none' }}>Active hours</span>
+        <span style={{ fontSize: 13, color: 'var(--color-neutral-700)' }} data-noprint="1">Set per day: select any hours in the grid and mark them active or inactive. Select a cell and press Ctrl/Cmd+C to copy its clock, then select another and press Ctrl/Cmd+V to paste.</span>
         {clipboard !== undefined && (
           <span className="tag tag-neutral mono" data-noprint="1" style={{ flex: 'none' }}>
             Copied {clipboard ? clocks[clipboard].name : 'empty'} — Ctrl/Cmd+V to paste
@@ -122,7 +122,7 @@ export function WeekScreen() {
                 return (
                   <div
                     key={d}
-                    title={`${dl} ${hh(i)}${out ? ' · non-local' : id ? ' · ' + clocks[id].name : ' · no clock yet'}`}
+                    title={`${dl} ${hh(i)}${out ? ' · inactive' : id ? ' · ' + clocks[id].name : ' · no clock yet'}`}
                     onMouseDown={(e) => { e.preventDefault(); setDrag(true); pickKeys([key], e.shiftKey || e.metaKey || on); }}
                     onMouseEnter={() => { setHover(key); if (drag) pickKeys([key], true); }}
                     onDoubleClick={() => { if (id) openClock(id); }}
@@ -163,7 +163,7 @@ export function WeekScreen() {
           <span style={{ width: 26, height: 13, borderRadius: 999, border: '1.5px dashed var(--color-neutral-400)' }} />no clock yet
         </span>
         <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ width: 26, height: 13, borderRadius: 999, background: HATCH }} />non-local
+          <span style={{ width: 26, height: 13, borderRadius: 999, background: HATCH }} />inactive
         </span>
       </div>
 

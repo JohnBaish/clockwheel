@@ -12,7 +12,7 @@ export function WeekHeader() {
         <h2 style={{ margin: '1px 0 0', lineHeight: 1.05 }}>Schedule</h2>
       </div>
       <div style={{ display: 'flex', gap: 6, alignItems: 'center', minWidth: 0, flexWrap: 'wrap' }}>
-        <span className="tag tag-neutral mono">{assigned} of {slots} local hours assigned</span>
+        <span className="tag tag-neutral mono">{assigned} of {slots} active hours assigned</span>
         <span className="tag tag-neutral mono">{gaps} unassigned</span>
       </div>
       <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center', flex: 'none' }}>
