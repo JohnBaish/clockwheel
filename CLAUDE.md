@@ -2131,3 +2131,51 @@ correctly-attributed link to clockmaker.baish.net, sitting between the
 existing "clear it at any time" and "Contact:" text exactly as asked;
 confirmed Clockmaker's own Backtimer tab still shows none of this
 footer at all, matching its existing standalone-only scope.
+
+## A third favicon for baish.net: a lowercase "b" (2026-10-04)
+
+John asked for a favicon for the baish.net landing page specifically —
+it had been using the shared Clockmaker one (`/favicon.svg`) by default
+since that file existed, per the 2026-10-03 favicon entry above, but
+baish.net isn't Clockmaker, so a dedicated mark made more sense once
+asked for. He wanted a lowercase "b" that matched the other two in
+colour and style, not a third clock glyph (baish.net is John's own
+landing hub, not a clock tool — a letter mark fits what it actually is
+better than another clock face would).
+
+**`public/favicon-baish.svg`** (new file) — hand-drawn vector, same
+reasoning as the other two favicons for why it's hand-drawn rather than
+relying on an actual font: a standalone favicon SVG can't reliably load
+an external webfont at the tiny sizes it needs to render crisply at, so
+the letterform is built from the same primitives the clock glyphs use
+(a `<line>` and `<circle>`), not text. Construction: the disc and ring
+are byte-identical to `favicon.svg`'s (`#f5ead8` cream fill, `#c67139`
+terracotta stroke, same `r="21"` circle) — picked over mirroring
+Backtimer's solid-terracotta-disc treatment instead, since baish.net's
+own card styling already leans on the cream/terracotta-ring look. The
+"b" itself: a vertical ink (`#201e1d`) stroke for the ascender/stem
+(`stroke-width="4.5"`, `stroke-linecap="round"` — the exact same weight
+and cap style as both clock glyphs' hour/minute hands) from y=9 to y=36,
+plus a terracotta circle (same `4.5` stroke-width, unfilled) for the
+bowl, centred so its left edge overlaps the stem and its bottom sits on
+the same baseline the stem's foot does. The ink-stem/terracotta-bowl
+split mirrors how both clock glyphs always split their two strokes
+between the same two colours (just inverted which part gets which
+colour between Clockmaker and Backtimer) — this is the three icons'
+shared "style," not just their shared palette.
+
+- `landing.html`'s `<link rel="icon">` now points at
+  `/favicon-baish.svg` instead of the shared `/favicon.svg`.
+  `index.html` (Clockmaker) and `backtimer.html` are untouched — each
+  keeps its own existing icon exactly as before.
+
+Before touching any real file, rendered the new glyph at 128/32/16px
+next to both existing favicons, and in simulated light- and dark-theme
+browser tab strips — the same verification method used for the original
+two — and sent that comparison for approval. John confirmed before
+anything was wired in. Verified after wiring: fetched each of the three
+HTML entries' actual `<link rel="icon">` target at runtime and confirmed
+`index.html` still serves `/favicon.svg`, `backtimer.html` still serves
+`/favicon-backtimer.svg`, and `landing.html` now serves
+`/favicon-baish.svg` (200, `image/svg+xml`) — no cross-contamination
+between the three.
