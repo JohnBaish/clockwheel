@@ -102,7 +102,7 @@ export function BacktimerScreen() {
   // on, so this asks first rather than following the rest of the app's
   // no-confirmation pattern for destructive actions.
   const handleClear = () => {
-    if (window.confirm('Clear all items and reset the out time back to 60:00?')) resetBacktimer();
+    if (window.confirm('Clear all items and reset the out-time back to 60:00?')) resetBacktimer();
   };
 
   return (
@@ -110,7 +110,7 @@ export function BacktimerScreen() {
       <div data-noprint="1" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 'var(--space-3)', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <span style={{ font: '700 11px var(--font-body)', letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--color-neutral-700)' }}>
-            Out time
+            Out-time
           </span>
           <input
             className="plain-input mono"
@@ -151,7 +151,7 @@ export function BacktimerScreen() {
       {isNarrow ? (
         rows.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--space-6)', color: 'var(--color-neutral-700)' }}>
-            No items yet — check and change your out time above, then add the name and duration
+            No items yet — check and change your out-time above, then add the name and duration
             of the items before it, working backwards.
           </div>
         ) : (
@@ -228,7 +228,7 @@ export function BacktimerScreen() {
             {rows.length === 0 && (
               <tr>
                 <td colSpan={5} style={{ textAlign: 'center', padding: 'var(--space-6)', color: 'var(--color-neutral-700)' }}>
-                  No items yet — check and change your out time above, then add the name and
+                  No items yet — check and change your out-time above, then add the name and
                   duration of the items before it, working backwards.
                 </td>
               </tr>

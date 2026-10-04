@@ -2179,3 +2179,55 @@ HTML entries' actual `<link rel="icon">` target at runtime and confirmed
 `/favicon-backtimer.svg`, and `landing.html` now serves
 `/favicon-baish.svg` (200, `image/svg+xml`) — no cross-contamination
 between the three.
+
+## Clockmaker's link-preview tagline rewritten; "out time" hyphenated throughout (2026-10-04)
+
+Two unrelated wording changes John asked for together.
+
+**Tagline: "Build broadcast radio clocks, ready to print for any hour."
+→ "Display a broadcast hour in a circular layout."** Changed everywhere
+it appeared:
+- `index.html`'s `meta[name=description]`, `og:description`, and
+  `twitter:description` (three tags, one string).
+- `landing.html`'s Clockmaker card's `card-body` paragraph.
+- `public/og-clockmaker.png` — the tagline is baked into this image as
+  rendered text, not read from any meta tag (flagged the same way back
+  in the 2026-09-29 "clocks not clockwheels" entry, and true again
+  here). No generator script survived from whenever that image was
+  first made, so it was rebuilt from scratch: a standalone HTML page
+  (not part of the app) laying out a hand-drawn CSS clock face (tick
+  marks, an ink hour hand, a terracotta minute hand, in the same
+  "10:10" position the favicons use) next to "Clockmaker" and the new
+  tagline, in the app's own palette and self-hosted Caprasimo font
+  (loaded straight from `node_modules/@fontsource/caprasimo` by file
+  path, so this doesn't depend on network access either), screenshotted
+  with Playwright at the same 1200×630 the original used. A close visual
+  match to the original composition, not a pixel-identical clone of it
+  — the point was a faithful same-family replacement carrying the new
+  words, not forensic reproduction of a lost original.
+
+**"out time" → "out-time", every user-facing occurrence, five places:**
+`landing.html`'s Backtimer card description, `backtimer.html`'s three
+meta-description tags (one string, same "why the image needed
+regenerating too" logic doesn't apply here — these are read from the
+tag directly, not baked into an image), and inside the app itself —
+`BacktimerScreen.tsx`'s "Out-time" field label, its Clear confirm
+dialog ("reset the out-time back to 60:00?"), both empty-state messages
+(desktop table and mobile cards — "check and change your out-time
+above…"), and `GuideScreen.tsx`'s Backtimer section ("Set the
+out-time, then add items…"). Left alone, deliberately: every "out time"
+inside source comments and identifiers (`outTime`, `setBacktimerOutTime`,
+`normalizeOutTime`, `parseOutTime`, JSDoc prose in `data/backtimer.ts`
+and `lib/time.ts`) — none of that is ever shown to anyone, same
+STORAGE_KEY-style reasoning this file has used for every prior
+display-text-only rename.
+
+Verified with Playwright: `index.html`'s three description tags and
+`landing.html`'s Clockmaker card both read the exact new tagline, with
+no trace of the old one anywhere; `og-clockmaker.png` loads (200,
+`image/png`) from the built output; all five "out-time" sites read
+correctly (the Backtimer field label checked case-insensitively, since
+its CSS uppercases it to "OUT-TIME" — the source text is "Out-time"),
+and a body-text regex for a lingering unhyphenated " out time" comes up
+empty on `landing.html`, `?host=backtimer`'s Backtimer screen, and the
+Guide screen.

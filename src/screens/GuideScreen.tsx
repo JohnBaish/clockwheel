@@ -34,7 +34,7 @@ const SECTIONS: { heading: string; body: ReactNode }[] = [
     body: (
       <>
         This is a separate tool for working backwards from a fixed moment, which doesn’t have to be the end of the
-        hour. Set the out time, then add items and durations; Backtimer works out when each one needs to start.
+        hour. Set the out-time, then add items and durations; Backtimer works out when each one needs to start.
         Reverse flips the display between working backwards and forwards. Backtimer also exists as a standalone web
         app, for people who don’t need the whole Clockmaker functionality, at{' '}
         <a href="https://backtimer.baish.net" target="_blank" rel="noopener noreferrer" style={linkStyle}>
