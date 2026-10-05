@@ -2231,3 +2231,28 @@ its CSS uppercases it to "OUT-TIME" — the source text is "Out-time"),
 and a body-text regex for a lingering unhyphenated " out time" comes up
 empty on `landing.html`, `?host=backtimer`'s Backtimer screen, and the
 Guide screen.
+
+## Library gets its own local-storage-warning footer (2026-10-05)
+
+John wanted a warning at the bottom of Library that data is only saved
+in the local browser, in the same visual style as standalone Backtimer's
+footer, with wording based on Guide's Library section but much shorter.
+Drafted two options, John picked a cross between them.
+
+`LibraryScreen.tsx` gained a footer `<div>` below the clock-card grid
+(or the empty-state message, when there are no clocks), styled
+identically to `BacktimerScreen.tsx`'s standalone footer — same
+`marginTop: 64`/divider/centered/muted/`data-noprint="1"` treatment,
+just not host-gated, since Library has no standalone-vs-embedded split
+the way Backtimer does. Text: "Your clocks are saved automatically, but
+only in this browser, on this device. Use Export to back up your work
+or move it to another browser." Unlike Guide's fuller Library paragraph,
+this intentionally drops the Import-replaces-not-merges detail — that's
+instructional depth that belongs in Guide, not a short footer warning.
+
+Verified with Playwright against a built `vite preview`: footer text
+renders exactly once on Library at both 1200px and 390px (hamburger menu
+opened first to reach the Library link at narrow width), zero horizontal
+overflow at 390px, and the footer stays in the DOM (just CSS-hidden,
+same `data-noprint` mechanism as everywhere else) under
+`emulateMedia({ media: 'print' })`.

@@ -120,6 +120,17 @@ export function LibraryScreen() {
           })}
         </div>
       )}
+      <div
+        data-noprint="1"
+        style={{
+          margin: '64px var(--space-4) 0', paddingTop: 'var(--space-3)',
+          borderTop: '1px solid var(--color-divider)',
+          fontSize: 12, lineHeight: 1.6, color: 'var(--color-neutral-700)', textAlign: 'center',
+        }}
+      >
+        Your clocks are saved automatically, but only in this browser, on this device. Use Export to
+        back up your work or move it to another browser.
+      </div>
     </>
   );
 }
