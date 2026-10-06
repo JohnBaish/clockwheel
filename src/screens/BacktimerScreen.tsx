@@ -316,7 +316,7 @@ export function BacktimerScreen() {
           }}
         >
           Backtimer is a free-to-use personal project by John Baish.
-          Nothing you type here is sent anywhere; your data is only saved in your own browser and you
+          The data you enter here is not collected; it’s only saved in your own browser and you
           can{' '}
           <button
             onClick={handleClear}

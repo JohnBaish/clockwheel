@@ -2256,3 +2256,62 @@ opened first to reach the Library link at narrow width), zero horizontal
 overflow at 390px, and the footer stays in the DOM (just CSS-hidden,
 same `data-noprint` mechanism as everywhere else) under
 `emulateMedia({ media: 'print' })`.
+
+## Privacy wording: scoped to "your content," Clockmaker's Guide now
+## mentions anonymous visit analytics (2026-10-06)
+
+John is about to turn on Vercel Web Analytics (page-view/visit
+telemetry — no cookies, no persistent visitor id, but it does send
+basic visit data like URL/referrer/rough location/device type to
+Vercel on every page load). Before doing that, he wanted the app's
+existing "nothing is sent anywhere" / "your data is not collected"
+style claims checked against whether they'd still be true once
+Analytics is live, and adjusted if not.
+
+Worked through this by scope, not by wholesale rewrite: a claim scoped
+to "the data/clocks you enter/build" stays true regardless of Web
+Analytics, since Analytics has no access to the app's state — it only
+ever sees page-level visit metadata, never anything typed into a
+clock or Backtimer. A claim scoped to "your data" broadly (no
+qualifier) is the one that actually breaks, since a reader would
+reasonably take "your data" to include the fact of their visit too.
+
+- **`BacktimerScreen.tsx`'s standalone footer**: "Nothing you type here
+  is sent anywhere; your data is only saved in your own browser and
+  you can clear it at any time." → "The data you enter here is not
+  collected; it's only saved in your own browser and you can clear it
+  at any time." Already scoped correctly ("the data you enter here"),
+  so no analytics-related change needed beyond the wording John asked
+  for — confirmed true either way.
+- **`GuideScreen.tsx`'s Library section**: "...there's no account and
+  nothing is sent anywhere." → "...there are no individual user
+  accounts, and your clock info is not sent anywhere." Also already
+  scoped to "your clock info" specifically, so this one's fine
+  unchanged by the Analytics question too.
+- **`GuideScreen.tsx`'s "About Clockmaker" section — the one that
+  actually needed rescoping**: originally "Nothing you type here is
+  sent anywhere, because your data is only saved in your browser." The
+  broad "your data is only saved in your browser" framing would have
+  been misleading once Analytics is live. Rewritten, and — John's own
+  call, not assumed — given an explicit added sentence disclosing the
+  analytics rather than just avoiding contradicting it: "Clockmaker is
+  a free-to-use personal project by John Baish. The clocks you build
+  here are not collected; they're only saved in your browser. We
+  collect anonymous visit statistics (no cookies, no personal data) to
+  see how the site is used. Contact: clockmaker@baish.net."
+
+**Worth knowing: this ships the analytics-disclosure sentence ahead of
+Analytics actually being turned on.** "We collect anonymous visit
+statistics..." is not true yet as of this commit — it becomes true the
+moment John enables Vercel Web Analytics for the project, which is a
+dashboard action outside this repo, not something this session can do.
+Flagged to him directly so the gap is deliberate, not an oversight.
+
+Verified with Playwright against a built `vite preview`: Guide's
+Library section reads the new wording with the old "no account"
+phrasing gone; Guide's About section reads the new three-sentence
+paragraph with the analytics-disclosure sentence present and the old
+wording gone; standalone Backtimer (`?host=backtimer`) reads the new
+footer sentence with the old wording gone, and the "clear it" link and
+the clockmaker.baish.net companion-tools sentence right after it are
+both still intact and unaffected.

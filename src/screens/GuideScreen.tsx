@@ -7,7 +7,7 @@ const linkStyle = { color: 'var(--color-accent-700)', textDecoration: 'underline
 const SECTIONS: { heading: string; body: ReactNode }[] = [
   {
     heading: 'Library',
-    body: 'Every clock you’ve built lives here. Click to open or duplicate it. Everything you build here is saved automatically, but only in this browser, on this device — there’s no account and nothing is sent anywhere. If you want to move your work to a different browser or computer, or just want a backup, use Export to download everything as one file. Import loads that file back in — but it replaces whatever’s currently here, so use it to restore or move your work, not to combine two sets of clocks.',
+    body: 'Every clock you’ve built lives here. Click to open or duplicate it. Everything you build here is saved automatically, but only in this browser, on this device — there are no individual user accounts, and your clock info is not sent anywhere. If you want to move your work to a different browser or computer, or just want a backup, use Export to download everything as one file. Import loads that file back in — but it replaces whatever’s currently here, so use it to restore or move your work, not to combine two sets of clocks.',
   },
   {
     heading: 'Categories',
@@ -46,7 +46,7 @@ const SECTIONS: { heading: string; body: ReactNode }[] = [
   },
   {
     heading: 'About Clockmaker',
-    body: 'Clockmaker is a free-to-use personal project by John Baish. Nothing you type here is sent anywhere, because your data is only saved in your browser. Contact: clockmaker@baish.net.',
+    body: 'Clockmaker is a free-to-use personal project by John Baish. The clocks you build here are not collected; they’re only saved in your browser. We collect anonymous visit statistics (no cookies, no personal data) to see how the site is used. Contact: clockmaker@baish.net.',
   },
 ];
 
