@@ -2428,3 +2428,19 @@ preview` (200, `image/png`) and confirmed `backtimer.html`'s `og:image`
 tag still correctly points at it (unchanged path, only the file's
 contents changed) — same filename, so no HTML/meta changes were needed
 anywhere, just the asset itself.
+
+**Follow-up, same day — layout matched to Clockmaker's.** John's next
+WhatsApp check showed Backtimer's card still looked bigger. Cause: the
+two images still used different layouts — the 2026-10-04 Clockmaker
+rebuild used a 72px title / 27px tagline / 440px clock, while Backtimer
+kept the original template's 96px / 30px / 380px. Rebuilt Backtimer on
+Clockmaker's exact absolute positions and sizes (clock at 96,95 at
+440px; text block at 592,225; 72px title; 27px tagline), keeping
+Backtimer's own clock illustration, just scaled to fill the same
+440px dial. Pixel-checked afterwards: both titles' ink spans rows
+233–286 (54px tall) in their images — same font, same size, same
+baseline; only the width differs, because the words differ. John
+noticed the cards still *feel* slightly different; that comes from
+Backtimer's bolder clock (black ticks/hands vs. Clockmaker's pale dial)
+and the taglines wrapping differently, not the type. He chose to
+keep Backtimer's bolder clock as-is.
