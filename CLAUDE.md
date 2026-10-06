@@ -2377,3 +2377,54 @@ shipped slightly ahead of this. As of this commit, both are true
 together — the code that actually sends the anonymous visit data now
 exists, so once this deploys and John confirms data is flowing in
 Vercel's dashboard, the Guide text and the real behaviour are in sync.
+
+## `og-backtimer.png` rebuilt — was silently missing its brand font (2026-10-06)
+
+John spotted it himself, from real WhatsApp link-preview screenshots:
+Clockmaker's shared-link card showed "Clockmaker" in the bold Caprasimo
+display font, but Backtimer's card showed "Backtimer" in a plain
+generic serif — visibly inconsistent between the two apps' previews.
+
+Root cause, found by reading the actual two PNGs pixel-for-pixel rather
+than guessing from the file list: `og-clockmaker.png` was rebuilt on
+2026-10-04 (see that entry above) using a template that loads Caprasimo
+from a **local, self-hosted file** (`node_modules/@fontsource/
+caprasimo/.../*.woff2` via a `file://` URL) — specifically so it
+doesn't depend on network access. `og-backtimer.png` was never
+rebuilt at that time and still came from the *original* template
+(`og_template.html`, from the very first per-domain-OG-image work,
+2026-09-29), which loaded Caprasimo with a live `@import
+url('https://fonts.googleapis.com/...')`. This sandbox has no general
+outbound network access (confirmed repeatedly elsewhere in this
+project) — so that `@import` has always silently failed here, and the
+browser fell back to a plain generic `serif` for the title, which is
+exactly what shipped. Nobody caught it at the time because the
+original build never had anything to visually compare it against.
+
+**Also found and fixed while rebuilding it**: the image's tagline text
+still read "...to hit your out time." (unhyphenated) — missed during
+the 2026-10-04 "out-time" hyphenation pass, since that work correctly
+caught the matching text in `backtimer.html`'s `<meta>` tag but didn't
+think to check this image, where the same words are separately baked
+in as rendered pixels, not read from the tag at all.
+
+Fix: new template (not reusing `og-clockmaker-template.html` directly,
+since Backtimer's clock illustration is its own fine-ticked SVG design
+from the original `og_template.html`, deliberately not touched/
+redesigned here — only the font-loading mechanism and the text were
+wrong) — same `@font-face { src: url('file://...') }` self-hosted
+Caprasimo approach as `og-clockmaker.png`, same clock SVG/hand angles
+Backtimer's image always had, title text unchanged ("Backtimer"),
+tagline corrected to "...to hit your out-time." Rendered with
+Playwright at the same 1200×630, same as every other OG image in this
+project.
+
+Built and screenshotted for approval before touching the real file —
+same pattern as every other image asset in this project (favicons, the
+Clockmaker OG rebuild). John confirmed before it was wired in.
+
+Verified after wiring: fetched `/og-backtimer.png` from a built `vite
+preview` (200, `image/png`) and confirmed `backtimer.html`'s `og:image`
+tag still correctly points at it (unchanged path, only the file's
+contents changed) — same filename, so no HTML/meta changes were needed
+anywhere, just the asset itself.
