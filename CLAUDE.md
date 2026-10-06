@@ -2315,3 +2315,65 @@ wording gone; standalone Backtimer (`?host=backtimer`) reads the new
 footer sentence with the old wording gone, and the "clear it" link and
 the clockmaker.baish.net companion-tools sentence right after it are
 both still intact and unaffected.
+
+## Vercel Web Analytics wired in (2026-10-06)
+
+Follow-up to the privacy-wording entry above: John is turning on Vercel
+Web Analytics for real now. Walked through Vercel's own "Get Started"
+screens with him first (he was looking at the Next.js-flavoured
+instructions by default) — two things don't map onto this project
+as-is: (1) this is a plain Vite + React app, not Next.js, so the
+React-specific integration applies, not the Next one; (2) more
+importantly, this project has **three** HTML entry points
+(`index.html`/`backtimer.html` both load `src/main.tsx`'s real React
+app; `landing.html` deliberately does not — see the 2026-09-30 "baish.net
+root domain" entry for why, it's a ~0.7kB CSS-only shim specifically to
+avoid pulling in the ~260kB React bundle for a 3-link static page).
+Vercel's docs only show you the React-component path, which would have
+silently missed `landing.html`. Declined Vercel's "Implement with
+Vercel Agent" auto-PR option for the same reason — an automated agent
+with no knowledge of this project's non-standard 3-entry build would be
+more likely to get that split wrong than to get it right.
+
+- `npm i @vercel/analytics` (`^2.0.1`), one new runtime dependency.
+- `src/main.tsx`: added `<Analytics />` (from `@vercel/analytics/react`)
+  as a sibling of `<App />` inside the existing `<StrictMode>` root.
+  Since both `index.html` and `backtimer.html` load this exact same
+  file, this one addition covers both domains — no host-conditional
+  logic needed, same as everything else that lives in the shared
+  `main.tsx`/`App` tree.
+- `src/landing.ts`: added `inject()` from the non-React `@vercel/analytics`
+  entry point instead — the React component needs React mounted, which
+  this file specifically avoids. Same underlying tracking mechanism
+  either way, just the import that doesn't require React.
+- Noted, not fixed: `npm install` surfaced one pre-existing high-severity
+  advisory (`source-map-js`, via `vite → postcss`) — unrelated to this
+  change (confirmed via `npm ls source-map-js`, it was already in the
+  tree before `@vercel/analytics` was added), and it's a build-time-only
+  tool, not something that ships to a visitor's browser. Left alone,
+  flagged to John for awareness rather than silently fixed or silently
+  ignored.
+
+**What this does and doesn't track**: none of Clockmaker's screens
+(Library/Clock/List/Week/etc.) are separate URLs — they're all one page
+with internal React state, no real navigation — so Analytics registers
+one page-view per actual page load (i.e. per visit to the domain), not
+one per screen someone clicks into. Expected behaviour for a
+single-page app, not a bug or a gap in the integration.
+
+Verified with Playwright against a built `vite preview`: all three
+pages (`index.html`, `?host=backtimer`, `landing.html`) load with zero
+uncaught page errors; confirmed the browser actually attempts a request
+to `/_vercel/insights/script.js` on page load (the one Vercel-specific
+network call this integration adds) — it 404s in local preview, as
+expected, since that endpoint only exists on real Vercel infrastructure,
+not `vite preview`'s plain static server. Not verified: real data
+appearing in Vercel's dashboard, which needs an actual production
+deploy and a real visit — that's John's next step once this ships.
+
+**Sequencing note, tying back to the privacy-wording entry above**: the
+Guide screen's "We collect anonymous visit statistics..." sentence was
+shipped slightly ahead of this. As of this commit, both are true
+together — the code that actually sends the anonymous visit data now
+exists, so once this deploys and John confirms data is flowing in
+Vercel's dashboard, the Guide text and the real behaviour are in sync.

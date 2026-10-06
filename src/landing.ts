@@ -5,3 +5,8 @@
 // served on baish.net specifically.
 import './styles/organic.css';
 import './styles/global.css';
+import { inject } from '@vercel/analytics';
+
+// Non-React analytics entry point, since this page deliberately doesn't
+// load React — see main.tsx for the <Analytics /> component used there.
+inject();
