@@ -2444,3 +2444,38 @@ noticed the cards still *feel* slightly different; that comes from
 Backtimer's bolder clock (black ticks/hands vs. Clockmaker's pale dial)
 and the taglines wrapping differently, not the type. He chose to
 keep Backtimer's bolder clock as-is.
+
+## PARKED IDEA — Backtimer setup walkthrough (discussed 2026-10-11, not started)
+
+John raised the idea of a short, step-through set of setup screens for
+Backtimer, shown the first time someone opens it and after Clear. He
+wants to think it over and come back to it. **Nothing has been built,
+and no branch exists yet.** Don't start until he picks it up again.
+
+**Proposed shape (my suggestion, not yet agreed):** a small sequence of
+cards with Next / Back / Skip, e.g. (1) what Backtimer does, (2) set
+your out-time, (3) add your first item, (4) done. Trigger it when the
+browser has no saved Backtimer data (a true first visit) and straight
+after Clear. Existing users already have saved data, so they would not
+suddenly see it on their next visit.
+
+**Proposed way to test it safely, now the sites are in regular use:**
+build it on a separate git branch, not `main`. Vercel normally builds
+every non-`main` branch at its own private preview URL and leaves the
+live domains untouched. John can try it on his phone there (append
+`?host=backtimer` to see the standalone-Backtimer presentation — see
+`lib/hostMode.ts`). The preview URL is a different origin, so it has
+its own separate `localStorage`; nobody's real data is touched. Merge to
+`main` only once he's happy. Not yet confirmed: that preview deployments
+are switched on for this Vercel project (they are by default; it's one
+setting if not).
+
+**Three decisions waiting on John before anything is built:**
+1. **People who Clear routinely** (e.g. between shows) would see the
+   walkthrough every time. Suggested: after Clear, show it only until
+   they tick "Don't show this again", or keep Skip very prominent.
+2. **Where it appears:** standalone `backtimer.baish.net` only, or also
+   Clockmaker's own Backtimer tab? Leaning standalone only, since
+   Clockmaker already has its Guide screen.
+3. **Wording:** John writes the step text himself (as he did for
+   Guide), or I draft it for him to edit.
