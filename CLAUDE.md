@@ -2445,37 +2445,55 @@ Backtimer's bolder clock (black ticks/hands vs. Clockmaker's pale dial)
 and the taglines wrapping differently, not the type. He chose to
 keep Backtimer's bolder clock as-is.
 
-## PARKED IDEA — Backtimer setup walkthrough (discussed 2026-10-11, not started)
+## PARKED IDEA — Backtimer setup walkthrough (discussed 2026-10-11, decisions 2026-10-12, not started)
 
-John raised the idea of a short, step-through set of setup screens for
-Backtimer, shown the first time someone opens it and after Clear. He
-wants to think it over and come back to it. **Nothing has been built,
-and no branch exists yet.** Don't start until he picks it up again.
+A short step-through set of setup cards for Backtimer. **Nothing has
+been built and no branch exists yet.** Next step is John editing the
+draft wording below; build only once he's happy with the text.
 
-**Proposed shape (my suggestion, not yet agreed):** a small sequence of
-cards with Next / Back / Skip, e.g. (1) what Backtimer does, (2) set
-your out-time, (3) add your first item, (4) done. Trigger it when the
-browser has no saved Backtimer data (a true first visit) and straight
-after Clear. Existing users already have saved data, so they would not
-suddenly see it on their next visit.
+**Decisions John has made (2026-10-12):**
+1. Show it on a first visit (no saved Backtimer data) **and every time
+   after Clear** — with both a prominent **Skip** and a **"Don't show
+   this again"** tickbox, available on every card.
+2. Show it in **both** places: standalone `backtimer.baish.net` and
+   Clockmaker's own Backtimer tab (he's finding people don't read the
+   Guide carefully).
+3. Claude drafts the wording, John edits it.
 
-**Proposed way to test it safely, now the sites are in regular use:**
-build it on a separate git branch, not `main`. Vercel normally builds
-every non-`main` branch at its own private preview URL and leaves the
-live domains untouched. John can try it on his phone there (append
-`?host=backtimer` to see the standalone-Backtimer presentation — see
-`lib/hostMode.ts`). The preview URL is a different origin, so it has
-its own separate `localStorage`; nobody's real data is touched. Merge to
-`main` only once he's happy. Not yet confirmed: that preview deployments
-are switched on for this Vercel project (they are by default; it's one
-setting if not).
+**Testing plan:** build on a separate git branch, not `main`; try it on
+the Vercel preview URL for that branch (append `?host=backtimer` for the
+standalone presentation — see `lib/hostMode.ts`). The preview is a
+different origin with its own `localStorage`, so no real data is
+touched. Merge to `main` only when John's happy. Not yet confirmed that
+preview deployments are on for this Vercel project (default is on).
 
-**Three decisions waiting on John before anything is built:**
-1. **People who Clear routinely** (e.g. between shows) would see the
-   walkthrough every time. Suggested: after Clear, show it only until
-   they tick "Don't show this again", or keep Skip very prominent.
-2. **Where it appears:** standalone `backtimer.baish.net` only, or also
-   Clockmaker's own Backtimer tab? Leaning standalone only, since
-   Clockmaker already has its Guide screen.
-3. **Wording:** John writes the step text himself (as he did for
-   Guide), or I draft it for him to edit.
+**Draft wording (Claude's, awaiting John's edits).** Each card shows
+"N of 5", Skip, and the "Don't show this again" tickbox. Buttons: Skip ·
+Back · Next (last card: "Get started").
+
+1. **Welcome to Backtimer** — Backtimer works backwards from a fixed
+   moment, your out-time, and tells you when each item needs to start
+   so you finish exactly on time.
+2. **Set your out-time** — Type the moment you need to finish into
+   Out-time, in minutes and seconds, for example 29:30. It starts at
+   60:00, the top of the hour. If you type 0:00, it means the same thing.
+3. **Add your items, last one first** — Press Add item and enter the
+   item that finishes at your out-time, then its duration. Keep adding,
+   working backwards: each new item goes underneath and runs before the
+   one above it. Type durations as minutes and seconds (3:20) or as
+   seconds on their own (200). Pressing Tab in the last duration box
+   starts a new item.
+4. **Read your start times** — The Starts column shows when each item
+   has to begin. If your items stretch back past the top of the hour,
+   those start times are highlighted and shown as times in the previous
+   hour. Reverse flips the list so it reads in running order, earliest
+   first.
+5. **You're ready** — Your work is saved automatically, but only in
+   this browser. Clear empties the list and brings this walkthrough
+   back, unless you tick the box below.
+
+Open questions put to John on the wording: keep "0:00 means the top of
+the hour" on card 2 (true — `normalizeOutTime` — but maybe too much
+detail)? Keep "seconds on their own" on card 3 (true — `parseDur`
+treats a bare number as seconds, so "3" is three seconds, not minutes;
+probably worth keeping)?
