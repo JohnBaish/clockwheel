@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type FocusEvent, type ReactNode } from 'react';
+import { flushSync } from 'react-dom';
 import { useApp } from '../state/store';
 import { normalizeOutTime } from '../data/backtimer';
 import { dur, parseDur, parseOutTime } from '../lib/time';
@@ -6,6 +7,22 @@ import { useIsNarrow } from '../lib/responsive';
 import { IconArrowUpDown, IconGrip } from '../lib/icons';
 
 const STEPS = 4;
+
+// Phone/tablet keyboards only open when focus happens during a tap, so on
+// touch screens fields are focused from the Next/Back tap itself, never on
+// their own when the card first appears.
+const isTouch = () => typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+
+// The digits keypad ("decimal") has a "." key but no ":", so "." (or "," on
+// keypads that show a comma) is turned into ":" as it's typed.
+const toColon = (v: string) => v.replace(/[.,]/g, ':');
+
+const selectAll = (e: FocusEvent<HTMLInputElement>) => {
+  const el = e.currentTarget;
+  // Deferred: on phones the tap that focused the box would otherwise put the
+  // cursor back where the finger landed, undoing the selection.
+  setTimeout(() => el.setSelectionRange(0, el.value.length), 0);
+};
 
 const inputStyle = {
   font: '700 16px var(--font-body)',
@@ -19,7 +36,7 @@ const inputStyle = {
   boxSizing: 'border-box' as const,
 };
 
-export function BacktimerWalkthrough({ onClose, floating }: { onClose: () => void; floating: boolean }) {
+export function BacktimerWalkthrough({ onClose }: { onClose: () => void }) {
   const {
     backtimer, setBacktimerOutTime, insertBacktimerItem, setBacktimerItemName,
     setBacktimerItemDuration, setBacktimerWalkthroughOff,
@@ -34,10 +51,30 @@ export function BacktimerWalkthrough({ onClose, floating }: { onClose: () => voi
   const [dontShow, setDontShow] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const touch = isTouch();
+
+  const focusField = () => {
+    const el = inputRef.current;
+    if (!el) return;
+    el.focus();
+    el.setSelectionRange(0, el.value.length);
+  };
+
+  // First appearance only; later cards are focused by goTo().
   useEffect(() => {
-    inputRef.current?.focus();
-    inputRef.current?.select();
-  }, [step]);
+    if (isTouch()) return;
+    const el = inputRef.current;
+    el?.focus();
+    el?.setSelectionRange(0, el.value.length);
+  }, []);
+
+  // Renders the new card immediately (flushSync) so its box can be focused
+  // while still inside the tap — the only way a phone will open its keyboard.
+  const goTo = (n: number) => {
+    setError(null);
+    flushSync(() => setStep(n));
+    focusField();
+  };
 
   // Saves whatever is on the current card. Returns false (with a message,
   // unless silent) if the entry can't be used yet.
@@ -61,12 +98,11 @@ export function BacktimerWalkthrough({ onClose, floating }: { onClose: () => voi
 
   const next = () => {
     if (!commit(false)) return;
-    setError(null);
-    if (step < STEPS - 1) setStep(step + 1);
+    if (step < STEPS - 1) goTo(step + 1);
     else onClose();
   };
 
-  const back = () => { setError(null); setStep(step - 1); };
+  const back = () => goTo(step - 1);
 
   const skip = () => { commit(true); onClose(); };
 
@@ -88,9 +124,9 @@ export function BacktimerWalkthrough({ onClose, floating }: { onClose: () => voi
     body = 'When do you want your sequence to finish, in minutes and seconds?';
     field = (
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <input ref={inputRef} value={outText} onChange={(e) => setOutText(e.target.value)}
-          inputMode="numeric" aria-label="Out-time" style={{ ...inputStyle, width: 110 }} />
-        <span style={{ fontSize: 13, color: 'var(--color-neutral-700)' }}>e.g. 29:30</span>
+        <input ref={inputRef} value={outText} onChange={(e) => setOutText(toColon(e.target.value))} onFocus={selectAll}
+          inputMode="decimal" aria-label="Out-time" style={{ ...inputStyle, width: 110 }} />
+        <span style={{ fontSize: 13, color: 'var(--color-neutral-700)' }}>e.g. 29:30{touch && ' · tap . for :'}</span>
       </div>
     );
     later = 'You can change this later in the OUT-TIME box at the top left.';
@@ -108,8 +144,11 @@ export function BacktimerWalkthrough({ onClose, floating }: { onClose: () => voi
     title = 'How long is it?';
     body = <>How long is {itemName}, in minutes and seconds?</>;
     field = (
-      <input ref={inputRef} value={durText} onChange={(e) => setDurText(e.target.value)}
-        inputMode="numeric" placeholder="e.g. 2:30" aria-label="Duration" style={{ ...inputStyle, width: 110 }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <input ref={inputRef} value={durText} onChange={(e) => setDurText(toColon(e.target.value))} onFocus={selectAll}
+          inputMode="decimal" placeholder="e.g. 2:30" aria-label="Duration" style={{ ...inputStyle, width: 110 }} />
+        {touch && <span style={{ fontSize: 13, color: 'var(--color-neutral-700)' }}>tap . for :</span>}
+      </div>
     );
     later = isNarrow
       ? 'You can change this later by tapping its duration.'
@@ -132,8 +171,6 @@ export function BacktimerWalkthrough({ onClose, floating }: { onClose: () => voi
 
   return (
     <>
-      {/* Lets the page scroll far enough that nothing stays hidden behind the panel. */}
-      {floating && <div aria-hidden="true" style={{ height: 300 }} />}
       <div
         role="dialog"
         aria-label="Getting started with Backtimer"
@@ -144,10 +181,8 @@ export function BacktimerWalkthrough({ onClose, floating }: { onClose: () => voi
         }}
         className="card"
         style={{
-          ...(floating
-            ? { position: 'fixed', left: '50%', bottom: 16, transform: 'translateX(-50%)', zIndex: 50 }
-            : { flex: 'none' }),
-          width: 'min(460px, calc(100vw - 32px))', boxSizing: 'border-box',
+          flex: 'none',
+          width: isNarrow ? '100%' : 460, boxSizing: 'border-box',
           padding: 'var(--space-4)', gap: 12,
           border: '1px solid var(--color-divider)',
           boxShadow: '0 12px 32px rgba(32,30,29,.18), 0 2px 6px rgba(32,30,29,.10)',
@@ -165,10 +200,14 @@ export function BacktimerWalkthrough({ onClose, floating }: { onClose: () => voi
         {error && <div role="alert" style={{ fontSize: 13, color: 'var(--color-accent-700)' }}>{error}</div>}
         {later && <p style={{ margin: 0, fontSize: 13, lineHeight: 1.45, color: 'var(--color-neutral-700)' }}>{later}</p>}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginTop: 4 }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--color-neutral-700)', cursor: 'pointer', marginRight: 'auto' }}>
+          <label style={{
+            display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--color-neutral-700)', cursor: 'pointer',
+            ...(isNarrow ? { order: 1, flexBasis: '100%' } : { marginRight: 'auto' }),
+          }}>
             <input type="checkbox" checked={dontShow} onChange={(e) => toggleDontShow(e.target.checked)} />
             Don’t show this again
           </label>
+          {isNarrow && <span style={{ marginRight: 'auto' }} />}
           {step > 0 && (
             <button className="btn btn-ghost" onClick={back} style={{ padding: '8px 12px' }}>Back</button>
           )}

@@ -181,6 +181,13 @@ export function BacktimerScreen() {
         Backtimer · out at {dur(normalizeOutTime(backtimer.outTime))}
       </div>
 
+      {/* On a phone the card goes above the list, so the keypad can't cover its Next button. */}
+      {showWalk && isNarrow && (
+        <div data-noprint="1" style={{ marginBottom: 'var(--space-4)' }}>
+          <BacktimerWalkthrough onClose={() => setShowWalk(false)} />
+        </div>
+      )}
+
       {isNarrow ? (
         rows.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 'var(--space-6)', color: 'var(--color-neutral-700)' }}>
@@ -339,7 +346,7 @@ export function BacktimerScreen() {
       )}
 
       {showWalk && !isNarrow && centreOnItem(
-        <BacktimerWalkthrough floating={false} onClose={() => setShowWalk(false)} />,
+        <BacktimerWalkthrough onClose={() => setShowWalk(false)} />,
         'var(--space-4)',
       )}
 
@@ -377,7 +384,6 @@ export function BacktimerScreen() {
         </div>
       )}
 
-      {showWalk && isNarrow && <BacktimerWalkthrough floating onClose={() => setShowWalk(false)} />}
     </div>
   );
 }

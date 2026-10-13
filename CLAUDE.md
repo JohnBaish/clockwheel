@@ -2530,5 +2530,38 @@ typed out-time. Screenshots checked at 1200px and 390px.
   centres all 450.4px; line→Reverse and Reverse→card gaps both 17.6px.
   All 21 earlier checks still pass.
 
+**Round 3 (2026-10-13), from John's first look on his phone:**
+- **Card position on phones:** right at the top, between the toolbar
+  (Print / Add item / Clear) and the list, not under Reverse as on
+  desktop. iPhone's number keypad has no Return key and covers roughly
+  the bottom 40% of the screen, so a card lower down would hide its own
+  Next button. At 390×844 the Next button's bottom edge sits at 437px on
+  card 1 and 397px on card 3 — both clear of the keypad. Desktop
+  placement is unchanged. The fixed bottom panel and its spacer are gone.
+- **Keyboard opening:** a phone only opens its keyboard when focus
+  happens during a tap. So on touch screens (`(pointer: coarse)`)
+  nothing is focused when the card first appears (no more "60:00
+  highlighted but no keypad"). Tapping the box focuses it and selects its
+  contents (deferred `setSelectionRange`, since the tap otherwise moves
+  the cursor). Next/Back render the new card with `flushSync` and focus
+  its box inside the same tap handler, so the keyboard opens straight
+  away. Desktop still auto-focuses card 1.
+- **The ":" problem:** the number keypad (`inputMode="numeric"`) has no
+  ":". The two time boxes now use `inputMode="decimal"` (digits plus a
+  "." key) and turn "." or "," into ":" as it's typed (`toColon`). On
+  touch screens the hint reads "e.g. 29:30 · tap . for :" (card 1) and
+  "tap . for :" (card 3). The main Backtimer boxes were never affected:
+  they have no `inputMode`, so phones show the full keyboard, where ":"
+  is on the numbers page.
+- **Card buttons on phones:** Back and Next/Done sit together on the
+  right, with "Don't show this again" on its own line beneath (on card 4
+  "Done" used to wrap onto its own line).
+- Verified with Playwright in a touch-emulated 390×844 phone (19 checks:
+  no pre-focus, tap selects, "."/"," → ":", Next/Back focus the next box
+  within the tap, positions above, saved values) plus the earlier 21
+  checks and the desktop centring/gap measurements, all passing. Not
+  verifiable here: a real iPhone's keyboard actually appearing. That
+  needs John's phone.
+
 **Next:** John tries the branch's Vercel preview (add `?host=backtimer`
 for the standalone look). Merge to `main` only once he's happy.
