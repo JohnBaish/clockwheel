@@ -3,7 +3,7 @@ import { useApp } from '../state/store';
 import { normalizeOutTime } from '../data/backtimer';
 import { dur, parseDur, parseOutTime } from '../lib/time';
 import { useIsNarrow } from '../lib/responsive';
-import { IconGrip } from '../lib/icons';
+import { IconArrowUpDown, IconGrip } from '../lib/icons';
 
 const STEPS = 4;
 
@@ -19,7 +19,7 @@ const inputStyle = {
   boxSizing: 'border-box' as const,
 };
 
-export function BacktimerWalkthrough({ onClose }: { onClose: () => void }) {
+export function BacktimerWalkthrough({ onClose, floating }: { onClose: () => void; floating: boolean }) {
   const {
     backtimer, setBacktimerOutTime, insertBacktimerItem, setBacktimerItemName,
     setBacktimerItemDuration, setBacktimerWalkthroughOff,
@@ -124,7 +124,8 @@ export function BacktimerWalkthrough({ onClose }: { onClose: () => void }) {
         {' '}Add more items with “+ Add item”, or by pressing Tab in the last duration box. Each new item runs
         before the one above it. Drag the{' '}
         <span style={{ display: 'inline-flex', verticalAlign: 'middle', color: 'var(--color-neutral-700)' }}><IconGrip size={15} /></span>
-        {' '}handle to move an item, and press “Reverse” to see your items in running order instead of backwards.
+        {' '}handle to move an item, and press “<span style={{ display: 'inline-flex', verticalAlign: 'middle' }}><IconArrowUpDown size={14} /></span>{' '}Reverse” to see
+        your items with the earliest first instead of backwards.
       </>
     );
   }
@@ -132,7 +133,7 @@ export function BacktimerWalkthrough({ onClose }: { onClose: () => void }) {
   return (
     <>
       {/* Lets the page scroll far enough that nothing stays hidden behind the panel. */}
-      <div aria-hidden="true" style={{ height: 300 }} />
+      {floating && <div aria-hidden="true" style={{ height: 300 }} />}
       <div
         role="dialog"
         aria-label="Getting started with Backtimer"
@@ -143,8 +144,10 @@ export function BacktimerWalkthrough({ onClose }: { onClose: () => void }) {
         }}
         className="card"
         style={{
-          position: 'fixed', left: '50%', bottom: 16, transform: 'translateX(-50%)',
-          width: 'min(460px, calc(100vw - 32px))', boxSizing: 'border-box', zIndex: 50,
+          ...(floating
+            ? { position: 'fixed', left: '50%', bottom: 16, transform: 'translateX(-50%)', zIndex: 50 }
+            : { flex: 'none' }),
+          width: 'min(460px, calc(100vw - 32px))', boxSizing: 'border-box',
           padding: 'var(--space-4)', gap: 12,
           border: '1px solid var(--color-divider)',
           boxShadow: '0 12px 32px rgba(32,30,29,.18), 0 2px 6px rgba(32,30,29,.10)',

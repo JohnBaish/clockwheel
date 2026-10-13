@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { useApp } from '../state/store';
 import { withBackTimes, normalizeOutTime } from '../data/backtimer';
 import { dur, parseDur, parseOutTime, wrapHour } from '../lib/time';
@@ -33,6 +33,32 @@ export function BacktimerScreen() {
   const durInputs = useRef<Record<string, HTMLInputElement | null>>({});
   const prevCount = useRef(seed.length);
   const [showWalk, setShowWalk] = useState(() => seed.length === 0 && !backtimerWalkthroughOff);
+
+  // On the desktop table, Reverse and the walkthrough card are centred on the
+  // middle of the Item column rather than the page. Measured, not derived
+  // from the column widths, so it stays right if those ever change.
+  const tableRef = useRef<HTMLTableElement | null>(null);
+  const itemThRef = useRef<HTMLTableCellElement | null>(null);
+  const [itemCentre, setItemCentre] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    const measure = () => {
+      const table = tableRef.current, th = itemThRef.current;
+      if (!table || !th) { setItemCentre(null); return; }
+      const t = table.getBoundingClientRect(), h = th.getBoundingClientRect();
+      setItemCentre(h.left + h.width / 2 - t.left);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [isNarrow, rows.length]);
+  // A zero-width flex box at the centre point; justify-content: center
+  // overhangs the child equally on both sides of it.
+  const centreOnItem = (child: ReactNode, marginTop: string) =>
+    !isNarrow && itemCentre !== null ? (
+      <div data-noprint="1" style={{ marginLeft: itemCentre, width: 0, display: 'flex', justifyContent: 'center', marginTop }}>{child}</div>
+    ) : (
+      <div data-noprint="1" style={{ display: 'flex', justifyContent: 'center', marginTop }}>{child}</div>
+    );
 
   // The drag hook works entirely in on-screen row positions, but reordering
   // has to happen on the real (unreversed) item array — when flipped, visual
@@ -221,12 +247,12 @@ export function BacktimerScreen() {
           </div>
         )
       ) : (
-        <table className="table">
+        <table className="table" ref={tableRef}>
           <thead>
             <tr>
               <th data-noprint="1" style={{ width: 26 }}></th>
               <th style={{ width: 78 }}>Starts</th>
-              <th style={{ width: 460 }}>Item</th>
+              <th ref={itemThRef} style={{ width: 460 }}>Item</th>
               <th style={{ width: 84 }}>Dur</th>
               <th data-noprint="1" style={{ width: 30 }}></th>
             </tr>
@@ -300,8 +326,7 @@ export function BacktimerScreen() {
         </table>
       )}
 
-      {rows.length > 0 && (
-        <div data-noprint="1" style={{ display: 'flex', justifyContent: 'center', marginTop: 'var(--space-4)' }}>
+      {rows.length > 0 && centreOnItem(
           <button
             className="btn btn-ghost"
             onClick={() => toggleBacktimerReversed()}
@@ -309,8 +334,13 @@ export function BacktimerScreen() {
             style={{ color: 'var(--color-neutral-700)' }}
           >
             <IconArrowUpDown size={14} />Reverse
-          </button>
-        </div>
+          </button>,
+          'var(--space-4)',
+      )}
+
+      {showWalk && !isNarrow && centreOnItem(
+        <BacktimerWalkthrough floating={false} onClose={() => setShowWalk(false)} />,
+        'var(--space-4)',
       )}
 
       {isBacktimerHost() && (
@@ -347,7 +377,7 @@ export function BacktimerScreen() {
         </div>
       )}
 
-      {showWalk && <BacktimerWalkthrough onClose={() => setShowWalk(false)} />}
+      {showWalk && isNarrow && <BacktimerWalkthrough floating onClose={() => setShowWalk(false)} />}
     </div>
   );
 }

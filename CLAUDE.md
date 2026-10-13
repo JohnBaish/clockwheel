@@ -2512,5 +2512,23 @@ closed, and not shown after another Clear or a reload; phone wording on
 cards 2 and 4 at 390px, no sideways overflow; Skip on card 1 keeps a
 typed out-time. Screenshots checked at 1200px and 390px.
 
+**Round 2 (2026-10-13), from John's first look at the desktop preview:**
+- On the desktop table, the card is no longer fixed to the bottom of the
+  window. It sits in the page directly under Reverse, the same gap below
+  Reverse (17.6px, `--space-4`) as Reverse is below the table's bottom
+  line. Before the first item exists, Reverse isn't shown, so the card
+  sits that same gap below the table.
+- Reverse and the card are both centred on the middle of the **Item**
+  column, not the page. `BacktimerScreen` measures the Item `<th>`'s
+  centre relative to the table (`itemCentre`, re-measured on resize) and
+  `centreOnItem()` places a zero-width flex box there, so the child
+  overhangs equally on both sides. Phones keep the floating bottom panel
+  (`floating` prop) and normally centred Reverse — no Item column there.
+- Card 4: the ⇅ icon now sits before "Reverse" (inside the quotes, like
+  "+ Add item"), and "in running order" → "with the earliest first".
+- Measured with Playwright at 1280px: Item column, Reverse and card
+  centres all 450.4px; line→Reverse and Reverse→card gaps both 17.6px.
+  All 21 earlier checks still pass.
+
 **Next:** John tries the branch's Vercel preview (add `?host=backtimer`
 for the standalone look). Merge to `main` only once he's happy.
