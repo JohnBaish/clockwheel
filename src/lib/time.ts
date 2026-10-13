@@ -39,8 +39,9 @@ export const hh = (n: number) => `${String(n).padStart(2, '0')}:00`;
 
 function parseMmSs(input: string, min: number): number | null {
   const trimmed = input.trim();
-  const withColon = trimmed.match(/^(\d+):([0-5]?\d)$/);
-  if (withColon) return Math.max(min, +withColon[1] * 60 + +withColon[2]);
+  // "3:" counts as 3:00, so a phone keypad user can stop after the minutes.
+  const withColon = trimmed.match(/^(\d+):([0-5]?\d)?$/);
+  if (withColon) return Math.max(min, +withColon[1] * 60 + +(withColon[2] ?? 0));
   const secondsOnly = trimmed.match(/^\d+$/);
   if (secondsOnly) return Math.max(min, +trimmed);
   return null;

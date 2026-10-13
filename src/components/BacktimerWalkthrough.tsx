@@ -1,28 +1,14 @@
-import { useEffect, useRef, useState, type FocusEvent, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { useApp } from '../state/store';
 import { normalizeOutTime } from '../data/backtimer';
 import { dur, parseDur, parseOutTime } from '../lib/time';
 import { useIsNarrow } from '../lib/responsive';
 import { IconArrowUpDown, IconGrip } from '../lib/icons';
+import { isTouch, selectAllSoon, toColon } from '../lib/timeInput';
 
 const STEPS = 4;
 
-// Phone/tablet keyboards only open when focus happens during a tap, so on
-// touch screens fields are focused from the Next/Back tap itself, never on
-// their own when the card first appears.
-const isTouch = () => typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
-
-// The digits keypad ("decimal") has a "." key but no ":", so "." (or "," on
-// keypads that show a comma) is turned into ":" as it's typed.
-const toColon = (v: string) => v.replace(/[.,]/g, ':');
-
-const selectAll = (e: FocusEvent<HTMLInputElement>) => {
-  const el = e.currentTarget;
-  // Deferred: on phones the tap that focused the box would otherwise put the
-  // cursor back where the finger landed, undoing the selection.
-  setTimeout(() => el.setSelectionRange(0, el.value.length), 0);
-};
 
 const inputStyle = {
   font: '700 16px var(--font-body)',
@@ -124,7 +110,7 @@ export function BacktimerWalkthrough({ onClose }: { onClose: () => void }) {
     body = 'When do you want your sequence to finish, in minutes and seconds?';
     field = (
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <input ref={inputRef} value={outText} onChange={(e) => setOutText(toColon(e.target.value))} onFocus={selectAll}
+        <input ref={inputRef} value={outText} onChange={(e) => setOutText(toColon(e.target.value))} onFocus={(e) => selectAllSoon(e.currentTarget)}
           inputMode="decimal" aria-label="Out-time" style={{ ...inputStyle, width: 110 }} />
         <span style={{ fontSize: 13, color: 'var(--color-neutral-700)' }}>e.g. 29:30{touch && ' · tap . for :'}</span>
       </div>
@@ -145,7 +131,7 @@ export function BacktimerWalkthrough({ onClose }: { onClose: () => void }) {
     body = <>How long is {itemName}, in minutes and seconds?</>;
     field = (
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <input ref={inputRef} value={durText} onChange={(e) => setDurText(toColon(e.target.value))} onFocus={selectAll}
+        <input ref={inputRef} value={durText} onChange={(e) => setDurText(toColon(e.target.value))} onFocus={(e) => selectAllSoon(e.currentTarget)}
           inputMode="decimal" placeholder="e.g. 2:30" aria-label="Duration" style={{ ...inputStyle, width: 110 }} />
         {touch && <span style={{ fontSize: 13, color: 'var(--color-neutral-700)' }}>tap . for :</span>}
       </div>

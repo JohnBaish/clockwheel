@@ -6,6 +6,8 @@ import { useDragReorder } from '../lib/useDragReorder';
 import { useIsNarrow } from '../lib/responsive';
 import { IconGrip, IconPlus, IconTrash, IconArrowUpDown, IconPrint } from '../lib/icons';
 import { isBacktimerHost } from '../lib/hostMode';
+import { selectAllSoon, toColon } from '../lib/timeInput';
+import { flushSync } from 'react-dom';
 import { BacktimerWalkthrough } from '../components/BacktimerWalkthrough';
 
 const NARROW = 720;
@@ -94,6 +96,14 @@ export function BacktimerScreen() {
     setDurDrafts((d) => { const next = { ...d }; delete next[itemId]; return next; });
   };
 
+  // Adds the item and focuses its name box inside the same tap, so a phone
+  // opens its keyboard (it won't for focus that happens after the tap).
+  const addItemAndFocus = () => {
+    let id = '';
+    flushSync(() => { id = addBacktimerItem(); });
+    focusName(id);
+  };
+
   const focusName = (itemId: string) => {
     const input = nameInputs.current[itemId];
     if (input) { input.focus(); input.select(); }
@@ -149,8 +159,9 @@ export function BacktimerScreen() {
             className="plain-input mono"
             style={{ width: 64, fontWeight: 700, background: 'var(--color-surface)', border: '1px solid var(--color-divider)' }}
             value={outDraft ?? dur(normalizeOutTime(backtimer.outTime))}
-            onFocus={(e) => { setOutDraft(dur(normalizeOutTime(backtimer.outTime))); e.target.select(); }}
-            onChange={(e) => setOutDraft(e.target.value)}
+            inputMode="decimal"
+            onFocus={(e) => { setOutDraft(dur(normalizeOutTime(backtimer.outTime))); selectAllSoon(e.currentTarget); }}
+            onChange={(e) => setOutDraft(toColon(e.target.value))}
             onBlur={commitOutTime}
             onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
           />
@@ -170,7 +181,7 @@ export function BacktimerScreen() {
         >
           <IconPrint size={15} />Print
         </button>
-        <button className="btn btn-ghost" onClick={() => addBacktimerItem()} style={{ color: 'var(--color-accent-700)' }}>
+        <button className="btn btn-ghost" onClick={addItemAndFocus} style={{ color: 'var(--color-accent-700)' }}>
           <IconPlus size={15} />Add item
         </button>
         <button className="btn btn-ghost" onClick={handleClear} style={{ color: 'var(--color-neutral-700)' }}>
@@ -195,6 +206,7 @@ export function BacktimerScreen() {
             of the items before it, working backwards.
           </div>
         ) : (
+          <>
           <div className="list-cards">
             {rows.map((it, i) => (
               <div
@@ -241,10 +253,11 @@ export function BacktimerScreen() {
                   <input
                     ref={(el) => { durInputs.current[it.id] = el; }}
                     className="plain-input mono outlined-input"
-                    style={{ width: 56, textAlign: 'right', marginLeft: 'auto', flex: 'none' }}
+                    style={{ width: 76, textAlign: 'right', marginLeft: 'auto', flex: 'none' }}
                     value={durDrafts[it.id] ?? dur(it.d)}
-                    onFocus={(e) => { setDurDrafts((d) => ({ ...d, [it.id]: dur(it.d) })); e.target.select(); }}
-                    onChange={(e) => setDurDrafts((d) => ({ ...d, [it.id]: e.target.value }))}
+                    inputMode="decimal"
+                    onFocus={(e) => { setDurDrafts((d) => ({ ...d, [it.id]: dur(it.d) })); selectAllSoon(e.currentTarget); }}
+                    onChange={(e) => setDurDrafts((d) => ({ ...d, [it.id]: toColon(e.target.value) }))}
                     onBlur={() => commitDuration(it.id)}
                     onKeyDown={durationKeyDown(i, it.id)}
                   />
@@ -252,6 +265,12 @@ export function BacktimerScreen() {
               </div>
             ))}
           </div>
+          {/* Phones have no Tab key to start the next item, so offer it here. */}
+          <button className="btn btn-secondary" data-noprint="1" onClick={addItemAndFocus}
+            style={{ width: '100%', marginTop: 'var(--space-2)', color: 'var(--color-accent-700)' }}>
+            <IconPlus size={15} />Add item
+          </button>
+          </>
         )
       ) : (
         <table className="table" ref={tableRef}>
@@ -311,8 +330,9 @@ export function BacktimerScreen() {
                     ref={(el) => { durInputs.current[it.id] = el; }}
                     className="plain-input mono outlined-input"
                     value={durDrafts[it.id] ?? dur(it.d)}
-                    onFocus={(e) => { setDurDrafts((d) => ({ ...d, [it.id]: dur(it.d) })); e.target.select(); }}
-                    onChange={(e) => setDurDrafts((d) => ({ ...d, [it.id]: e.target.value }))}
+                    inputMode="decimal"
+                    onFocus={(e) => { setDurDrafts((d) => ({ ...d, [it.id]: dur(it.d) })); selectAllSoon(e.currentTarget); }}
+                    onChange={(e) => setDurDrafts((d) => ({ ...d, [it.id]: toColon(e.target.value) }))}
                     onBlur={() => commitDuration(it.id)}
                     onKeyDown={durationKeyDown(i, it.id)}
                   />

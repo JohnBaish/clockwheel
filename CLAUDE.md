@@ -2556,12 +2556,46 @@ typed out-time. Screenshots checked at 1200px and 390px.
 - **Card buttons on phones:** Back and Next/Done sit together on the
   right, with "Don't show this again" on its own line beneath (on card 4
   "Done" used to wrap onto its own line).
-- Verified with Playwright in a touch-emulated 390×844 phone (19 checks:
+- Verified with Playwright in a touch-emulated 390×844 phone (18 checks:
   no pre-focus, tap selects, "."/"," → ":", Next/Back focus the next box
   within the tap, positions above, saved values) plus the earlier 21
   checks and the desktop centring/gap measurements, all passing. Not
   verifiable here: a real iPhone's keyboard actually appearing. That
   needs John's phone.
+
+**Round 4 (2026-10-13): phone data entry in the main lists — Backtimer
+AND the clock List screen** (John asked to look at duration entry on a
+phone after the walkthrough; he approved all six suggestions, "do it
+all", applied to both screens):
+1. **Digits keypad** — every minutes:seconds box (Backtimer's Dur and
+   Out-time, List's Dur) has `inputMode="decimal"` and turns "." or ","
+   into ":" as typed. Shared helpers now live in `src/lib/timeInput.ts`
+   (`toColon`, `selectAllSoon`, `isTouch`); the walkthrough uses them too.
+2. **No iPhone zoom** — iPhone zooms the page when a box with text under
+   16px is tapped. In the ≤720px media query, `.plain-input` is 16px; List's
+   category `<select>` gets `fontSize: 16` inline on narrow screens (its
+   inline `font: inherit` would beat a stylesheet rule). Visible side
+   effect: category pills and name text are a little bigger on phones.
+3. **Bigger tap targets** — `.list-cards .plain-input` min-height 44px;
+   phone Dur box 56→76px wide.
+4. **Phones have no Tab key** — a full-width "+ Add item" / "+ Add segment"
+   button under the last card on narrow screens (`btn-secondary`).
+5. **Add opens the keyboard** — both Add buttons (toolbar and bottom) use
+   `addItemAndFocus` / `addSegmentAndFocus`: `flushSync` the add, then
+   focus the new name box inside the same tap. `addBacktimerItem` and
+   `addSegment` now return the new id for this.
+6. **Selection + "3:"** — tapping a time box selects its value; on touch
+   screens this is deferred one tick (a tap otherwise moves the cursor);
+   on computers it's immediate `select()` as before. Deferring it on
+   computers too caused a real race in testing: keystrokes typed before
+   the deferred select-all got overwritten. `parseMmSs` now accepts "3:"
+   as 3:00 (used by both durations and out-times).
+Desktop is unchanged apart from "."→":" and "3:" being accepted: no
+second Add button, table text still 14px, Tab from the last Dur still
+adds a row. Verified with Playwright (22 checks across Backtimer phone,
+List phone and desktop List, three clean runs), plus the earlier
+walkthrough suites (21 + 18) and desktop centring measurements.
+Not verifiable here: real-iPhone keyboard and zoom behaviour.
 
 **Next:** John tries the branch's Vercel preview (add `?host=backtimer`
 for the standalone look). Merge to `main` only once he's happy.

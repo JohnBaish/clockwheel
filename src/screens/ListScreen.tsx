@@ -6,6 +6,8 @@ import { useDragReorder } from '../lib/useDragReorder';
 import { useIsNarrow } from '../lib/responsive';
 import { IconGrip, IconPin, IconPlus, IconNote, IconTrash } from '../lib/icons';
 import { PINS_ENABLED, NOTES_ENABLED } from '../config';
+import { selectAllSoon, toColon } from '../lib/timeInput';
+import { flushSync } from 'react-dom';
 
 const NARROW = 720;
 
@@ -39,6 +41,14 @@ export function ListScreen() {
     const parsed = parseDur(durDrafts[segmentId] ?? '');
     if (parsed !== null) setSegmentDuration(segmentId, parsed);
     setDurDrafts((d) => { const next = { ...d }; delete next[segmentId]; return next; });
+  };
+
+  // Adds the segment and focuses its name box inside the same tap, so a
+  // phone opens its keyboard (it won't for focus that happens after the tap).
+  const addSegmentAndFocus = () => {
+    let id = '';
+    flushSync(() => { id = addSegment(); });
+    focusName(id);
   };
 
   const focusName = (segmentId: string) => {
@@ -84,6 +94,7 @@ export function ListScreen() {
       style={{
         appearance: 'none', WebkitAppearance: 'none', border: 'none', cursor: 'pointer',
         background: categories[s.c].color, color: categories[s.c].ink, font: 'inherit',
+        fontSize: isNarrow ? 16 : undefined,
       }}
     >
       {categoryOrder.map((id) => <option key={id} value={id}>{categories[id].name}</option>)}
@@ -96,7 +107,7 @@ export function ListScreen() {
         <span style={{ font: '700 11px var(--font-body)', letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--color-neutral-700)' }}>
           {rows.length} segments · drag to reorder
         </span>
-        <button className="btn btn-ghost" onClick={() => addSegment()} style={{ marginLeft: 'auto', color: 'var(--color-accent-700)' }}>
+        <button className="btn btn-ghost" onClick={addSegmentAndFocus} style={{ marginLeft: 'auto', color: 'var(--color-accent-700)' }}>
           <IconPlus size={15} />Add segment
         </button>
       </div>
@@ -110,6 +121,7 @@ export function ListScreen() {
             No segments yet — add the first one above.
           </div>
         ) : (
+          <>
           <div className="list-cards">
             {rows.map((s, i) => (
               <div
@@ -157,10 +169,11 @@ export function ListScreen() {
                   <input
                     ref={(el) => { durInputs.current[s.id] = el; }}
                     className="plain-input mono outlined-input"
-                    style={{ width: 56, textAlign: 'right', marginLeft: 'auto', flex: 'none' }}
+                    style={{ width: 76, textAlign: 'right', marginLeft: 'auto', flex: 'none' }}
                     value={durDrafts[s.id] ?? dur(s.d)}
-                    onFocus={(e) => { setDurDrafts((d) => ({ ...d, [s.id]: dur(s.d) })); e.target.select(); }}
-                    onChange={(e) => setDurDrafts((d) => ({ ...d, [s.id]: e.target.value }))}
+                    inputMode="decimal"
+                    onFocus={(e) => { setDurDrafts((d) => ({ ...d, [s.id]: dur(s.d) })); selectAllSoon(e.currentTarget); }}
+                    onChange={(e) => setDurDrafts((d) => ({ ...d, [s.id]: toColon(e.target.value) }))}
                     onBlur={() => commitDuration(s.id)}
                     onKeyDown={durationKeyDown(i, s.id)}
                   />
@@ -168,6 +181,12 @@ export function ListScreen() {
               </div>
             ))}
           </div>
+          {/* Phones have no Tab key to start the next segment, so offer it here. */}
+          <button className="btn btn-secondary" data-noprint="1" onClick={addSegmentAndFocus}
+            style={{ width: '100%', marginTop: 'var(--space-2)', color: 'var(--color-accent-700)' }}>
+            <IconPlus size={15} />Add segment
+          </button>
+          </>
         )
       ) : (
         <table className="table">
@@ -230,8 +249,9 @@ export function ListScreen() {
                     ref={(el) => { durInputs.current[s.id] = el; }}
                     className="plain-input mono outlined-input"
                     value={durDrafts[s.id] ?? dur(s.d)}
-                    onFocus={(e) => { setDurDrafts((d) => ({ ...d, [s.id]: dur(s.d) })); e.target.select(); }}
-                    onChange={(e) => setDurDrafts((d) => ({ ...d, [s.id]: e.target.value }))}
+                    inputMode="decimal"
+                    onFocus={(e) => { setDurDrafts((d) => ({ ...d, [s.id]: dur(s.d) })); selectAllSoon(e.currentTarget); }}
+                    onChange={(e) => setDurDrafts((d) => ({ ...d, [s.id]: toColon(e.target.value) }))}
                     onBlur={() => commitDuration(s.id)}
                     onKeyDown={durationKeyDown(i, s.id)}
                   />

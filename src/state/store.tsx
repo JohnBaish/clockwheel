@@ -105,7 +105,8 @@ interface AppContextValue extends PersistedState {
   setSegmentDuration: (segmentId: string, seconds: number) => void;
   /** Sets or clears (pass null) a segment's manually-dragged callout-label position. */
   setSegmentLabelPos: (segmentId: string, pos: { x: number; y: number } | null) => void;
-  addSegment: () => void;
+  /** Appends a segment and returns its id. */
+  addSegment: () => string;
   removeSegment: (segmentId: string) => void;
   assign: (keys: string[], id: ClockId | null) => void;
   markLocal: (keys: string[], local: boolean) => void;
@@ -118,7 +119,8 @@ interface AppContextValue extends PersistedState {
   deleteCategory: (id: CategoryId) => string | null;
   categoryUsageCount: (id: CategoryId) => number;
   setBacktimerOutTime: (seconds: number) => void;
-  addBacktimerItem: () => void;
+  /** Appends an item and returns its id. */
+  addBacktimerItem: () => string;
   /** Appends an item with the given name and returns its id. */
   insertBacktimerItem: (name: string) => string;
   removeBacktimerItem: (id: string) => void;
@@ -238,9 +240,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
         seg.id === segmentId ? { ...seg, labelPos: pos ?? undefined } : seg
       )
     ),
-    addSegment: () => editOpenClock((s) => [...s.clocks[s.openClockId].segments, {
-      id: newId('seg'), n: 'New segment', d: 60, c: s.categoryOrder[0], pin: false, note: false,
-    }]),
+    addSegment: () => {
+      const id = newId('seg');
+      editOpenClock((s) => [...s.clocks[s.openClockId].segments, {
+        id, n: 'New segment', d: 60, c: s.categoryOrder[0], pin: false, note: false,
+      }]);
+      return id;
+    },
     removeSegment: (segmentId) => editOpenClock((s) =>
       s.clocks[s.openClockId].segments.filter((seg) => seg.id !== segmentId)
     ),
@@ -297,7 +303,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     },
     categoryUsageCount: (id) => categoryUsageCountFor(id, state.clocks),
     setBacktimerOutTime: (seconds) => setEdited((s) => ({ ...s, backtimer: { ...s.backtimer, outTime: seconds } })),
-    addBacktimerItem: () => editBacktimer((s) => [...s.backtimer.items, { id: newId('bt'), n: 'New item', d: 60 }]),
+    addBacktimerItem: () => {
+      const id = newId('bt');
+      editBacktimer((s) => [...s.backtimer.items, { id, n: 'New item', d: 60 }]);
+      return id;
+    },
     insertBacktimerItem: (name) => {
       const id = newId('bt');
       editBacktimer((s) => [...s.backtimer.items, { id, n: name, d: 60 }]);
