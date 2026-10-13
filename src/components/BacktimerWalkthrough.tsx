@@ -107,7 +107,7 @@ export function BacktimerWalkthrough({ onClose }: { onClose: () => void }) {
 
   if (step === 0) {
     title = 'Set your out-time';
-    body = 'When do you want your sequence to finish, in minutes and seconds?';
+    body = 'When do you want your sequence to finish, in minutes and seconds? (Top of hour displays as 60:00.)';
     field = (
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <input ref={inputRef} value={outText} onChange={(e) => setOutText(toColon(e.target.value))} onFocus={(e) => selectAllSoon(e.currentTarget)}

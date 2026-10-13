@@ -2470,7 +2470,8 @@ anything reaches `main`/the live domains.
 wording uses the column names; phone wording (`useIsNarrow(720)`, where
 the list is cards with no column headings) swaps them out:
 1. **Set your out-time** — "When do you want your sequence to finish,
-   in minutes and seconds?" [field, pre-filled, hint e.g. 29:30] "You
+   in minutes and seconds? (Top of hour displays as 60:00.)" (bracketed
+   sentence added at John's request after go-live, 2026-10-13) [field, pre-filled, hint e.g. 29:30] "You
    can change this later in the OUT-TIME box at the top left."
 2. **Name your last item** — "What shall we call the last item before
    your out-time?" [e.g. Travel] Computer: "…in the ITEM column." Phone:
