@@ -2445,55 +2445,72 @@ Backtimer's bolder clock (black ticks/hands vs. Clockmaker's pale dial)
 and the taglines wrapping differently, not the type. He chose to
 keep Backtimer's bolder clock as-is.
 
-## PARKED IDEA — Backtimer setup walkthrough (discussed 2026-10-11, decisions 2026-10-12, not started)
+## Backtimer getting-started walkthrough — ON BRANCH `backtimer-walkthrough`, NOT YET MERGED (2026-10-13)
 
-A short step-through set of setup cards for Backtimer. **Nothing has
-been built and no branch exists yet.** Next step is John editing the
-draft wording below; build only once he's happy with the text.
+John reshaped the 2026-10-12 idea: not a guide to how Backtimer works,
+but a quick, **interactive** start — the cards collect the out-time and
+the first item, so people finish with a real working row. Built on a
+separate branch for him to try on its Vercel preview URL before
+anything reaches `main`/the live domains.
 
-**Decisions John has made (2026-10-12):**
-1. Show it on a first visit (no saved Backtimer data) **and every time
-   after Clear** — with both a prominent **Skip** and a **"Don't show
-   this again"** tickbox, available on every card.
-2. Show it in **both** places: standalone `backtimer.baish.net` and
-   Clockmaker's own Backtimer tab (he's finding people don't read the
-   Guide carefully).
-3. Claude drafts the wording, John edits it.
+**Agreed behaviour:**
+- Shows whenever Backtimer opens with an **empty list** and the "Don't
+  show this again" box hasn't been ticked — covers a first visit, every
+  Clear, and existing Clockmaker users who've never used the tab.
+- In **both** places: standalone `backtimer.baish.net` and Clockmaker's
+  Backtimer tab (`BacktimerScreen` is shared, so no host check needed).
+- **Skip** (top right) and **Don't show this again** on every card.
+  Whatever's been typed on the current card is kept on Skip.
+- A panel fixed near the bottom of the screen (not a blocking modal), so
+  the real list stays visible and card 4 can point at the new row. A
+  300px spacer is added below the page while it's open so nothing is
+  stuck behind it.
 
-**Testing plan:** build on a separate git branch, not `main`; try it on
-the Vercel preview URL for that branch (append `?host=backtimer` for the
-standalone presentation — see `lib/hostMode.ts`). The preview is a
-different origin with its own `localStorage`, so no real data is
-touched. Merge to `main` only when John's happy. Not yet confirmed that
-preview deployments are on for this Vercel project (default is on).
+**Wording (John's, lightly edited and agreed 2026-10-13).** Computer
+wording uses the column names; phone wording (`useIsNarrow(720)`, where
+the list is cards with no column headings) swaps them out:
+1. **Set your out-time** — "When do you want your sequence to finish,
+   in minutes and seconds?" [field, pre-filled, hint e.g. 29:30] "You
+   can change this later in the OUT-TIME box at the top left."
+2. **Name your last item** — "What shall we call the last item before
+   your out-time?" [e.g. Travel] Computer: "…in the ITEM column." Phone:
+   "…by tapping its name."
+3. **How long is it?** — "How long is **{name}**, in minutes and
+   seconds?" [e.g. 2:30] Computer: "…in the DUR column." Phone: "…by
+   tapping its duration."
+4. **There's your first start time** — Computer: "…now shows in the
+   STARTS column." Phone: "…now shows under its name." Then: Add more
+   items with "+ Add item", or by pressing Tab in the last duration box.
+   Each new item runs before the one above it. Drag the ⋮⋮ handle…,
+   and press "Reverse" to see your items in running order instead of
+   backwards. [Done]
 
-**Draft wording (Claude's, awaiting John's edits).** Each card shows
-"N of 5", Skip, and the "Don't show this again" tickbox. Buttons: Skip ·
-Back · Next (last card: "Get started").
+**Code:**
+- `src/components/BacktimerWalkthrough.tsx` (new) — the panel. Commits
+  each card on Next (and on Skip, silently ignoring invalid input):
+  out-time via `parseOutTime`+`normalizeOutTime`; name creates the item
+  via the new `insertBacktimerItem(name)` (or renames it if the person
+  went Back); duration via `parseDur`. Enter = Next, Escape = Skip.
+- `state/store.tsx`: `backtimerWalkthroughOff?: boolean` at the **top
+  level** of `PersistedState`, deliberately *not* inside `backtimer`, so
+  Clear (`resetBacktimer` → `seedBacktimer()`) can't wipe it. New
+  actions `setBacktimerWalkthroughOff` and `insertBacktimerItem(name)`
+  (returns the new id — plain `addBacktimerItem` returns nothing).
+- `screens/BacktimerScreen.tsx`: `showWalk` state, initialised from
+  "list empty && not ticked off"; `handleClear` reopens it after a
+  confirmed Clear. The existing "focus the newest row's name field"
+  effect is suppressed while the walkthrough is open, otherwise the item
+  the walkthrough creates would yank focus out of the panel.
 
-1. **Welcome to Backtimer** — Backtimer works backwards from a fixed
-   moment, your out-time, and tells you when each item needs to start
-   so you finish exactly on time.
-2. **Set your out-time** — Type the moment you need to finish into
-   Out-time, in minutes and seconds, for example 29:30. It starts at
-   60:00, the top of the hour. If you type 0:00, it means the same thing.
-3. **Add your items, last one first** — Press Add item and enter the
-   item that finishes at your out-time, then its duration. Keep adding,
-   working backwards: each new item goes underneath and runs before the
-   one above it. Type durations as minutes and seconds (3:20) or as
-   seconds on their own (200). Pressing Tab in the last duration box
-   starts a new item.
-4. **Read your start times** — The Starts column shows when each item
-   has to begin. If your items stretch back past the top of the hour,
-   those start times are highlighted and shown as times in the previous
-   hour. Reverse flips the list so it reads in running order, earliest
-   first.
-5. **You're ready** — Your work is saved automatically, but only in
-   this browser. Clear empties the list and brings this walkthrough
-   back, unless you tick the box below.
+**Verified with Playwright (21 checks, all passing)** on a built `vite
+preview`: shows on first visit (standalone and Clockmaker tab, not on
+Guide); empty-name error; focus stays in the panel after the item is
+created; card 3 uses the typed name; Back-then-rename edits the same
+item (still one item); out-time 29:30 + 2:30 → table shows 27:00; Done
+closes; reload with items → not shown; Clear → shown; tick + Skip →
+closed, and not shown after another Clear or a reload; phone wording on
+cards 2 and 4 at 390px, no sideways overflow; Skip on card 1 keeps a
+typed out-time. Screenshots checked at 1200px and 390px.
 
-Open questions put to John on the wording: keep "0:00 means the top of
-the hour" on card 2 (true — `normalizeOutTime` — but maybe too much
-detail)? Keep "seconds on their own" on card 3 (true — `parseDur`
-treats a bare number as seconds, so "3" is three seconds, not minutes;
-probably worth keeping)?
+**Next:** John tries the branch's Vercel preview (add `?host=backtimer`
+for the standalone look). Merge to `main` only once he's happy.

@@ -6,6 +6,7 @@ import { useDragReorder } from '../lib/useDragReorder';
 import { useIsNarrow } from '../lib/responsive';
 import { IconGrip, IconPlus, IconTrash, IconArrowUpDown, IconPrint } from '../lib/icons';
 import { isBacktimerHost } from '../lib/hostMode';
+import { BacktimerWalkthrough } from '../components/BacktimerWalkthrough';
 
 const NARROW = 720;
 
@@ -13,7 +14,7 @@ export function BacktimerScreen() {
   const {
     backtimer, setBacktimerOutTime, addBacktimerItem, removeBacktimerItem,
     setBacktimerItemName, setBacktimerItemDuration, reorderBacktimerItems, resetBacktimer,
-    toggleBacktimerReversed,
+    toggleBacktimerReversed, backtimerWalkthroughOff,
   } = useApp();
   const seed = backtimer.items;
   // `computed` is always in the one true order items are stored/calculated
@@ -31,6 +32,7 @@ export function BacktimerScreen() {
   const nameInputs = useRef<Record<string, HTMLInputElement | null>>({});
   const durInputs = useRef<Record<string, HTMLInputElement | null>>({});
   const prevCount = useRef(seed.length);
+  const [showWalk, setShowWalk] = useState(() => seed.length === 0 && !backtimerWalkthroughOff);
 
   // The drag hook works entirely in on-screen row positions, but reordering
   // has to happen on the real (unreversed) item array — when flipped, visual
@@ -44,13 +46,15 @@ export function BacktimerScreen() {
     useDragReorder(rows.length, commitReorder);
 
   useEffect(() => {
-    if (seed.length > prevCount.current) {
+    // While the walkthrough is open it owns the keyboard focus, so an item it
+    // creates mustn't pull focus down into the list.
+    if (seed.length > prevCount.current && !showWalk) {
       const lastId = seed[seed.length - 1].id;
       const input = nameInputs.current[lastId];
       if (input) { input.focus(); input.select(); }
     }
     prevCount.current = seed.length;
-  }, [seed]);
+  }, [seed, showWalk]);
 
   const commitOutTime = () => {
     const parsed = outDraft === null ? null : parseOutTime(outDraft);
@@ -102,7 +106,10 @@ export function BacktimerScreen() {
   // on, so this asks first rather than following the rest of the app's
   // no-confirmation pattern for destructive actions.
   const handleClear = () => {
-    if (window.confirm('Clear all items and reset the out-time back to 60:00?')) resetBacktimer();
+    if (window.confirm('Clear all items and reset the out-time back to 60:00?')) {
+      resetBacktimer();
+      if (!backtimerWalkthroughOff) setShowWalk(true);
+    }
   };
 
   return (
@@ -339,6 +346,8 @@ export function BacktimerScreen() {
           . Contact: backtimer@baish.net.
         </div>
       )}
+
+      {showWalk && <BacktimerWalkthrough onClose={() => setShowWalk(false)} />}
     </div>
   );
 }

@@ -19,6 +19,9 @@ interface PersistedState {
   categories: Record<CategoryId, Category>;
   categoryOrder: CategoryId[];
   backtimer: BacktimerState;
+  /** Set by the walkthrough's "Don't show this again" tickbox. Kept outside
+   *  `backtimer` on purpose, so Clear (which resets `backtimer`) can't undo it. */
+  backtimerWalkthroughOff?: boolean;
   lastEditedAt: number;
 }
 
@@ -116,6 +119,8 @@ interface AppContextValue extends PersistedState {
   categoryUsageCount: (id: CategoryId) => number;
   setBacktimerOutTime: (seconds: number) => void;
   addBacktimerItem: () => void;
+  /** Appends an item with the given name and returns its id. */
+  insertBacktimerItem: (name: string) => string;
   removeBacktimerItem: (id: string) => void;
   setBacktimerItemName: (id: string, name: string) => void;
   setBacktimerItemDuration: (id: string, seconds: number) => void;
@@ -124,6 +129,7 @@ interface AppContextValue extends PersistedState {
   resetBacktimer: () => void;
   /** Flips between backwards (latest thing on top) and chronological (earliest on top) display. */
   toggleBacktimerReversed: () => void;
+  setBacktimerWalkthroughOff: (off: boolean) => void;
   /** All persisted state, wrapped and pretty-printed for a downloadable backup file. */
   exportState: () => string;
   /** Loads a previously exported file back in. Returns null on success, or a
@@ -292,6 +298,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     categoryUsageCount: (id) => categoryUsageCountFor(id, state.clocks),
     setBacktimerOutTime: (seconds) => setEdited((s) => ({ ...s, backtimer: { ...s.backtimer, outTime: seconds } })),
     addBacktimerItem: () => editBacktimer((s) => [...s.backtimer.items, { id: newId('bt'), n: 'New item', d: 60 }]),
+    insertBacktimerItem: (name) => {
+      const id = newId('bt');
+      editBacktimer((s) => [...s.backtimer.items, { id, n: name, d: 60 }]);
+      return id;
+    },
     removeBacktimerItem: (id) => editBacktimer((s) => s.backtimer.items.filter((it) => it.id !== id)),
     setBacktimerItemName: (id, name) => editBacktimer((s) =>
       s.backtimer.items.map((it) => (it.id === id ? { ...it, n: name } : it))
@@ -307,6 +318,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }),
     resetBacktimer: () => setEdited((s) => ({ ...s, backtimer: seedBacktimer() })),
     toggleBacktimerReversed: () => setEdited((s) => ({ ...s, backtimer: { ...s.backtimer, reversed: !s.backtimer.reversed } })),
+    setBacktimerWalkthroughOff: (off) => setEdited((s) => ({ ...s, backtimerWalkthroughOff: off })),
     exportState: () => JSON.stringify({ app: 'clockwheel', version: 2, exportedAt: new Date().toISOString(), state }, null, 2),
     importState: (json) => {
       let parsed: unknown;
