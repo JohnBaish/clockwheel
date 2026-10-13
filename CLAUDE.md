@@ -2445,7 +2445,7 @@ Backtimer's bolder clock (black ticks/hands vs. Clockmaker's pale dial)
 and the taglines wrapping differently, not the type. He chose to
 keep Backtimer's bolder clock as-is.
 
-## Backtimer getting-started walkthrough — ON BRANCH `backtimer-walkthrough`, NOT YET MERGED (2026-10-13)
+## Backtimer getting-started walkthrough + phone data entry — LIVE (built 2026-10-13 on branch `backtimer-walkthrough`, merged to `main` 2026-10-13)
 
 John reshaped the 2026-10-12 idea: not a guide to how Backtimer works,
 but a quick, **interactive** start — the cards collect the out-time and
@@ -2597,5 +2597,6 @@ List phone and desktop List, three clean runs), plus the earlier
 walkthrough suites (21 + 18) and desktop centring measurements.
 Not verifiable here: real-iPhone keyboard and zoom behaviour.
 
-**Next:** John tries the branch's Vercel preview (add `?host=backtimer`
-for the standalone look). Merge to `main` only once he's happy.
+**Merged to `main` (2026-10-13)** after John tried every round on the
+branch's Vercel preview and approved it all. The branch was left in
+place on GitHub; it's fully merged, so it can be deleted any time.
