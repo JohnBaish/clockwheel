@@ -2658,7 +2658,7 @@ loose ends. `design/` now holds the source for each image —
 - `HOUSE-STYLE.md` §7 now says previews are done for every existing site;
   a new tool only needs its own.
 
-## Copy image (Clock screen) now uses the brand fonts (2026-10-15, branch `copy-image-fonts`)
+## Copy image (Clock screen) now uses the brand fonts — LIVE (built 2026-10-15 on branch `copy-image-fonts`, merged to `main` 2026-10-15)
 
 Found while planning Flowcharter: the PNG from **Copy image** on the Clock
 screen showed the Caprasimo text (`:00/:15/:30/:45`, the hour in the hub)
