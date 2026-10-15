@@ -170,6 +170,14 @@ its own `og:title`, `og:description`, `og:image`, `og:url` and `twitter:*`
 tags; any tagline baked into the image must be updated too whenever the
 description changes.
 
+**Status (2026-10-15): done for every existing site.** Clockmaker,
+Backtimer and baish.net all have finished preview images, rebuilt from the
+`design/` sources with both brand fonts, and their tags are in place
+(baish.net: title "baish.net", description "John Baish’s websites"). A new
+tool like Flowcharter only needs its own image: copy
+`design/og-clockmaker.html`, swap the drawing and words, screenshot it,
+and add its tags. Nothing else needs fixing or remaking first.
+
 ## 8. Data and privacy
 
 - No accounts and no backend. Everything a person makes is saved

@@ -2627,6 +2627,33 @@ tagline uses Figtree 600 rather than "any sans-serif": rendering the
 original template on a different machine showed the generic sans-serif
 differs from machine to machine, so the existing two images' taglines
 (rendered in whatever sans the first machine had, Arial-like) can't be
-reproduced exactly. The title and layout reproduce pixel-for-pixel. Not
-applied to the live images; John could regenerate both from the
-template for a perfectly matched set if he ever wants.
+reproduced exactly. The title and layout reproduce pixel-for-pixel.
+
+## All three link-preview images rebuilt from `design/`; baish.net gets one (2026-10-15)
+
+John asked for this so the Flowcharter project wouldn't inherit any
+loose ends. `design/` now holds the source for each image —
+`og-clockmaker.html` (also the template for new tools), `og-backtimer.html`,
+`og-baish.html` — each loading Caprasimo 400 and Figtree 600 from
+`node_modules` by relative path.
+- **Clockmaker and Backtimer** re-rendered from those sources. Only the
+  tagline changed (now Figtree 600 instead of the old machine-dependent
+  generic sans). Pixel-checked against the previous images: drawings
+  identical; titles on the same rows with only anti-aliasing differences
+  (under 0.4% of title pixels differ noticeably).
+- **baish.net** had no preview image (text-only card, `twitter:card`
+  "summary"). New `public/og-baish.png`: the favicon's lowercase "b"
+  redrawn at 440px on a plain `#ebddc5` dial (a version with a terracotta
+  ring was tried and dropped: it read as busier than the Clockmaker image
+  and clipped at the edge), title "baish.net", tagline "John Baish’s
+  websites" (John's wording). `landing.html`: `og:title`/`twitter:title`
+  → "baish.net" (matches the image heading, as Clockmaker/Backtimer do; the
+  browser tab `<title>` stays "John Baish"), all three descriptions →
+  "John Baish’s websites", added `og:image`/`twitter:image`, `twitter:card`
+  → `summary_large_image`. Served as a plain static file on baish.net
+  (`middleware.ts` only intercepts `/`).
+- Verified: all three PNGs 1200×630, both fonts confirmed loaded at
+  render time, all three served 200 `image/png` from a built `vite
+  preview`, `landing.html`'s tags correct in the built output.
+- `HOUSE-STYLE.md` §7 now says previews are done for every existing site;
+  a new tool only needs its own.
