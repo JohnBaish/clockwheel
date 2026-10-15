@@ -2697,3 +2697,30 @@ inlines two colour variables.
   copied image's background is still the cream `--color-bg`, not the
   darker card colour behind the clock on screen — that was already the
   case and was left alone.
+
+## Import asks before replacing everything (2026-10-15, branch `import-confirm`)
+
+John asked whether Import warned that it would wipe what's already
+there. It didn't: picking a valid file replaced everything at once (all
+clocks, the Week, categories and Clockmaker's own Backtimer list; the
+export holds the whole saved state), with no undo. Only the Guide's
+Library paragraph mentioned it.
+- `importState(json, confirm?)` in `src/state/store.tsx`: the optional
+  `confirm` callback runs only **after** the file has passed every
+  validation check, so a bad file still just shows its error banner and
+  nobody is asked to approve a file that would be rejected anyway.
+  Returning false cancels with nothing changed and no message.
+- `LibraryScreen` passes a plain `window.confirm()` (the house-style
+  pattern for destructive actions, like Clear and Delete). Wording is
+  John's, verbatim, with the real file name in the quotes: "Replace
+  everything in Clockmaker (clocks, categories and weekly allocation) with
+  the contents of “<file name>”? This can’t be undone. Press Cancel and
+  then use Export first if you want to save your current work."
+- Left alone: the Library footer (deliberately short) and the Guide text
+  (already says Import replaces rather than merges).
+- Verified with Playwright against a built `vite preview`, at 1200px and
+  at 390px with touch emulation: a non-Clockmaker file → no dialog, error
+  banner, nothing changed; a real export + Cancel → one dialog with the
+  exact text and file name, nothing changed; + OK → clocks replaced. The
+  dialog itself is drawn by the browser, so its look varies by browser
+  and phone and couldn't be screenshotted here.

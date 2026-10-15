@@ -136,8 +136,11 @@ interface AppContextValue extends PersistedState {
   exportState: () => string;
   /** Loads a previously exported file back in. Returns null on success, or a
    *  message explaining why it was rejected — the only place this app parses
-   *  data from outside itself, so it's the one place worth validating. */
-  importState: (json: string) => string | null;
+   *  data from outside itself, so it's the one place worth validating.
+   *  `confirm` is asked only once the file has passed validation, so nobody
+   *  is asked to approve a file that would be rejected anyway; returning
+   *  false cancels with nothing changed (and no message). */
+  importState: (json: string, confirm?: () => boolean) => string | null;
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -330,7 +333,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     toggleBacktimerReversed: () => setEdited((s) => ({ ...s, backtimer: { ...s.backtimer, reversed: !s.backtimer.reversed } })),
     setBacktimerWalkthroughOff: (off) => setEdited((s) => ({ ...s, backtimerWalkthroughOff: off })),
     exportState: () => JSON.stringify({ app: 'clockwheel', version: 2, exportedAt: new Date().toISOString(), state }, null, 2),
-    importState: (json) => {
+    importState: (json, confirm) => {
       let parsed: unknown;
       try {
         parsed = JSON.parse(json);
@@ -357,6 +360,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       ) {
         return 'That file is missing data Clockmaker needs — it may be corrupted.';
       }
+      if (confirm && !confirm()) return null;
       setState((s) => {
         const merged: PersistedState = { ...s, ...incoming, lastEditedAt: Date.now(), screen: 'lib' };
         if (!merged.clocks[merged.openClockId]) merged.openClockId = merged.clockOrder[0] ?? s.openClockId;
