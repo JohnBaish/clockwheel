@@ -2724,3 +2724,53 @@ Library paragraph mentioned it.
   exact text and file name, nothing changed; + OK → clocks replaced. The
   dialog itself is drawn by the browser, so its look varies by browser
   and phone and couldn't be screenshotted here.
+
+## Standalone Backtimer gets its own Export and Import — LIVE (built 2026-10-15 on branch `backtimer-export`, merged to `main` 2026-10-15)
+
+John saw a user this morning who needed it: backtimer.baish.net is its own
+origin with its own storage, and had no way to back up a list or move it
+to another browser. Clockmaker's Library Export already includes
+Clockmaker's own Backtimer tab, so this is **standalone only** (gated on
+`isBacktimerHost()`); Clockmaker's Backtimer tab is unchanged.
+- **File:** `backtimer-YYYY-MM-DD-HHMM.json`, holding only the Backtimer
+  (`{ app: 'backtimer', version: 1, exportedAt, backtimer }`: out-time,
+  items, Reverse). The download code moved out of `LibraryScreen` into
+  `src/lib/download.ts` (`downloadJson(text, prefix)`), shared by both
+  Exports so the names match; Clockmaker's filename is unchanged.
+- **Store:** `exportBacktimer()` and `importBacktimer(json, confirm?)`,
+  same contract as `importState`. It validates (out-time a number 0–3600,
+  items an array of `{ n: string, d: number ≥ 0 }`), gives imported items
+  fresh ids, caps names at 50 like the name box, and replaces only
+  `backtimer`. A Clockmaker export picked by mistake gets its own message
+  ("That's a Clockmaker export file. Import it in Clockmaker instead.").
+  Clockmaker's Import already rejects a Backtimer file as "doesn't look
+  like a Clockmaker export file".
+- **Screen:** Import and Export as ghost buttons in the toolbar, between
+  Add item and Clear; a dismissable error banner like Library's. The
+  confirmation (draft wording, mirroring Clockmaker's) is asked only after
+  the file passes validation; accepting it closes the walkthrough if it's
+  open (a fresh browser importing a backup) and stops the screen jumping
+  into the last item's name box, which it otherwise does when the item
+  count grows.
+- **Verified** with Playwright against a built `vite preview`, at 1200px
+  and at 390px with touch emulation (12 checks each, plus one on
+  Clockmaker's tab): filename and file contents; three kinds of bad file
+  → message, no dialog, nothing changed; Cancel → nothing changed; OK →
+  out-time, items and Reverse arrive, walkthrough closes, nothing
+  focused, start times correct; no sideways overflow. On a phone the
+  toolbar wraps to three lines, with Import/Export/Clear on the last.
+- **Round 2 (same day), from John's look at the preview:**
+  - Import/Export restyled to match Clockmaker's Library buttons
+    (`btn btn-secondary`, outlined, 13.5px, padding 8px 16px) instead of
+    ghost text buttons.
+  - Walkthrough: Return now presses **Done** on the last card. That card
+    has no box, so focus used to be left nowhere (pressing Return in the
+    duration box on card 3 unmounts that box) and Return did nothing.
+    `focusField()` now focuses the Done button when there's no box to
+    focus. Checked: keyboard-only run (Return on every card) closes the
+    walkthrough with the item saved; clicking Next on card 3 then Return
+    does too; on a touch-emulated phone tapping through still works.
+- **Approved and merged:** John approved the drafted confirmation wording
+  as-is, and the standalone footer gained a sentence after "…clear it at
+  any time.": "Use Export to back up your list or move it to another
+  browser." (his approval of the suggested wording).

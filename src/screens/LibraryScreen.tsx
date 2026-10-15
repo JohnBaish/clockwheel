@@ -3,6 +3,7 @@ import { useApp } from '../state/store';
 import { localKeys } from '../lib/weekStats';
 import { splitBg, wheelBg, mixLine } from '../lib/color';
 import { computeSplit, songCount } from '../lib/clockStats';
+import { downloadJson } from '../lib/download';
 
 export function LibraryScreen() {
   const { clocks, clockOrder, week, outside, categories, categoryOrder, duplicateClock, openClock, removeClock, exportState, importState } = useApp();
@@ -23,20 +24,7 @@ export function LibraryScreen() {
     }
   };
 
-  const handleExport = () => {
-    const blob = new Blob([exportState()], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    const now = new Date();
-    const pad = (n: number) => String(n).padStart(2, '0');
-    // Local time, not UTC — someone exporting a couple of backups in the
-    // same day wants filenames that match the clock on their own wall.
-    const stamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}`;
-    a.download = `clockmaker-${stamp}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  const handleExport = () => downloadJson(exportState(), 'clockmaker');
 
   const handleImportFile = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

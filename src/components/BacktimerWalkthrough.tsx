@@ -36,12 +36,14 @@ export function BacktimerWalkthrough({ onClose }: { onClose: () => void }) {
   const [error, setError] = useState<string | null>(null);
   const [dontShow, setDontShow] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const primaryRef = useRef<HTMLButtonElement | null>(null);
 
   const touch = isTouch();
 
   const focusField = () => {
     const el = inputRef.current;
-    if (!el) return;
+    // The last card has no box, so focus Done instead: Return then presses it.
+    if (!el) { primaryRef.current?.focus(); return; }
     el.focus();
     el.setSelectionRange(0, el.value.length);
   };
@@ -197,7 +199,7 @@ export function BacktimerWalkthrough({ onClose }: { onClose: () => void }) {
           {step > 0 && (
             <button className="btn btn-ghost" onClick={back} style={{ padding: '8px 12px' }}>Back</button>
           )}
-          <button className="btn btn-primary" onClick={next} style={{ padding: '8px 20px' }}>
+          <button ref={primaryRef} className="btn btn-primary" onClick={next} style={{ padding: '8px 20px' }}>
             {step < STEPS - 1 ? 'Next' : 'Done'}
           </button>
         </div>
