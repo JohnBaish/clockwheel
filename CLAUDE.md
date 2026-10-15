@@ -2759,3 +2759,14 @@ Clockmaker's own Backtimer tab, so this is **standalone only** (gated on
   out-time, items and Reverse arrive, walkthrough closes, nothing
   focused, start times correct; no sideways overflow. On a phone the
   toolbar wraps to three lines, with Import/Export/Clear on the last.
+- **Round 2 (same day), from John's look at the preview:**
+  - Import/Export restyled to match Clockmaker's Library buttons
+    (`btn btn-secondary`, outlined, 13.5px, padding 8px 16px) instead of
+    ghost text buttons.
+  - Walkthrough: Return now presses **Done** on the last card. That card
+    has no box, so focus used to be left nowhere (pressing Return in the
+    duration box on card 3 unmounts that box) and Return did nothing.
+    `focusField()` now focuses the Done button when there's no box to
+    focus. Checked: keyboard-only run (Return on every card) closes the
+    walkthrough with the item saved; clicking Next on card 3 then Return
+    does too; on a touch-emulated phone tapping through still works.

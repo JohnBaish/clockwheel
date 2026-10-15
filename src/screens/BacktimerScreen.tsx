@@ -213,10 +213,10 @@ export function BacktimerScreen() {
         {standalone && (
           <>
             <input ref={fileInput} type="file" accept="application/json,.json" onChange={handleImportFile} style={{ display: 'none' }} />
-            <button className="btn btn-ghost" onClick={() => fileInput.current?.click()} style={{ color: 'var(--color-accent-700)' }}>
+            <button className="btn btn-secondary" onClick={() => fileInput.current?.click()} style={{ padding: '8px 16px', fontSize: '13.5px', whiteSpace: 'nowrap' }}>
               Import
             </button>
-            <button className="btn btn-ghost" onClick={() => downloadJson(exportBacktimer(), 'backtimer')} style={{ color: 'var(--color-accent-700)' }}>
+            <button className="btn btn-secondary" onClick={() => downloadJson(exportBacktimer(), 'backtimer')} style={{ padding: '8px 16px', fontSize: '13.5px', whiteSpace: 'nowrap' }}>
               Export
             </button>
           </>
