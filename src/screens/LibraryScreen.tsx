@@ -43,7 +43,10 @@ export function LibraryScreen() {
     e.target.value = '';
     if (!file) return;
     const text = await file.text();
-    setError(importState(text));
+    // Import replaces everything (it doesn't merge), and there's no undo.
+    setError(importState(text, () => window.confirm(
+      `Replace everything in Clockmaker (clocks, categories and weekly allocation) with the contents of “${file.name}”? This can’t be undone. Press Cancel and then use Export first if you want to save your current work.`,
+    )));
   };
 
   return (
