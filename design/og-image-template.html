@@ -1,0 +1,76 @@
+<!doctype html>
+<!--
+  Link-preview ("og:image") template for baish.net tools — 1200×630.
+  Used for public/og-clockmaker.png; public/og-backtimer.png uses the same
+  layout with its own clock drawing. See HOUSE-STYLE.md.
+
+  To make a new one: change the <h1> and <p>, replace the .art block with
+  the tool's own illustration (keep it 440×440 at left 96, top 95), then
+  screenshot at exactly 1200×630 (e.g. Playwright, after `npm ci` so the
+  font file below exists). The heading font is loaded from node_modules by
+  relative path ON PURPOSE: loading it from Google Fonts silently fails
+  without network access and the title falls back to a plain serif, which
+  is exactly what went wrong with the first og-backtimer.png. Check the
+  rendered title really is Caprasimo before using the image.
+  The tagline is Figtree 600 (the app's body font), also loaded by path.
+  Note: the two existing images' taglines were rendered in whatever generic
+  sans-serif the machine had at the time (looks like Arial Bold), so they
+  can't be reproduced exactly; regenerating them from this template would
+  give a slightly different (more on-brand) tagline font.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face {
+    font-family: 'Caprasimo';
+    src: url('../node_modules/@fontsource/caprasimo/files/caprasimo-latin-400-normal.woff2') format('woff2');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'Figtree';
+    src: url('../node_modules/@fontsource/figtree/files/figtree-latin-600-normal.woff2') format('woff2');
+    font-weight: 600;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1200px; height: 630px; background: #f5ead8; font-family: -apple-system, sans-serif; position: relative; overflow: hidden; }
+
+  /* Example illustration (Clockmaker's clock). Replace for a new tool. */
+  .art { position: absolute; left: 96px; top: 95px; width: 440px; height: 440px; border-radius: 50%;
+         background: #ebddc5; box-shadow: inset 0 0 0 1px rgba(32,30,29,.08); }
+  .tick { position: absolute; left: 50%; top: 50%; width: 3px; height: 18px; background: rgba(32,30,29,.3);
+          transform-origin: 1.5px 202px; margin-left: -1.5px; margin-top: -202px; border-radius: 2px; }
+  .hub { position: absolute; left: 50%; top: 50%; width: 150px; height: 150px; margin: -75px 0 0 -75px;
+         border-radius: 50%; background: #f5ead8; }
+  .hand { position: absolute; left: 50%; top: 50%; border-radius: 999px; transform-origin: 0 50%; height: 11px; margin-top: -5.5px; }
+  .hour { width: 95px; background: #201e1d; transform: rotate(-150deg); }
+  .minute { width: 150px; background: #c67139; transform: rotate(-30deg); }
+
+  /* Text block: same position and sizes on every tool's image. */
+  .text { position: absolute; left: 592px; top: 225px; width: 560px; }
+  h1 { font-family: 'Caprasimo', serif; font-weight: 400; font-size: 72px; color: #201e1d; line-height: 1; margin-bottom: 18px; }
+  p { font-family: 'Figtree', sans-serif; font-size: 27px; font-weight: 600; color: #645c50; line-height: 1.35; }
+</style>
+</head>
+<body>
+  <div class="art">
+    <div id="ticks"></div>
+    <div class="hand hour"></div>
+    <div class="hand minute"></div>
+    <div class="hub"></div>
+  </div>
+  <div class="text">
+    <h1>Clockmaker</h1>
+    <p>Display a broadcast hour in a circular layout.</p>
+  </div>
+  <script>
+    const ticks = document.getElementById('ticks');
+    for (let i = 0; i < 12; i++) {
+      const t = document.createElement('div');
+      t.className = 'tick';
+      t.style.transform = `rotate(${i * 30}deg)`;
+      ticks.appendChild(t);
+    }
+  </script>
+</body>
+</html>

@@ -5,6 +5,10 @@ what that did and didn't touch. Historical entries throughout this file
 that say "Clockwheel" are accurate records of what the app was called at
 the time they were written; they're deliberately not rewritten.)
 
+**Starting a new tool in the same style (e.g. Flowcharter)? Read
+`HOUSE-STYLE.md` first** — the shared design system, phone rules, privacy
+wording, hosting and ways of working, in one short file.
+
 A React + TypeScript rebuild of the Organic-design broadcast clock builder
 (`../project/Clock and List.dc.html` is the original Claude Design handoff
 this was built from). Vite app, no backend — state lives in localStorage.
@@ -2601,3 +2605,26 @@ Not verifiable here: real-iPhone keyboard and zoom behaviour.
 **Merged to `main` (2026-10-13)** after John tried every round on the
 branch's Vercel preview and approved it all. The branch was left in
 place on GitHub; it's fully merged, so it can be deleted any time.
+
+## House style guide for new tools (2026-10-15)
+
+John is starting a new project, **Flowcharter**, in a new chat, and wants
+it to match Clockmaker/Backtimer. Rather than point a new session at this
+long, Clockmaker-specific history file, wrote **`HOUSE-STYLE.md`** (repo
+root): which files to copy (`organic.css`, parts of `global.css`, icons,
+`useIsNarrow`, `timeInput`), the palette/type/spacing tokens, component
+conventions (action row, buttons, cards, footer notice, step-through
+cards), phone rules, favicon and link-preview recipes, data/privacy
+(approved wording, analytics), hosting, and how John likes to work. Every
+value was checked against the code, not written from memory.
+
+Also added **`design/og-image-template.html`**, the link-preview image
+template (the earlier ones only ever lived in temporary scratch folders
+and were lost). Fonts load from `node_modules` by relative path. Its
+tagline uses Figtree 600 rather than "any sans-serif": rendering the
+original template on a different machine showed the generic sans-serif
+differs from machine to machine, so the existing two images' taglines
+(rendered in whatever sans the first machine had, Arial-like) can't be
+reproduced exactly. The title and layout reproduce pixel-for-pixel. Not
+applied to the live images; John could regenerate both from the
+template for a perfectly matched set if he ever wants.
