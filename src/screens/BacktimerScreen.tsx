@@ -434,7 +434,7 @@ export function BacktimerScreen() {
           >
             clear it
           </button>
-          {' '}at any time. A companion set of tools to build and visualise clock hours is available at{' '}
+          {' '}at any time. Use Export to back up your list or move it to another browser. A companion set of tools to build and visualise clock hours is available at{' '}
           <a
             href="https://clockmaker.baish.net"
             target="_blank"

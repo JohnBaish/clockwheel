@@ -2725,7 +2725,7 @@ Library paragraph mentioned it.
   dialog itself is drawn by the browser, so its look varies by browser
   and phone and couldn't be screenshotted here.
 
-## Standalone Backtimer gets its own Export and Import (2026-10-15, branch `backtimer-export`)
+## Standalone Backtimer gets its own Export and Import — LIVE (built 2026-10-15 on branch `backtimer-export`, merged to `main` 2026-10-15)
 
 John saw a user this morning who needed it: backtimer.baish.net is its own
 origin with its own storage, and had no way to back up a list or move it
@@ -2770,3 +2770,7 @@ Clockmaker's own Backtimer tab, so this is **standalone only** (gated on
     focus. Checked: keyboard-only run (Return on every card) closes the
     walkthrough with the item saved; clicking Next on card 3 then Return
     does too; on a touch-emulated phone tapping through still works.
+- **Approved and merged:** John approved the drafted confirmation wording
+  as-is, and the standalone footer gained a sentence after "…clear it at
+  any time.": "Use Export to back up your list or move it to another
+  browser." (his approval of the suggested wording).
