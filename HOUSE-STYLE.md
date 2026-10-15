@@ -27,7 +27,7 @@ Backtimer — long, and mostly about those apps. Read it only for the
 | `src/lib/timeInput.ts` | Phone keyboard helpers (`isTouch`, `toColon`, `selectAllSoon`). Only if the new tool has time or number entry. |
 | `src/lib/useDragReorder.ts` | Drag-to-reorder by a grip handle, mouse and touch. Only if needed. |
 | `public/favicon*.svg` | Favicon style to adapt (see §7). |
-| `design/og-image-template.html` | Link-preview image template (see §7). |
+| `design/og-clockmaker.html` | Link-preview image source; use it as the template for a new tool (see §7). |
 
 Dependencies these rely on: `@fontsource/caprasimo`, `@fontsource/figtree`,
 `lucide-react`, React. Stack is **Vite + React + TypeScript**, `oxlint`
@@ -161,7 +161,8 @@ Check every new one at a real 16px before using it.
 
 **Link-preview images** (`og:image`, 1200×630): cream background,
 illustration 440×440 at (96, 95), tool name in Caprasimo 72px and a
-one-line tagline at (592, 225). Start from `design/og-image-template.html`.
+one-line tagline at (592, 225). Start from `design/og-clockmaker.html`
+(`design/` also holds the Backtimer and baish.net sources).
 Both fonts must be loaded from `node_modules` by file path — loading from
 Google Fonts fails silently without network access and the title falls
 back to a plain serif (this happened once). Each HTML entry point needs

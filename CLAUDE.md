@@ -2618,7 +2618,9 @@ cards), phone rules, favicon and link-preview recipes, data/privacy
 (approved wording, analytics), hosting, and how John likes to work. Every
 value was checked against the code, not written from memory.
 
-Also added **`design/og-image-template.html`**, the link-preview image
+Also added **`design/og-image-template.html`** (since renamed
+`design/og-clockmaker.html`, alongside `og-backtimer.html` and
+`og-baish.html`), the link-preview image
 template (the earlier ones only ever lived in temporary scratch folders
 and were lost). Fonts load from `node_modules` by relative path. Its
 tagline uses Figtree 600 rather than "any sans-serif": rendering the

@@ -1,0 +1,54 @@
+<!doctype html>
+<!-- Link-preview image for backtimer.baish.net (public/og-backtimer.png).
+     Same layout and fonts as og-clockmaker.html — see the notes there and
+     HOUSE-STYLE.md §7. Screenshot at exactly 1200×630. -->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face {
+    font-family: 'Caprasimo';
+    src: url('../node_modules/@fontsource/caprasimo/files/caprasimo-latin-400-normal.woff2') format('woff2');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'Figtree';
+    src: url('../node_modules/@fontsource/figtree/files/figtree-latin-600-normal.woff2') format('woff2');
+    font-weight: 600;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1200px; height: 630px; background: #f5ead8; font-family: -apple-system, sans-serif; position: relative; overflow: hidden; }
+  .art { position: absolute; left: 96px; top: 95px; width: 440px; height: 440px; display: block; }
+  .text { position: absolute; left: 592px; top: 225px; width: 560px; }
+  h1 { font-family: 'Caprasimo', serif; font-weight: 400; font-size: 72px; color: #201e1d; line-height: 1; margin-bottom: 18px; }
+  p { font-family: 'Figtree', sans-serif; font-size: 27px; font-weight: 600; color: #645c50; line-height: 1.35; }
+</style>
+</head>
+<body>
+  <svg class="art" viewBox="-170 -170 340 340" id="face"></svg>
+  <div class="text">
+    <h1>Backtimer</h1>
+    <p>Work out exactly when each item needs to start to hit your out-time.</p>
+  </div>
+  <script>
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = document.getElementById('face');
+    const RO = 170, RI = 46;
+    const el = (name, attrs) => { const n = document.createElementNS(NS, name); for (const k in attrs) n.setAttribute(k, attrs[k]); return n; };
+    const polar = (deg, r) => { const a = (deg - 90) * Math.PI / 180; return [r * Math.cos(a), r * Math.sin(a)]; };
+    svg.appendChild(el('circle', { cx: 0, cy: 0, r: RO, fill: '#ebddc5' }));
+    for (let m = 0; m < 60; m++) {
+      const major = m % 5 === 0;
+      const [x1, y1] = polar(m * 6, RO - (major ? 22 : 12));
+      const [x2, y2] = polar(m * 6, RO - 4);
+      svg.appendChild(el('line', { x1, y1, x2, y2, stroke: major ? '#201e1d' : 'rgba(32,30,29,.4)', 'stroke-width': major ? 5 : 2.5, 'stroke-linecap': 'round' }));
+    }
+    svg.appendChild(el('circle', { cx: 0, cy: 0, r: RI, fill: '#f5ead8' }));
+    const [hx, hy] = polar(35, RO * 0.55);
+    svg.appendChild(el('line', { x1: 0, y1: 0, x2: hx, y2: hy, stroke: '#201e1d', 'stroke-width': 9, 'stroke-linecap': 'round' }));
+    const [mx, my] = polar(215, RO * 0.8);
+    svg.appendChild(el('line', { x1: 0, y1: 0, x2: mx, y2: my, stroke: '#c67139', 'stroke-width': 6, 'stroke-linecap': 'round' }));
+    svg.appendChild(el('circle', { cx: 0, cy: 0, r: 9, fill: '#201e1d' }));
+  </script>
+</body>
+</html>
