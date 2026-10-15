@@ -2690,9 +2690,10 @@ inlines two colour variables.
   page, and pixel-identical across four fresh runs. A clock named
   "Łódź Ść" also comes out in Figtree (latin-ext subset).
 - **Not checked:** Safari and Firefox (only Chromium is available here),
-  and real phones. Safari is known to be stricter about images with
-  embedded fonts and about clipboard writes after a delay; if a copy
-  there fails, the existing fallback downloads the file instead. The
+  and real phones. Safari has historically been less reliable with fonts
+  inside SVG images (unconfirmed for current versions), and is strict
+  about clipboard writes that happen after a delay; if a copy there
+  fails, the existing fallback downloads the file instead. The
   copied image's background is still the cream `--color-bg`, not the
   darker card colour behind the clock on screen — that was already the
   case and was left alone.
