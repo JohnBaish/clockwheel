@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ChangeEvent, type KeyboardEvent, type ReactNode } from 'react';
 import { useApp } from '../state/store';
 import { withBackTimes, normalizeOutTime } from '../data/backtimer';
 import { dur, parseDur, parseOutTime, wrapHour } from '../lib/time';
@@ -9,6 +9,7 @@ import { isBacktimerHost } from '../lib/hostMode';
 import { selectAllSoon, toColon } from '../lib/timeInput';
 import { flushSync } from 'react-dom';
 import { BacktimerWalkthrough } from '../components/BacktimerWalkthrough';
+import { downloadJson } from '../lib/download';
 
 const NARROW = 720;
 
@@ -16,7 +17,7 @@ export function BacktimerScreen() {
   const {
     backtimer, setBacktimerOutTime, addBacktimerItem, removeBacktimerItem,
     setBacktimerItemName, setBacktimerItemDuration, reorderBacktimerItems, resetBacktimer,
-    toggleBacktimerReversed, backtimerWalkthroughOff,
+    toggleBacktimerReversed, backtimerWalkthroughOff, exportBacktimer, importBacktimer,
   } = useApp();
   const seed = backtimer.items;
   // `computed` is always in the one true order items are stored/calculated
@@ -148,6 +149,31 @@ export function BacktimerScreen() {
     }
   };
 
+  // Export/Import exist only on the standalone backtimer.baish.net, which
+  // has its own storage and no other way to back up or move a list.
+  // Clockmaker's Backtimer tab is already covered by Library's Export.
+  const standalone = isBacktimerHost();
+  const [importError, setImportError] = useState<string | null>(null);
+  const fileInput = useRef<HTMLInputElement | null>(null);
+
+  const handleImportFile = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    const text = await file.text();
+    setImportError(importBacktimer(text, () => {
+      const ok = window.confirm(
+        `Replace everything in Backtimer (out-time and all items) with the contents of “${file.name}”? This can’t be undone. Press Cancel and then use Export first if you want to save your current work.`,
+      );
+      if (ok) {
+        // Imported rows aren't "new" rows: don't jump into the last name box.
+        prevCount.current = Number.POSITIVE_INFINITY;
+        setShowWalk(false);
+      }
+      return ok;
+    }));
+  };
+
   return (
     <div style={{ padding: '0 var(--space-6) var(--space-6)' }}>
       <div data-noprint="1" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 'var(--space-3)', flexWrap: 'wrap' }}>
@@ -184,10 +210,27 @@ export function BacktimerScreen() {
         <button className="btn btn-ghost" onClick={addItemAndFocus} style={{ color: 'var(--color-accent-700)' }}>
           <IconPlus size={15} />Add item
         </button>
+        {standalone && (
+          <>
+            <input ref={fileInput} type="file" accept="application/json,.json" onChange={handleImportFile} style={{ display: 'none' }} />
+            <button className="btn btn-ghost" onClick={() => fileInput.current?.click()} style={{ color: 'var(--color-accent-700)' }}>
+              Import
+            </button>
+            <button className="btn btn-ghost" onClick={() => downloadJson(exportBacktimer(), 'backtimer')} style={{ color: 'var(--color-accent-700)' }}>
+              Export
+            </button>
+          </>
+        )}
         <button className="btn btn-ghost" onClick={handleClear} style={{ color: 'var(--color-neutral-700)' }}>
           Clear
         </button>
       </div>
+      {importError && (
+        <div data-noprint="1" style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'var(--color-accent-100)', color: 'var(--color-accent-800)', borderRadius: 'var(--radius-md)', padding: '10px 14px', marginBottom: 'var(--space-3)', fontSize: 13.5 }}>
+          <span style={{ flex: 1 }}>{importError}</span>
+          <button className="btn btn-ghost" onClick={() => setImportError(null)} style={{ color: 'var(--color-accent-700)', padding: '2px 8px' }}>Dismiss</button>
+        </div>
+      )}
       <div className="print-only" style={{ font: '400 22px var(--font-heading)', marginBottom: 'var(--space-3)' }}>
         Backtimer · out at {dur(normalizeOutTime(backtimer.outTime))}
       </div>

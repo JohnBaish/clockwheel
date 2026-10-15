@@ -132,6 +132,13 @@ interface AppContextValue extends PersistedState {
   /** Flips between backwards (latest thing on top) and chronological (earliest on top) display. */
   toggleBacktimerReversed: () => void;
   setBacktimerWalkthroughOff: (off: boolean) => void;
+  /** Just the Backtimer (out-time, items, Reverse), for the standalone
+   *  Backtimer's own Export — a separate, smaller file from exportState(). */
+  exportBacktimer: () => string;
+  /** Loads a Backtimer export back in, replacing only the Backtimer. Same
+   *  contract as importState: null on success (or if `confirm` says no),
+   *  otherwise a message saying why the file was rejected. */
+  importBacktimer: (json: string, confirm?: () => boolean) => string | null;
   /** All persisted state, wrapped and pretty-printed for a downloadable backup file. */
   exportState: () => string;
   /** Loads a previously exported file back in. Returns null on success, or a
@@ -333,6 +340,43 @@ export function AppProvider({ children }: { children: ReactNode }) {
     toggleBacktimerReversed: () => setEdited((s) => ({ ...s, backtimer: { ...s.backtimer, reversed: !s.backtimer.reversed } })),
     setBacktimerWalkthroughOff: (off) => setEdited((s) => ({ ...s, backtimerWalkthroughOff: off })),
     exportState: () => JSON.stringify({ app: 'clockwheel', version: 2, exportedAt: new Date().toISOString(), state }, null, 2),
+    // Tagged 'backtimer', not 'clockwheel', so each Import can tell the two
+    // kinds of file apart and say which one someone has picked.
+    exportBacktimer: () => JSON.stringify({ app: 'backtimer', version: 1, exportedAt: new Date().toISOString(), backtimer: state.backtimer }, null, 2),
+    importBacktimer: (json, confirm) => {
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(json);
+      } catch {
+        return "That file isn't valid JSON.";
+      }
+      const wrapper = parsed as Record<string, unknown>;
+      if (typeof wrapper === 'object' && wrapper !== null && wrapper.app === 'clockwheel') {
+        return 'That’s a Clockmaker export file. Import it in Clockmaker instead.';
+      }
+      if (typeof wrapper !== 'object' || wrapper === null || wrapper.app !== 'backtimer' || typeof wrapper.backtimer !== 'object' || wrapper.backtimer === null) {
+        return "That doesn't look like a Backtimer export file.";
+      }
+      const incoming = wrapper.backtimer as Record<string, unknown>;
+      const items = incoming.items;
+      const validTime = (n: unknown): n is number => typeof n === 'number' && Number.isFinite(n) && n >= 0;
+      if (
+        !validTime(incoming.outTime) || incoming.outTime > 3600 ||
+        !Array.isArray(items) ||
+        !items.every((it) => typeof it === 'object' && it !== null && typeof it.n === 'string' && validTime(it.d))
+      ) {
+        return 'That file is missing data Backtimer needs — it may be corrupted.';
+      }
+      if (confirm && !confirm()) return null;
+      const backtimer: BacktimerState = {
+        outTime: incoming.outTime,
+        // Fresh ids, so nothing in the file can clash with or depend on them.
+        items: items.map((it: { n: string; d: number }) => ({ id: newId('bt'), n: it.n.slice(0, 50), d: Math.round(it.d) })),
+        reversed: incoming.reversed === true,
+      };
+      setEdited((s) => ({ ...s, backtimer }));
+      return null;
+    },
     importState: (json, confirm) => {
       let parsed: unknown;
       try {
