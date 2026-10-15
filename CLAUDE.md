@@ -2657,3 +2657,43 @@ loose ends. `design/` now holds the source for each image —
   preview`, `landing.html`'s tags correct in the built output.
 - `HOUSE-STYLE.md` §7 now says previews are done for every existing site;
   a new tool only needs its own.
+
+## Copy image (Clock screen) now uses the brand fonts (2026-10-15, branch `copy-image-fonts`)
+
+Found while planning Flowcharter: the PNG from **Copy image** on the Clock
+screen showed the Caprasimo text (`:00/:15/:30/:45`, the hour in the hub)
+in a plain serif, and the Figtree labels in the device's generic sans.
+Cause: `copyClockImage` serialises the SVG and loads it as a standalone
+image, which can't see the page's web fonts — the same reason it already
+inlines two colour variables.
+- **Fix** (`src/lib/exportImage.ts`): the `<style>` block inserted into the
+  SVG now starts with `@font-face` rules for the faces the clock face uses —
+  Caprasimo 400, Figtree 600 and 700 — each in @fontsource's latin and
+  latin-ext subsets, with the same `unicode-range`s as the page's CSS. The
+  files are imported with Vite's `?url` (same hashed files the page already
+  loads, so no extra download in practice), fetched, and turned into data
+  URLs. This happens on the first copy only; the result is cached. If the
+  fetch fails, the image is still copied with fallback fonts, as before,
+  and the next copy tries again. ClockFace sets `fontFamily` as literal
+  names (`Figtree,sans-serif`, `Caprasimo,serif`), not CSS variables, so
+  nothing else needed resolving. Figtree 400 isn't used in the face, so it
+  isn't embedded.
+- **List image left alone, confirmed:** `copyListImage` draws text directly
+  on a canvas, which uses the page's loaded fonts. Checked in Chromium: the
+  copied list image shows Caprasimo for the title and Figtree for the rows,
+  and all four faces it asks for (Caprasimo 400, Figtree 400/600/700) are
+  already loaded by the time the button can be pressed.
+- **Verified** in Chromium (Playwright, 1200px, 2× pixel ratio, real
+  clipboard read-back) against the built app: before the fix, the copied
+  clock had the serif/generic-sans fallbacks; after, it matches the
+  on-screen clock's fonts. Same result on the very first copy in a fresh
+  page, and pixel-identical across four fresh runs. A clock named
+  "Łódź Ść" also comes out in Figtree (latin-ext subset).
+- **Not checked:** Safari and Firefox (only Chromium is available here),
+  and real phones. Safari has historically been less reliable with fonts
+  inside SVG images (unconfirmed for current versions), and is strict
+  about clipboard writes that happen after a delay; if a copy there
+  fails, the existing fallback downloads the file instead. The
+  copied image's background is still the cream `--color-bg`, not the
+  darker card colour behind the clock on screen — that was already the
+  case and was left alone.

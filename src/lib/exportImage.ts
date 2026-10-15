@@ -2,6 +2,12 @@ import type { Segment } from '../data/segments';
 import type { Category, CategoryId } from '../data/categories';
 import type { Clock } from '../data/clocks';
 import { clockOf, dur } from './time';
+import caprasimo400 from '@fontsource/caprasimo/files/caprasimo-latin-400-normal.woff2?url';
+import caprasimo400Ext from '@fontsource/caprasimo/files/caprasimo-latin-ext-400-normal.woff2?url';
+import figtree600 from '@fontsource/figtree/files/figtree-latin-600-normal.woff2?url';
+import figtree600Ext from '@fontsource/figtree/files/figtree-latin-ext-600-normal.woff2?url';
+import figtree700 from '@fontsource/figtree/files/figtree-latin-700-normal.woff2?url';
+import figtree700Ext from '@fontsource/figtree/files/figtree-latin-ext-700-normal.woff2?url';
 
 const BG = '#f5ead8';
 const INK = '#201e1d';
@@ -56,6 +62,44 @@ function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
 // theme's colors here.
 const EXPORTED_CSS_VARS = ['--color-bg', '--color-neutral-700'];
 
+// Same problem for fonts: a standalone SVG image can't see the page's web
+// fonts, so without this the copied clock falls back to the device's default
+// serif/sans. The font files the clock face uses (Caprasimo 400, Figtree
+// 600/700, in @fontsource's latin + latin-ext subsets) are embedded inside
+// the SVG as data URLs. Fetched only on the first copy, then reused.
+const LATIN = 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD';
+const LATIN_EXT = 'U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF';
+const CLOCK_FONTS = [
+  { family: 'Caprasimo', weight: 400, range: LATIN, url: caprasimo400 },
+  { family: 'Caprasimo', weight: 400, range: LATIN_EXT, url: caprasimo400Ext },
+  { family: 'Figtree', weight: 600, range: LATIN, url: figtree600 },
+  { family: 'Figtree', weight: 600, range: LATIN_EXT, url: figtree600Ext },
+  { family: 'Figtree', weight: 700, range: LATIN, url: figtree700 },
+  { family: 'Figtree', weight: 700, range: LATIN_EXT, url: figtree700Ext },
+];
+
+async function toDataUrl(url: string): Promise<string> {
+  const blob = await (await fetch(url)).blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
+let fontFaceCss: Promise<string> | null = null;
+function clockFontFaces(): Promise<string> {
+  fontFaceCss ??= Promise.all(CLOCK_FONTS.map(async (f) =>
+    `@font-face{font-family:'${f.family}';font-style:normal;font-weight:${f.weight};unicode-range:${f.range};` +
+    `src:url(${await toDataUrl(f.url)}) format('woff2');}`,
+  )).then((rules) => rules.join(''))
+    // If the fonts can't be fetched, still copy the image (with fallback
+    // fonts, as before) — and try again next time.
+    .catch(() => { fontFaceCss = null; return ''; });
+  return fontFaceCss;
+}
+
 /** Rasterizes the clock face's own SVG to a PNG — the clipboard only takes
  *  raster images, not vector markup, so the SVG has to be drawn onto a
  *  canvas first. */
@@ -66,7 +110,8 @@ export async function copyClockImage(svg: SVGSVGElement, filename: string): Prom
   const height = vb && vb.height ? vb.height : svg.clientHeight;
 
   const computed = getComputedStyle(document.documentElement);
-  const styleBlock = `<style>:root{${EXPORTED_CSS_VARS.map((v) => `${v}:${computed.getPropertyValue(v).trim()};`).join('')}}</style>`;
+  const fonts = await clockFontFaces();
+  const styleBlock = `<style>${fonts}:root{${EXPORTED_CSS_VARS.map((v) => `${v}:${computed.getPropertyValue(v).trim()};`).join('')}}</style>`;
   const svgStr = new XMLSerializer().serializeToString(svg).replace(/^(<svg[^>]*>)/, `$1${styleBlock}`);
   const svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
   const url = URL.createObjectURL(svgBlob);
