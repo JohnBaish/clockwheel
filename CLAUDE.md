@@ -2698,7 +2698,7 @@ inlines two colour variables.
   darker card colour behind the clock on screen — that was already the
   case and was left alone.
 
-## Import asks before replacing everything (2026-10-15, branch `import-confirm`)
+## Import asks before replacing everything — LIVE (built 2026-10-15 on branch `import-confirm`, merged to `main` 2026-10-15)
 
 John asked whether Import warned that it would wipe what's already
 there. It didn't: picking a valid file replaced everything at once (all
