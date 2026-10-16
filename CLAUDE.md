@@ -2789,3 +2789,19 @@ Chromium at 1200px and 390px (touch): four cards in the agreed order, all four
 links correct, brand fonts loaded, no errors, no sideways scroll.
 **Couldn't be checked:** the real baish.net (served by `middleware.ts` only on
 that host).
+
+## `og-baish.png`: stem no longer pokes into the ring (2026-10-16)
+
+John asked whether the orange ring in baish.net's link preview was
+properly round, since it looked wobbly in WhatsApp. Measured: it is (outer
+edge within ~0.6px of its radius all the way round); the wobble is
+WhatsApp's shrinking and JPEG compression. But checking turned up a real
+flaw: the black stem's right edge (x = −40 + 11) sat 1 design unit
+(1.3px) inside the ring's hole (inner edge at 16 − 46 = −30), leaving a
+thin dark sliver down the hole's left side. `design/og-baish.html`'s stem
+moved from x = −40 to −41, so the two edges meet exactly, the same way
+`favicon-baish.svg` is drawn; nothing else changed. Re-rendering the old
+source first matched the live PNG pixel for pixel, so the stem move is
+the only difference; pixels darker than the dial inside the hole went
+from 20 to 0. Before/after shown to John and approved before replacing
+`public/og-baish.png` (still 1200×630, both fonts loaded at render time).
