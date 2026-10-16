@@ -2774,3 +2774,18 @@ Clockmaker's own Backtimer tab, so this is **standalone only** (gated on
   as-is, and the standalone footer gained a sentence after "…clear it at
   any time.": "Use Export to back up your list or move it to another
   browser." (his approval of the suggested wording).
+
+## Flowcharter added to the baish.net landing page (2026-10-16, branch `landing-flowcharter`)
+
+John asked for Flowcharter (its own repo, `JohnBaish/flowcharter`, live at
+`https://flowcharter.baish.net/`) to join the landing page now. `landing.html`
+gains a fourth card, third in the list (after Clockmaker, before John's Blog,
+keeping the tools alphabetical): title **Flowcharter**, line "Create a flowchart
+from a list, or build it step by step." (John's wording). The head comment now
+says four links. Nothing else changed.
+
+**Verified:** `npm run build` clean; `vite preview` of `/landing.html` in
+Chromium at 1200px and 390px (touch): four cards in the agreed order, all four
+links correct, brand fonts loaded, no errors, no sideways scroll.
+**Couldn't be checked:** the real baish.net (served by `middleware.ts` only on
+that host).
