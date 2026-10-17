@@ -3001,7 +3001,7 @@ Parked earlier the same day, picked up again and finished in a later session.
   §12 (summary), a §1 row, and a §9 reminder; its "as of" date is now
   2026-10-17. Docs only, no app code, so committed straight to `main`.
 
-## Backtimer explainer left-aligned (2026-10-17, branch `claude/zealous-lovelace-89uprd`)
+## Backtimer explainer left-aligned and moved down — LIVE (2026-10-17, merged to `main` the same day)
 
 At John's request, the standalone Backtimer's "A free backtiming calculator
 for radio and TV" section now starts at the page's left margin, in line with
