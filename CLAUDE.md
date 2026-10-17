@@ -3000,3 +3000,15 @@ Parked earlier the same day, picked up again and finished in a later session.
   card + hub title/description update in this repo. `HOUSE-STYLE.md` gains
   §12 (summary), a §1 row, and a §9 reminder; its "as of" date is now
   2026-10-17. Docs only, no app code, so committed straight to `main`.
+
+## Backtimer explainer left-aligned (2026-10-17, branch `claude/zealous-lovelace-89uprd`)
+
+At John's request, the standalone Backtimer's "A free backtiming calculator
+for radio and TV" section now starts at the page's left margin, in line with
+the table and the footer's line, instead of being centred. One change:
+`.backtimer-about`'s `margin: 64px auto 0` → `64px 0 0` in `global.css`. It
+keeps its 640px width so lines of text stay easy to read; phones look the
+same as before (the block already filled the width). Measured in Chromium
+against `vite preview`: section, heading, dividers, table and footer all
+start at the same x (26.4px) at both 1000px and 390px; no sideways scroll,
+no page errors.
