@@ -2952,3 +2952,44 @@ Decisions:
   clock").
 - **When done:** update `HOUSE-STYLE.md` with the choices made, and write a
   handover .md for the Flowcharter project describing what was done and why.
+
+### SEO work PARKED (2026-10-17) — where to pick up
+
+John asked to park everything and return later. State:
+- **Step 1 is built but NOT merged:** branch `seo-step1` (preview
+  https://clockwheel-git-seo-step1-john-baish.vercel.app). John said there was
+  nothing he needed to check; merge when he says. After merging, check
+  backtimer.baish.net/robots.txt, clockmaker.baish.net/sitemap.xml and
+  www.baish.net/sitemap.xml on the live sites.
+- **Step 2 drafts sent to John, awaiting his edits (nothing built):**
+  1. Clockmaker Guide, new first section after the intro paragraph —
+     heading "What is a hot clock?" (alternative offered: "Hot clocks,
+     format clocks and broadcast clocks"): "Radio stations plan each hour
+     with a clock: a circle showing what happens when (songs, news, travel,
+     adverts, jingles and links), so the hour sounds right and the news
+     starts on time. It goes by different names in different places. In the
+     US, where the term began, it's often called a hot clock, a name also
+     used in Spanish-language radio. In the UK it's usually a format clock,
+     or simply "the clock". You'll also see broadcast clock and clockwheel.
+     They all mean the same thing. Clockmaker builds them for free, for
+     anyone in radio, from student and community stations upwards."
+  2. Backtimer (standalone only), below the list and above the footer:
+     visible heading "A free backtiming calculator for radio and TV", then
+     two folded parts. "What is backtiming?": "Backtiming means working
+     backwards from a fixed time to find out when each item has to start.
+     If the news is at the top of the hour and you need to hit it exactly,
+     you need to know when to start your last song, the link before it, and
+     so on. Presenters, producers, directors and production assistants in
+     radio and TV do this every day, from student, community and hospital
+     radio to the networks. Backtimer does the sums for you." "How do I use
+     Backtimer?": 1. Set your out-time: the moment you need to finish, such
+     as 60:00 for the top of the hour or 30:00 for the half-hour. 2. Add
+     your last item and its duration, then the item before it, and so on,
+     working backwards. 3. Backtimer shows when each item must start. If
+     there's more than fits, the earliest items show as starting in the
+     hour before, so you can see what needs to go.
+  3. "More free tools at www.baish.net." (linked), just before "Contact:" in
+     Backtimer's footer and in the Guide's "About Clockmaker".
+- **Then:** Step 3 is John's (Google Search Console, DNS TXT record, submit
+  the sitemaps). Finally update `HOUSE-STYLE.md` and write the Flowcharter
+  handover .md.
