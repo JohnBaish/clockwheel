@@ -2849,3 +2849,10 @@ order's coverage line and check now include the "would leave alone" items.
 `SKILL.md`, `report-template.html` and `HOUSE-STYLE.md` §11 updated;
 Flowcharter has the copy. A small agreed wording change, so committed straight
 to `main`.
+
+## Licence: none, deliberately (2026-10-17, notes only)
+
+Decided with John in the Flowcharter thread: no licence for Clockmaker,
+Backtimer or Flowcharter for now. The repos are public, but without a licence
+normal copyright applies. If wanted later: MIT for code, optionally CC BY for
+Guide text and images. No change made.
