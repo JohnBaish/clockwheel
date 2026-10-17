@@ -2897,7 +2897,12 @@ Decisions:
   and the preview pictures stay as they are.
 - **Wording:** John is writing the titles and search descriptions himself
   (drafts offered: e.g. "Backtimer – free backtiming calculator for radio").
-- **www or not:** waiting on John to check Vercel → Settings → Domains for
-  which of baish.net / www.baish.net redirects; the code will then match it.
+- **www or not: www.baish.net is the main address.** John typed baish.net
+  and the browser ended up at https://www.baish.net (Vercel's redirect; his
+  DNS panel shows both the bare domain's A record and the www CNAME
+  pointing at Vercel, so nothing changes there). In Step 1, the hub's
+  canonical, `og:url`, `og:image`/`twitter:image` and sitemap use
+  `https://www.baish.net/`, and any new links to the hub use it too.
+  `middleware.ts` already serves the landing page on both hosts.
 - **When done:** update `HOUSE-STYLE.md` with the choices made, and write a
   handover .md for the Flowcharter project describing what was done and why.
