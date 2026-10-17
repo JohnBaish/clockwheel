@@ -2906,3 +2906,7 @@ Decisions:
   `middleware.ts` already serves the landing page on both hosts.
 - **When done:** update `HOUSE-STYLE.md` with the choices made, and write a
   handover .md for the Flowcharter project describing what was done and why.
+- **PARKED (2026-10-17) at John's request.** Step 1 is built on branch
+  `seo-step1` (not merged). The full current state, including the Step 2
+  draft wording waiting for John's edits and the next steps, is in this
+  entry's continuation on that branch: `git show origin/seo-step1:CLAUDE.md`.
