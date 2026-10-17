@@ -2938,5 +2938,17 @@ Decisions:
   canonical, `og:url`, `og:image`/`twitter:image` and sitemap use
   `https://www.baish.net/`, and any new links to the hub use it too.
   `middleware.ts` already serves the landing page on both hosts.
+- **Step 2 decisions (2026-10-17):** visible text for Backtimer only as a
+  new section (below the list, above the footer, folded-away parts that
+  open on click; standalone backtimer.baish.net only); Clockmaker's extra
+  material goes into the Guide; the hub page gets no new text. As little
+  as possible: no FAQ (Google stopped showing FAQ dropdowns for most sites
+  in 2023, so it would only add words). Claude drafts, John edits. A
+  one-line link to www.baish.net in Backtimer's footer and in the Guide's
+  "About Clockmaker". **"Hot clock" is American:** use it, but say it's
+  used in some places and not others, alongside "format clock",
+  "broadcast clock" and "clockwheel" (John's research, 2026-10-17: US
+  origin, also Spanish-language radio; UK says "format clock" or "the
+  clock").
 - **When done:** update `HOUSE-STYLE.md` with the choices made, and write a
   handover .md for the Flowcharter project describing what was done and why.
