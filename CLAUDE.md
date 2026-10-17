@@ -2895,8 +2895,42 @@ Decisions:
 - **Search description and link-preview description are separate.** Only
   `<meta name="description">` changes; `og:description`/`twitter:description`
   and the preview pictures stay as they are.
-- **Wording:** John is writing the titles and search descriptions himself
-  (drafts offered: e.g. "Backtimer – free backtiming calculator for radio").
+- **Wording (approved 2026-10-17):** the drafts, with Backtimer saying
+  "radio and TV":
+  - Clockmaker: "Clockmaker – free radio hot clock & format clock maker" /
+    "Free hot clock maker for radio. Build a format clock for each hour, see
+    it as a circle or a list, plan your week and print it. Works in your
+    browser."
+  - Backtimer: "Backtimer – free backtiming calculator for radio and TV" /
+    "Free backtiming calculator for radio and TV. Enter your out-time and
+    items, and see exactly when each one needs to start to hit the news on
+    time."
+  - Hub: "baish.net – free radio and flowchart tools by John Baish" / "Free
+    browser tools by John Baish: Clockmaker for radio hot clocks, Backtimer
+    for backtiming, and Flowcharter for flowcharts."
+  - **Reminder (John):** when tools are added to or changed on baish.net,
+    update the hub's title and description to match.
+
+**Step 1 built (2026-10-17, branch `seo-step1`):**
+- `index.html`, `backtimer.html`, `landing.html`: new `<title>` and
+  `<meta name="description">`, plus `<link rel="canonical">`
+  (clockmaker / backtimer / www.baish.net). Preview tags unchanged except the
+  hub's `og:url`, `og:image` and `twitter:image`, now on www.baish.net.
+- `Nav.tsx`: the standalone Backtimer's runtime `document.title` now matches
+  `backtimer.html`'s title (it used to reset the tab to "Backtimer").
+- `middleware.ts`: matcher now `/`, `/robots.txt`, `/sitemap.xml`. Each known
+  host gets its own robots.txt (allow all, plus a Sitemap line) and a
+  one-address sitemap.xml naming its main address. clockwheel.baish.net gets
+  robots.txt only (its canonical points at Clockmaker). Unknown hosts
+  (preview addresses) aren't intercepted. `/` handling unchanged.
+- Verified: build and lint clean; middleware typechecks; middleware called
+  directly for all six host types × both files gives the expected output, and
+  doesn't intercept `/` for Clockmaker; in Chromium against `vite preview`,
+  each page's tab title, description, canonical and preview tags are as
+  above, including the standalone Backtimer after the app has started.
+  **Can't be checked before going live:** `vite preview` and Vercel preview
+  addresses don't run the per-host middleware, so the real robots.txt and
+  sitemap.xml can only be checked on the live domains after merging.
 - **www or not: www.baish.net is the main address.** John typed baish.net
   and the browser ended up at https://www.baish.net (Vercel's redirect; his
   DNS panel shows both the bare domain's A record and the www CNAME

@@ -11,7 +11,37 @@
 // project, not Next.js, and those helper libraries' exact APIs for a
 // non-Next project weren't something this session could verify against
 // live docs (no outbound network access while this was written).
-export const config = { matcher: '/' };
+export const config = { matcher: ['/', '/robots.txt', '/sitemap.xml'] };
+
+// Search engines (2026-10-17): every domain shares one public/ folder, so a
+// static robots.txt or sitemap.xml would be the same file on all of them.
+// Instead each host gets its own, naming its one main (canonical) address —
+// the same one in that page's <link rel="canonical">. clockwheel.baish.net
+// (Clockmaker's old name) gets a robots.txt but no sitemap: it's a second
+// door to Clockmaker, and its canonical tag already points at clockmaker.
+const MAIN_ADDRESS: Record<string, string> = {
+  'clockmaker.baish.net': 'https://clockmaker.baish.net/',
+  'backtimer.baish.net': 'https://backtimer.baish.net/',
+  'baish.net': 'https://www.baish.net/',
+  'www.baish.net': 'https://www.baish.net/',
+};
+
+function plain(body: string, contentType: string, status = 200): Response {
+  return new Response(body, { status, headers: { 'content-type': contentType } });
+}
+
+function robotsTxt(host: string): string {
+  const main = MAIN_ADDRESS[host];
+  return `User-agent: *\nAllow: /\n${main ? `\nSitemap: ${main}sitemap.xml\n` : ''}`;
+}
+
+function sitemapXml(main: string): string {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>${main}</loc></url>
+</urlset>
+`;
+}
 
 // Fetches this same deployment's own static file and rebuilds a fresh
 // Response with only the header it actually needs, rather than returning
@@ -33,6 +63,18 @@ async function serveStatic(path: string, request: Request): Promise<Response> {
 
 export default async function middleware(request: Request) {
   const host = request.headers.get('host') ?? '';
+  const path = new URL(request.url).pathname;
+  const known = host in MAIN_ADDRESS || host === 'clockwheel.baish.net';
+  if (path === '/robots.txt') {
+    // Unknown hosts (Vercel preview addresses) fall through: no file there.
+    if (known) return plain(robotsTxt(host), 'text/plain; charset=utf-8');
+    return;
+  }
+  if (path === '/sitemap.xml') {
+    const main = MAIN_ADDRESS[host];
+    if (main) return plain(sitemapXml(main), 'application/xml; charset=utf-8');
+    return;
+  }
   if (host === 'backtimer.baish.net') return serveStatic('/backtimer.html', request);
   // www.baish.net included defensively — nothing currently points there,
   // but it costs nothing to handle the same as the bare domain in case a

@@ -25,7 +25,8 @@ export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Sc
   // no-op "you are here", and the brand text already says as much.
   const links = backtimerOnly ? [] : LINKS;
   useEffect(() => {
-    if (backtimerOnly) document.title = 'Backtimer';
+    // Must match backtimer.html's <title>, which is written for search engines.
+    if (backtimerOnly) document.title = 'Backtimer – free backtiming calculator for radio and TV';
   }, [backtimerOnly]);
   // The "ago" wording goes stale just from time passing, not just from edits —
   // this ticks "now" periodically so it stays accurate while idle.
