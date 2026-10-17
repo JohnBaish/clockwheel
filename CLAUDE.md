@@ -2970,8 +2970,22 @@ John asked to park everything and return later. State:
   and straight quotes made curly, like the rest of the Guide. Checked in
   Chromium at 1200px and 390px (touch): last-but-one section, no sideways
   scroll, no errors.
-- **Step 2 drafts sent to John (items 2 and 3 still awaiting his edits; the
-  item 1 draft below is superseded by what was built):**
+- **Step 2, item 2 BUILT (2026-10-17, branch `seo-step1`):** standalone
+  Backtimer's explainer, in John's edited wording (backtiming paragraph now
+  ends "…when to start your last song, and the songs or items before it.";
+  step 1 says "for instance"). `<section className="backtimer-about">` in
+  `BacktimerScreen.tsx`, between Reverse/walkthrough and the footer, gated on
+  `isBacktimerHost()` and `data-noprint`. Visible h3 "A free backtiming
+  calculator for radio and TV", then two native `<details>`/`<summary>` parts,
+  closed at start. Styles in `global.css` (`.backtimer-about`): 640px wide,
+  centred, Guide body text size/colour, accent-coloured summaries with
+  dividers; hover underline only for mouse (`@media (hover: hover)`, it stuck
+  after a tap) and the tap flash turned off. Checked in Chromium at 1200px and
+  390px (touch): closed at start, both open on click/tap, sits above the
+  footer, hidden in print, no sideways scroll, no errors, h3 in Caprasimo;
+  Clockmaker's own Backtimer tab doesn't show it.
+- **Step 2 drafts sent to John (item 3 still awaiting his edits; the item 1
+  and 2 drafts below are superseded by what was built):**
   1. Clockmaker Guide, new first section after the intro paragraph —
      heading "What is a hot clock?" (alternative offered: "Hot clocks,
      format clocks and broadcast clocks"): "Radio stations plan each hour

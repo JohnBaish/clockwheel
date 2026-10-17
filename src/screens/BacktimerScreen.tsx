@@ -413,6 +413,39 @@ export function BacktimerScreen() {
         'var(--space-4)',
       )}
 
+      {/* Explainer, standalone site only (2026-10-17): written for people
+          arriving from a search as much as for search engines. Folded parts
+          keep the page short; Google still reads what's inside them. */}
+      {isBacktimerHost() && (
+        <section className="backtimer-about" data-noprint="1">
+          <h3>A free backtiming calculator for radio and TV</h3>
+          <details>
+            <summary>What is backtiming?</summary>
+            <p>
+              Backtiming means working backwards from a fixed time to find out when each item has to start. If the
+              news is at the top of the hour and you need to hit it exactly, you need to know when to start your last
+              song, and the songs or items before it. Presenters, producers, directors and production assistants in
+              radio and TV do this every day, from student, community and hospital radio to the networks. Backtimer
+              does the sums for you.
+            </p>
+          </details>
+          <details>
+            <summary>How do I use Backtimer?</summary>
+            <ol>
+              <li>
+                Set your out-time: the moment you need to finish, for instance 60:00 for the top of the hour or 30:00
+                for the half-hour.
+              </li>
+              <li>Add your last item and its duration, then the item before it, and so on, working backwards.</li>
+              <li>
+                Backtimer shows when each item must start. If there’s more than fits, the earliest items show as
+                starting in the hour before, so you can see what needs to go.
+              </li>
+            </ol>
+          </details>
+        </section>
+      )}
+
       {isBacktimerHost() && (
         <div
           data-noprint="1"
