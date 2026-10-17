@@ -2825,3 +2825,16 @@ holds the master copy of both; Flowcharter has a copy.
 Not verified by running it: Claude Code only picks up the skill from a
 repo's `main` in a new session, so `/fresh-look` becomes available once this
 branch is merged. No app code changed.
+
+**Same day, at John's request:** the procedure now (1) spells out the
+"Suggested order" section he liked: every numbered item is placed in a group
+(quick fixes, decisions, optional, optional extras, left alone), ending with a
+coverage line. A coverage check before sending is required, because the first
+Flowcharter report's list missed three items. (2) Always sends the report as an A5 PDF
+in the brand fonts too, for reading on his phone: `report-template.html` (the
+approved look) and `make-pdf.mjs`, both beside `SKILL.md`. The script is copied
+into a scratchpad folder that has Playwright (Node looks for Playwright beside
+the script). It stops if a brand font didn't load. Then check page pictures
+before sending. Tested: the template renders in Caprasimo/Figtree, and a wrong
+repo path stops with the font error. `HOUSE-STYLE.md` §1 and §11 updated to
+match.
