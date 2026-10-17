@@ -2838,3 +2838,6 @@ the script). It stops if a brand font didn't load. Then check page pictures
 before sending. Tested: the template renders in Caprasimo/Figtree, and a wrong
 repo path stops with the font error. `HOUSE-STYLE.md` §1 and §11 updated to
 match.
+
+**Merged into `main` (2026-10-17)** at John's say-so, in both repos, so
+`/fresh-look` is available to new threads. No app code changed.
