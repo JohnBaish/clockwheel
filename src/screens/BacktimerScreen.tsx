@@ -476,6 +476,15 @@ export function BacktimerScreen() {
           >
             https://clockmaker.baish.net
           </a>
+          . More free tools at{' '}
+          <a
+            href="https://www.baish.net/"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'var(--color-accent-700)', textDecoration: 'underline' }}
+          >
+            www.baish.net
+          </a>
           . Contact: workshop@baish.net.
         </div>
       )}
