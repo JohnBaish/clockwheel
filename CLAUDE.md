@@ -2961,7 +2961,17 @@ John asked to park everything and return later. State:
   nothing he needed to check; merge when he says. After merging, check
   backtimer.baish.net/robots.txt, clockmaker.baish.net/sitemap.xml and
   www.baish.net/sitemap.xml on the live sites.
-- **Step 2 drafts sent to John, awaiting his edits (nothing built):**
+- **Step 2, item 1 BUILT (2026-10-17, branch `seo-step1`):** the Guide's
+  hot-clock section, in John's own wording, placed **last, just before
+  "About Clockmaker"** (asked whether it had to be high up for search: no,
+  Google indexes the whole rendered page, and a fresh visitor, which is what
+  Google's crawler always is, lands on the Guide). Heading "Format clocks, hot
+  clocks and broadcast clocks". Only typography tidied: a double space removed
+  and straight quotes made curly, like the rest of the Guide. Checked in
+  Chromium at 1200px and 390px (touch): last-but-one section, no sideways
+  scroll, no errors.
+- **Step 2 drafts sent to John (items 2 and 3 still awaiting his edits; the
+  item 1 draft below is superseded by what was built):**
   1. Clockmaker Guide, new first section after the intro paragraph —
      heading "What is a hot clock?" (alternative offered: "Hot clocks,
      format clocks and broadcast clocks"): "Radio stations plan each hour

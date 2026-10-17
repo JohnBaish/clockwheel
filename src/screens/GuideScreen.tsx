@@ -45,6 +45,12 @@ const SECTIONS: { heading: string; body: ReactNode }[] = [
     ),
   },
   {
+    // Also written for search engines (2026-10-17): names the terms people
+    // search for in different countries.
+    heading: 'Format clocks, hot clocks and broadcast clocks',
+    body: 'Radio stations often plan an hour with a clock: a circle showing what happens when (songs, news, travel, content, jingles and links) to balance elements in the hour and create flow. It goes by different names in different places. The “hot clocks” term began in America, and it’s also used in Spanish-language radio. In the UK it’s usually a format clock, a clockwheel, or simply “the clock”. They all mean the same thing. Clockmaker builds them for free, for anyone in radio, from student and community stations upwards.',
+  },
+  {
     heading: 'About Clockmaker',
     body: 'Clockmaker is a free-to-use personal project by John Baish. The clocks you build here are not collected; they’re only saved in your browser. We collect anonymous visit statistics (no cookies, no personal data) to see how the site is used. Contact: workshop@baish.net.',
   },
