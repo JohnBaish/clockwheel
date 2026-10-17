@@ -2874,3 +2874,30 @@ link-preview image, meta tag or landing-page text ever contained an
 address. Verified: no old address left in the built site; in a browser,
 the standalone Backtimer footer and the Guide both show the new address
 and neither shows an old one.
+
+## Search (SEO) work — decisions so far (2026-10-17, in progress, nothing built yet)
+
+John brought three SEO briefs from a separate Claude chat (hub, Clockmaker,
+Backtimer). Checked against the code: titles are just the names; the page
+files are empty shells filled in by JavaScript; no canonical tags; no
+robots.txt or sitemap; neither tool links back to baish.net. Not in the
+briefs: Backtimer's `Nav.tsx` resets `document.title` to "Backtimer" at
+runtime, so a new title must change there too; clockwheel.baish.net is a
+duplicate of Clockmaker, which a canonical tag resolves.
+
+Plan: Step 1 (invisible: titles, search descriptions, canonical, robots.txt
+and per-site sitemaps, the tab-title fix) on a branch; Step 2 (visible
+explanatory text and a link back to the hub) needs John's wording and layout
+decisions; Step 3 is John's: Google Search Console via a DNS TXT record.
+Structured data skipped for now.
+
+Decisions:
+- **Search description and link-preview description are separate.** Only
+  `<meta name="description">` changes; `og:description`/`twitter:description`
+  and the preview pictures stay as they are.
+- **Wording:** John is writing the titles and search descriptions himself
+  (drafts offered: e.g. "Backtimer – free backtiming calculator for radio").
+- **www or not:** waiting on John to check Vercel → Settings → Domains for
+  which of baish.net / www.baish.net redirects; the code will then match it.
+- **When done:** update `HOUSE-STYLE.md` with the choices made, and write a
+  handover .md for the Flowcharter project describing what was done and why.
