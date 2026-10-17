@@ -4,7 +4,7 @@ The shared look, behaviour and ways of working behind John Baish's tools
 (Clockmaker, Backtimer, the baish.net landing page), written so a new
 project — starting with **Flowcharter** — can match them without
 re-deriving anything. Everything here is taken from what is live in this
-repo (`JohnBaish/clockwheel`) as of 2026-10-15.
+repo (`JohnBaish/clockwheel`) as of 2026-10-17.
 
 **Rule of thumb: copy, don't reinvent.** Copy the files listed below into
 the new project and build on them. If something here and the code
@@ -28,6 +28,7 @@ Backtimer — long, and mostly about those apps. Read it only for the
 | `src/lib/useDragReorder.ts` | Drag-to-reorder by a grip handle, mouse and touch. Only if needed. |
 | `public/favicon*.svg` | Favicon style to adapt (see §7). |
 | `design/og-clockmaker.html` | Link-preview image source; use it as the template for a new tool (see §7). |
+| `SEO-HANDOVER.md` | How search (titles, descriptions, canonical, robots.txt/sitemap, visible text, Search Console) was done, with a checklist for each new tool (see §12). |
 | `HOUSE-STYLE.md` and `.claude/skills/fresh-look/` | This file, and the "fresh look" review procedure with its PDF template and script (see §11). Copy both into every project, new or existing. |
 
 Dependencies these rely on: `@fontsource/caprasimo`, `@fontsource/figtree`,
@@ -211,7 +212,8 @@ and add its tags. Nothing else needs fixing or remaking first.
   `src/lib/hostMode.ts` and `middleware.ts`). For a large new tool a
   separate repo and Vercel project is cleaner.
 - The baish.net landing page (`landing.html` here) has a card per tool;
-  add one for each new tool when it goes live.
+  add one for each new tool when it goes live, and update the hub's
+  `<title>` and search description to match (see §12).
 
 ## 10. Working with John
 
@@ -268,3 +270,22 @@ project a long, careful review on a computer and a phone, and report back
 
 Clockwheel holds the master copy of the skill, like this file. If it
 changes, re-copy it to the other projects.
+
+## 12. Search (SEO)
+
+Done for Clockmaker, Backtimer and the hub on 2026-10-17; the full record
+and a step-by-step checklist for a new tool are in **`SEO-HANDOVER.md`**
+(copy it into the new project). In short:
+- `<title>` "Name – free <what it is> for <who>" and a search description
+  starting "Free …", both John's wording. The search description is
+  separate from the link-preview (`og:`) description.
+- A canonical tag naming the tool's one main address; the hub's is
+  `https://www.baish.net/`. If the app sets `document.title`, it matches.
+- robots.txt and a one-address sitemap.xml (plain files in `public/` for a
+  one-domain project).
+- A short visible explanation a first-time visitor sees, folded parts
+  allowed, no FAQ; and "More free tools at www.baish.net." just before
+  "Contact:".
+- Search Console: one Domain property for baish.net covers every
+  subdomain, so a new tool only needs its sitemap submitted and its main
+  address inspected and requested.

@@ -2987,6 +2987,16 @@ Parked earlier the same day, picked up again and finished in a later session.
   Backtimer tab; both hub links present with the exact sentence; no sideways
   scroll, no page errors; build clean, lint warnings unchanged (8, all
   pre-existing). John approved the screenshots before merging.
-- **Next:** Step 3 is John's (Google Search Console via a DNS TXT record, then
-  submit the three sitemaps). Then update `HOUSE-STYLE.md` with the choices
-  made and write the Flowcharter handover .md.
+- **Live checks passed (John, 2026-10-17):** the three robots.txt/sitemap
+  addresses showed the right text.
+- **Step 3 done (John, 2026-10-17):** Search Console Domain property for
+  baish.net (DNS TXT), three sitemaps submitted, each main address tested
+  live and indexing requested. "URL is not on Google" beforehand was the
+  normal not-yet-crawled state.
+- **Handover written (2026-10-17):** new `SEO-HANDOVER.md` (repo root): what
+  was done and why, what was deliberately not done, and an 18-step checklist
+  for a new tool (Flowcharter now, Hindcaster later), including plain
+  `public/robots.txt`/`sitemap.xml` for a one-domain project and the hub
+  card + hub title/description update in this repo. `HOUSE-STYLE.md` gains
+  §12 (summary), a §1 row, and a §9 reminder; its "as of" date is now
+  2026-10-17. Docs only, no app code, so committed straight to `main`.
