@@ -2805,3 +2805,23 @@ source first matched the live PNG pixel for pixel, so the stem move is
 the only difference; pixels darker than the dial inside the hole went
 from 20 to 0. Before/after shown to John and approved before replacing
 `public/og-baish.png` (still 1200×630, both fonts loaded at render time).
+
+## House style: the "fresh look" review procedure (2026-10-17, branch `fresh-look`)
+
+John asked for the way the Flowcharter review was done and reported (2026-10-17,
+in `JohnBaish/flowcharter`) to be written up as part of the house style, usable
+in existing and new projects, with a name he can invoke. Named **fresh look**
+(his own words). New file `.claude/skills/fresh-look/SKILL.md`: a Claude Code
+skill, so typing `/fresh-look` in a thread for any repo that has it on `main`
+runs it. Anything typed after the command narrows the focus, e.g.
+`/fresh-look phones only`. Saying "do a fresh look" also works. It covers
+getting ready (read the notes, review live `main`, run the checks), using the
+app at 1200px and 390px with touch, proving each suspect with a targeted test,
+sorting findings by size and priority, the numbered report layout, and logging
+John's decisions afterwards. Above all, it changes nothing until John says.
+`HOUSE-STYLE.md` gains §11 (a summary) and a row in §1's copy list. This repo
+holds the master copy of both; Flowcharter has a copy.
+
+Not verified by running it: Claude Code only picks up the skill from a
+repo's `main` in a new session, so `/fresh-look` becomes available once this
+branch is merged. No app code changed.
