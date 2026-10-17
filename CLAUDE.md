@@ -2841,3 +2841,11 @@ match.
 
 **Merged into `main` (2026-10-17)** at John's say-so, in both repos, so
 `/fresh-look` is available to new threads. No app code changed.
+
+**Numbering (2026-10-17), at John's request:** every point in a fresh-look
+report is now numbered, never bulleted, including "would leave alone" and
+"couldn't check" (e.g. 7.1, 8.1), so he can reply by number. The Suggested
+order's coverage line and check now include the "would leave alone" items.
+`SKILL.md`, `report-template.html` and `HOUSE-STYLE.md` §11 updated;
+Flowcharter has the copy. A small agreed wording change, so committed straight
+to `main`.
