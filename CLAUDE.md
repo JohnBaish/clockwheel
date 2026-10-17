@@ -2856,3 +2856,21 @@ Decided with John in the Flowcharter thread: no licence for Clockmaker,
 Backtimer or Flowcharter for now. The repos are public, but without a licence
 normal copyright applies. If wanted later: MIT for code, optionally CC BY for
 Guide text and images. No change made.
+
+## One contact address: workshop@baish.net (2026-10-17)
+
+At John's request, `backtimer@baish.net` and `clockmaker@baish.net` were
+replaced everywhere they're shown with the single address
+`workshop@baish.net`, and made live straight away:
+- `src/screens/BacktimerScreen.tsx`: the standalone Backtimer footer,
+  "…Contact: workshop@baish.net."
+- `src/screens/GuideScreen.tsx`: the Guide's "About Clockmaker" section,
+  "…Contact: workshop@baish.net."
+- `HOUSE-STYLE.md` §8: new tools use the shared `workshop@baish.net`
+  (the example used to be `backtimer@baish.net`).
+Older entries in this file still mention the old addresses; they're
+records of what was true at the time and were left as they are. No
+link-preview image, meta tag or landing-page text ever contained an
+address. Verified: no old address left in the built site; in a browser,
+the standalone Backtimer footer and the Guide both show the new address
+and neither shows an old one.

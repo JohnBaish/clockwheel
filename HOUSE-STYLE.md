@@ -198,8 +198,8 @@ and add its tags. Nothing else needs fixing or remaking first.
   - "The data you enter here is not collected; it's only saved in your own
     browser and you can clear it at any time."
 - Each tool says it is "a free-to-use personal project by John Baish" and
-  gives a contact address at baish.net (e.g. `backtimer@baish.net`), as
-  plain text, not a mailto link.
+  gives the shared contact address `workshop@baish.net` (one address for
+  every tool, since 2026-10-17), as plain text, not a mailto link.
 
 ## 9. Hosting
 

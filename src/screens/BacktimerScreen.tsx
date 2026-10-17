@@ -443,7 +443,7 @@ export function BacktimerScreen() {
           >
             https://clockmaker.baish.net
           </a>
-          . Contact: backtimer@baish.net.
+          . Contact: workshop@baish.net.
         </div>
       )}
 

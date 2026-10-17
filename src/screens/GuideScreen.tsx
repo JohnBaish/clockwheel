@@ -46,7 +46,7 @@ const SECTIONS: { heading: string; body: ReactNode }[] = [
   },
   {
     heading: 'About Clockmaker',
-    body: 'Clockmaker is a free-to-use personal project by John Baish. The clocks you build here are not collected; they’re only saved in your browser. We collect anonymous visit statistics (no cookies, no personal data) to see how the site is used. Contact: clockmaker@baish.net.',
+    body: 'Clockmaker is a free-to-use personal project by John Baish. The clocks you build here are not collected; they’re only saved in your browser. We collect anonymous visit statistics (no cookies, no personal data) to see how the site is used. Contact: workshop@baish.net.',
   },
 ];
 
