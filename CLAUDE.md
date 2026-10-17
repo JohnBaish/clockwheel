@@ -3012,3 +3012,12 @@ same as before (the block already filled the width). Measured in Chromium
 against `vite preview`: section, heading, dividers, table and footer all
 start at the same x (26.4px) at both 1000px and 390px; no sideways scroll,
 no page errors.
+
+**Follow-up, same day:** John finds the explainer clutter (it's there for
+search), so it now sits lower, nearer the footer, leaving more clear space
+under Reverse: the section's top margin 64 → 160px, and the footer's top
+margin (inline in `BacktimerScreen.tsx`) 64 → 32px. The footer only ever
+appears with the explainer (both are standalone-only), so its smaller margin
+doesn't affect anything else. Measured at 1000px and 390px: Reverse → section
+160px, section → footer line 32px, left edges still aligned, no sideways
+scroll.

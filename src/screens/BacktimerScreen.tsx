@@ -450,7 +450,7 @@ export function BacktimerScreen() {
         <div
           data-noprint="1"
           style={{
-            marginTop: 64, paddingTop: 'var(--space-3)',
+            marginTop: 32, paddingTop: 'var(--space-3)',
             borderTop: '1px solid var(--color-divider)',
             fontSize: 12, lineHeight: 1.6, color: 'var(--color-neutral-700)', textAlign: 'center',
           }}
