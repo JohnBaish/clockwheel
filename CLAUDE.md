@@ -3089,7 +3089,7 @@ lint at the 8 known warnings. `HOUSE-STYLE.md` §6 updated (16px `.input`,
 handle-only drag). **Still for John to check on a real iPhone:** no zoom on
 the four boxes (6.1), tapping hours on Week (3.2), and the Back gesture (6.3).
 
-## Two-tab warning and the number rule (2026-10-18, branch `claude/tender-ramanujan-qr02ud`, not yet merged)
+## Two-tab warning and the number rule — LIVE (built 2026-10-18 on branch `claude/tender-ramanujan-qr02ud`, merged to `main` 2026-10-18)
 
 Two ideas from Flowcharter's handover (`design/handover-clockmaker-2026-10-18.md`
 in `JohnBaish/flowcharter`), checked against Clockmaker's code first and then
