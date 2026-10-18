@@ -15,7 +15,7 @@ import { BacktimerScreen } from './screens/BacktimerScreen';
 import { GuideScreen } from './screens/GuideScreen';
 
 function Shell() {
-  const { screen, setScreen, clocks, openClockId } = useApp();
+  const { screen, setScreen, clocks, openClockId, changedElsewhere } = useApp();
   // Clock and List show whichever clock is open; with no clocks at all (every
   // one deleted) there's nothing to show, so they say so instead of crashing.
   const noClock = !clocks[openClockId];
@@ -44,6 +44,14 @@ function Shell() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {changedElsewhere && (
+        <div className="stale-bar" role="alert" data-noprint="1">
+          <span className="stale-text">
+            {isBacktimerHost() ? 'Backtimer' : 'Clockmaker'} was changed in another tab. Reload to see the changes. Until you do, this tab won’t save anything.
+          </span>
+          <button className="stale-btn" onClick={() => window.location.reload()}>Reload</button>
+        </div>
+      )}
       <Nav screen={screen} onNavigate={setScreen} />
       <div style={{ width: '100%', maxWidth: '1100px', margin: '0 auto' }}>
         {screen === 'week' && <WeekHeader />}

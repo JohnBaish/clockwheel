@@ -3088,3 +3088,66 @@ lint at the 8 known warnings. `HOUSE-STYLE.md` §6 updated (16px `.input`,
 44px icon tap areas, taps instead of Shift, Back stays inside the tool,
 handle-only drag). **Still for John to check on a real iPhone:** no zoom on
 the four boxes (6.1), tapping hours on Week (3.2), and the Back gesture (6.3).
+
+## Two-tab warning and the number rule (2026-10-18, branch `claude/tender-ramanujan-qr02ud`, not yet merged)
+
+Two ideas from Flowcharter's handover (`design/handover-clockmaker-2026-10-18.md`
+in `JohnBaish/flowcharter`), checked against Clockmaker's code first and then
+agreed with John point by point.
+
+**1. Warning when Clockmaker was changed in another tab.** Before this,
+Clockmaker saved its whole state on every change, including just moving
+between screens, and never listened for other tabs. Proved in a real
+browser: tab A creates a clock, tab B (older) only clicks to Categories, and
+the saved copy loses the new clock. Now:
+- `src/lib/staleCopy.ts` (`savedCopyDiffers`): compares the other tab's
+  saved text with this tab's state using sorted-key JSON, ignoring `screen`,
+  `openClockId`, `sumSel` and `lastEditedAt` (navigation and stamp, not work).
+  Unreadable or missing text means no warning.
+- `store.tsx`: a `storage` listener (added once; reads the latest state through
+  a ref) sets `changedElsewhere`; while it is true the save effect does nothing,
+  so the older tab can't overwrite the newer one. Exposed on the context.
+- `App.tsx`: dark `.stale-bar` above the nav, "Clockmaker was changed in
+  another tab. Reload to see the changes. Until you do, this tab won’t save
+  anything." (John approved; "Backtimer" on the standalone host, which uses the
+  same storage). `Nav.tsx` hides the "saved … ago" tag while stopped.
+  `.stale-bar` / `.stale-btn` in `global.css`: one row on a computer, stacked
+  with a 44px button on a phone, hidden when printing.
+- Importing a backup in one tab warns every other open tab (intended).
+- Left alone: the known tiny gap (second tab opened in the same few
+  milliseconds as a save). Not checked: Safari, real iPhones (Safari private
+  windows may not share storage between tabs at all).
+
+**2. Number rule** (one to nine as words, 10 and above as digits), written
+into `HOUSE-STYLE.md` §13 (and §14 for the tab pattern). Helpers in
+`src/lib/words.ts`. John's decisions, group by group:
+- *Counted in a sentence, now follows the rule:* the Delete-clock warning in
+  Library ("assigned to three hours … those hours will become unassigned";
+  one hour is "one hour … that hour will become unassigned", which also fixes
+  the old "1 hour … those hours"); the Week picker's "for three hours"; the
+  category refusal ("still used by four segments", which can't actually be
+  reached from the screen, since the delete button is disabled while a category
+  is in use; it's a safety net).
+- *Changed from what I first proposed:* "the only hour/segment" for one would
+  read as if it were the single one that exists, so one is plain "one hour",
+  "one segment". John was told in the report.
+- *Left as digits (his call):* times and dates; names and labels ("Step 2 of
+  4", "Mon 06:00", seed names "Song 1"); and all short count tags and lines:
+  Library "3 clocks", "2 not in the week", card lines "8 songs" and "Used 1
+  hour a week"; header "8 songs"; "5 categories" and "used 3 times"; List
+  "18 segments"; Backtimer "4 items"; Week header "12 of 83 active hours
+  assigned", "71 unassigned"; the Week selection pill "3 hours".
+- The Guide and Backtimer explainer already used words; no change.
+
+**Verified** in Chromium against a built `vite preview` (build clean; lint at
+the 8 known warnings, none new): at 1200px and 390px with touch, and on the
+standalone-Backtimer host — no bar after opening two tabs; screen change alone
+gives no bar; no bar in the editing tab; bar in the other with the exact
+wording; saved tag hidden; the stale tab clicking around leaves the saved work
+untouched; Reload clears the bar, shows the new clock and saving resumes (and
+the other tab is then warned); no sideways scroll; button 36px (computer) or
+44px (phone); hidden in print; import warns the other tab; first visit still
+lands on the Guide. Number wording read from the real Delete-clock dialog for
+0, 1, 3, 9 and 10 hours, and the Week picker for one hour; `countOf` checked
+for 0 to 100.
+

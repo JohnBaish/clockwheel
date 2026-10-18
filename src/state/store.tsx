@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { SegmentSeed } from '../data/segments';
 import { seedOutside, seedClocks, SEED_CLOCK_ID, CLOCK_COLORS, type Clock, type ClockId } from '../data/clocks';
 import { SEED_CATEGORIES, SEED_CATEGORY_ORDER, NEXT_COLORS, type Category, type CategoryId } from '../data/categories';
@@ -6,6 +6,8 @@ import { seedBacktimer, type BacktimerState, type BacktimerItemSeed } from '../d
 import { contrastInk } from '../lib/color';
 import { isBacktimerHost } from '../lib/hostMode';
 import { screenFromHash } from '../lib/screenHash';
+import { savedCopyDiffers } from '../lib/staleCopy';
+import { countOf } from '../lib/words';
 
 export type Screen = 'guide' | 'lib' | 'clock' | 'list' | 'week' | 'summary' | 'categories' | 'backtimer';
 
@@ -93,6 +95,9 @@ function loadInitial(): PersistedState {
 }
 
 interface AppContextValue extends PersistedState {
+  /** True once another tab has saved different work. This tab then stops saving
+   *  (otherwise it would overwrite the newer copy) until the page is reloaded. */
+  changedElsewhere: boolean;
   setScreen: (screen: Screen) => void;
   openClock: (id: ClockId) => void;
   createClock: () => void;
@@ -158,14 +163,29 @@ const AppContext = createContext<AppContextValue | null>(null);
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<PersistedState>(loadInitial);
 
+  // Another tab changing the saved work (browsers send this event only for
+  // *other* tabs' saves). From then on this tab keeps its hands off storage.
+  const [changedElsewhere, setChangedElsewhere] = useState(false);
+  const stateRef = useRef(state);
+  useEffect(() => { stateRef.current = state; });
   useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key !== STORAGE_KEY) return;
+      if (savedCopyDiffers(e.newValue, stateRef.current)) setChangedElsewhere(true);
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
+  useEffect(() => {
+    if (changedElsewhere) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
       // Storage can be unavailable (private browsing, quota) — the app still
       // works for the session, it just won't survive a refresh.
     }
-  }, [state]);
+  }, [state, changedElsewhere]);
 
   // Content edits stamp lastEditedAt for the nav's "saved ... ago" readout;
   // pure navigation (setScreen, setSumSel, openClock) doesn't count as an edit.
@@ -189,6 +209,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<AppContextValue>(() => ({
     ...state,
+    changedElsewhere,
     setScreen: (screen) => setState((s) => ({ ...s, screen })),
     openClock: (id) => setState((s) => ({ ...s, openClockId: id, screen: 'clock' })),
     createClock: () => setEdited((s) => {
@@ -305,7 +326,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     deleteCategory: (id) => {
       if (categoryInUse(id, state.clocks)) {
         const n = categoryUsageCountFor(id, state.clocks);
-        return `Can't delete ${state.categories[id]?.name ?? 'this category'} — it's still used by ${n} segment${n === 1 ? '' : 's'}.`;
+        return `Can't delete ${state.categories[id]?.name ?? 'this category'} — it's still used by ${countOf(n, 'segment')}.`;
       }
       setEdited((s) => {
         const categories = { ...s.categories };
@@ -441,7 +462,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       });
       return null;
     },
-  }), [state]);
+  }), [state, changedElsewhere]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

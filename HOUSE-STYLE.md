@@ -26,6 +26,8 @@ Backtimer — long, and mostly about those apps. Read it only for the
 | `src/lib/responsive.ts` | `useIsNarrow(720)` — the phone/computer switch. |
 | `src/lib/timeInput.ts` | Phone keyboard helpers (`isTouch`, `toColon`, `selectAllSoon`). Only if the new tool has time or number entry. |
 | `src/lib/useDragReorder.ts` | Drag-to-reorder by a grip handle, mouse and touch. Only if needed. |
+| `src/lib/words.ts` | `numberWord` / `countOf`: the number rule for running text (§13). |
+| `src/lib/staleCopy.ts` and `.stale-bar` in `global.css` | The "changed in another tab" warning (§14). The matching code in `state/store.tsx` and `App.tsx` is small; copy the pattern. |
 | `public/favicon*.svg` | Favicon style to adapt (see §7). |
 | `design/og-clockmaker.html` | Link-preview image source; use it as the template for a new tool (see §7). |
 | `SEO-HANDOVER.md` | How search (titles, descriptions, canonical, robots.txt/sitemap, visible text, Search Console) was done, with a checklist for each new tool (see §12). |
@@ -299,3 +301,51 @@ and a step-by-step checklist for a new tool are in **`SEO-HANDOVER.md`**
 - Search Console: one Domain property for baish.net covers every
   subdomain, so a new tool only needs its sitemap submitted and its main
   address inspected and requested.
+
+## 13. Numbers in running text
+
+John's rule: **one to nine as words, 10 and above as digits**, wherever a
+number is counted inside a sentence. Decided for Flowcharter (2026-10-18)
+and applied to Clockmaker the same day. Check each tool by searching every
+file that holds words people see, including messages built in code
+(`${count}`), listing every case with its surrounding words, and showing John
+before changing anything. Helpers: `numberWord(n)` and `countOf(n, 'hour')`
+in `src/lib/words.ts`.
+
+| Kind of number | Rule | Examples |
+|---|---|---|
+| Counted inside a sentence (pop-up boxes, messages, explanatory text) | Follows the rule | "assigned to three hours … those hours will become unassigned"; "all 12 items" |
+| Names, labels and controls: anything that must match what is on screen | Digits | row numbers, "Step 2 of 4", "Mon 06:00", a clock called "Daytime 1", a box you type a number into |
+| Times, durations and dates | Digits | "saved 5 min ago", "29:30", "18 Oct" |
+| Short count tags (small pill labels) and short count lines | Digits | "3 clocks", "8 songs", "18 segments", "12 of 83 active hours assigned", "used 3 times" |
+
+- **One** is written "one hour", not "the one hour" or "the only hour": the
+  latter reads as if it were the single one that exists. (Flowcharter uses
+  "the only item" where it really is the only row. Choose for readability,
+  not mechanically.) Where a plural verb follows, make it agree: "that hour
+  will become unassigned".
+- Zero is "zero" only inside a sentence; tags keep "0".
+
+## 14. Two tabs: warn, and stop saving
+
+A tool that saves its whole state to `localStorage` lets an old tab silently
+overwrite a newer one (even just by clicking between screens in the old
+tab). Pattern, from Flowcharter 7.1 and Clockmaker (2026-10-18):
+
+- The browser sends a `storage` event to a tab only when **another** tab
+  changes storage. Compare the new saved text with this tab's own state
+  (`savedCopyDiffers`): only the person's **work**, never which screen or item
+  is open, and not the last-edited stamp. Compare with sorted keys, and
+  treat unreadable or missing text as "nothing to warn about".
+- On a difference, show a dark bar across the top ("X was changed in another
+  tab. Reload to see the changes. Until you do, this tab won’t save
+  anything.") and **stop saving** in this tab. Stopping is the point: a quiet
+  refresh could change the screen under someone typing, and warning without
+  stopping would still let the next click overwrite the newer copy.
+- Hide any "saved … ago" tag while saving is stopped. Bar: one row on a
+  computer, stacked on a phone with a 44px Reload button, hidden in print.
+- Known tiny gap, accepted: a second tab opened in the same few milliseconds
+  as the first one's save can make the first show the bar. Not checkable
+  here: Safari and real iPhones.
+- Test with two pages in one Playwright browser context (they share
+  storage); wait about half a second after the second loads.

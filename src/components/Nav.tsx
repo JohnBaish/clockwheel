@@ -16,7 +16,7 @@ const LINKS: { screen: Screen; label: string }[] = [
 ];
 
 export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Screen) => void }) {
-  const { lastEditedAt, createClock } = useApp();
+  const { lastEditedAt, createClock, changedElsewhere } = useApp();
   // Same build, two domains (see lib/hostMode.ts) — on the Backtimer-only
   // one, there's nowhere else to navigate to, so the rest of Clockmaker's
   // nav simply doesn't exist here rather than existing-but-going-nowhere.
@@ -77,7 +77,10 @@ export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Sc
             {l.label}
           </a>
         ))}
-        <span className="tag tag-neutral mono" data-noprint="1" style={{ marginLeft: backtimerOnly ? 'auto' : undefined }}>saved {relativeTime(lastEditedAt, now)}</span>
+        {/* Hidden while this tab isn't saving (another tab changed the work), so it can't claim otherwise. */}
+        {!changedElsewhere && (
+          <span className="tag tag-neutral mono" data-noprint="1" style={{ marginLeft: backtimerOnly ? 'auto' : undefined }}>saved {relativeTime(lastEditedAt, now)}</span>
+        )}
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { localKeys } from '../lib/weekStats';
 import { splitBg, wheelBg, mixLine } from '../lib/color';
 import { computeSplit, songCount } from '../lib/clockStats';
 import { downloadJson } from '../lib/download';
+import { countOf } from '../lib/words';
 
 export function LibraryScreen() {
   const { clocks, clockOrder, week, outside, categories, categoryOrder, duplicateClock, openClock, removeClock, exportState, importState } = useApp();
@@ -17,7 +18,7 @@ export function LibraryScreen() {
   const handleDelete = (id: string, name: string) => {
     const n = countUsage(id);
     const warning = n
-      ? ` It's currently assigned to ${n} hour${n === 1 ? '' : 's'} in the Week schedule — those hours will become unassigned.`
+      ? ` It's currently assigned to ${countOf(n, 'hour')} in the Week schedule — ${n === 1 ? 'that hour' : 'those hours'} will become unassigned.`
       : '';
     if (window.confirm(`Delete "${name}"? This can't be undone.${warning}`)) {
       removeClock(id);

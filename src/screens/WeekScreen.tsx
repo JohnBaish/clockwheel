@@ -8,6 +8,7 @@ import { splitBg, contrastInk } from '../lib/color';
 import { computeSplit } from '../lib/clockStats';
 import { useIsNarrow } from '../lib/responsive';
 import { isTouch } from '../lib/timeInput';
+import { countOf } from '../lib/words';
 
 const HATCH = 'repeating-linear-gradient(135deg,var(--color-neutral-200) 0 3px,var(--color-neutral-100) 3px 6px)';
 const HATCH_STRONG = 'repeating-linear-gradient(135deg,var(--color-neutral-300) 0 3px,var(--color-neutral-100) 3px 6px)';
@@ -238,7 +239,7 @@ export function WeekScreen() {
           <div className="dialog" style={{ width: 'min(600px,94vw)', maxHeight: '78vh', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
               <h3 className="dialog-title" style={{ margin: 0 }}>Choose a clock</h3>
-              <span style={{ fontSize: 13, color: 'var(--color-neutral-700)' }}>for {selKeys.length} {selKeys.length === 1 ? 'hour' : 'hours'}</span>
+              <span style={{ fontSize: 13, color: 'var(--color-neutral-700)' }}>for {countOf(selKeys.length, 'hour')}</span>
             </div>
             <input className="input" placeholder="Search clocks" value={search} onChange={(e) => setSearch(e.target.value)} style={{ width: '100%' }} />
             <div style={{ overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 3 }}>
