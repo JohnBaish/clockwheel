@@ -3151,3 +3151,9 @@ lands on the Guide. Number wording read from the real Delete-clock dialog for
 0, 1, 3, 9 and 10 hours, and the Week picker for one hour; `countOf` checked
 for 0 to 100.
 
+### 2026-10-18 — SEO handover: Flowcharter's row added (docs only, straight to `main`)
+
+At John's say-so (checklist step 18): Flowcharter's title, search description
+and canonical added as a column in `SEO-HANDOVER.md` §1's table, plus a short
+note under the introduction. The work itself is in `JohnBaish/flowcharter`
+(merged there 2026-10-18; Search Console steps still to do). No code changed.
