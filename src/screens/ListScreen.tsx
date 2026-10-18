@@ -153,7 +153,7 @@ export function ListScreen() {
                     onKeyDown={(e) => handleRowArrow(e, i, focusName)}
                   />
                   <button
-                    className="btn btn-ghost"
+                    className="btn btn-ghost list-card-delete"
                     onClick={() => removeSegment(s.id)}
                     title="Remove segment"
                     style={{ padding: '4px 6px', color: 'var(--color-neutral-600)', flex: 'none' }}

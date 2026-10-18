@@ -6,6 +6,7 @@ import { withTimes } from '../data/segments';
 import { copyClockImage, copyListImage } from '../lib/exportImage';
 import { IconPrint } from '../lib/icons';
 import { PINS_ENABLED } from '../config';
+import { useIsNarrow } from '../lib/responsive';
 
 const HOURS = Array.from({ length: 24 }, (_, h) => h);
 
@@ -24,6 +25,7 @@ export function EditorHeader() {
   const balance = hourBalance(total);
   const [imageStatus, setImageStatus] = useState<'idle' | 'copied' | 'downloaded'>('idle');
   const nameInput = useRef<HTMLTextAreaElement | null>(null);
+  const isNarrow = useIsNarrow(720);
 
   // A brand-new, untouched clock ("New clock", no segments yet) gets its name
   // field focused so it can be renamed immediately — checked whenever the
@@ -71,7 +73,8 @@ export function EditorHeader() {
             className="input"
             value={clock.hour}
             onChange={(e) => setClockHour(clock.id, +e.target.value)}
-            style={{ padding: '2px 8px', fontSize: '11px', width: 'auto' }}
+            // 16px on phones: iPhone zooms in on anything smaller when it's tapped.
+            style={{ padding: '2px 8px', fontSize: isNarrow ? 16 : '11px', width: 'auto' }}
           >
             {HOURS.map((h) => <option key={h} value={h}>{String(h).padStart(2, '0')}:00</option>)}
           </select>

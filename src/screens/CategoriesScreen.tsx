@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useApp } from '../state/store';
 import { IconGrip, IconPlus, IconTrash } from '../lib/icons';
+import { useDragReorder } from '../lib/useDragReorder';
 
 export function CategoriesScreen() {
   const { categories, categoryOrder, addCategory, renameCategory, recolorCategory, reorderCategory, deleteCategory, categoryUsageCount } = useApp();
-  const [dragIndex, setDragIndex] = useState<number | null>(null);
-  const [overIndex, setOverIndex] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const nameInputs = useRef<Record<string, HTMLInputElement | null>>({});
   const prevCount = useRef(categoryOrder.length);
@@ -19,11 +18,10 @@ export function CategoriesScreen() {
     prevCount.current = categoryOrder.length;
   }, [categoryOrder]);
 
-  const handleDrop = (targetIndex: number) => {
-    if (dragIndex !== null && dragIndex !== targetIndex) reorderCategory(dragIndex, targetIndex);
-    setDragIndex(null);
-    setOverIndex(null);
-  };
+  // Same handle-only drag as List and Backtimer, so it works with a finger
+  // as well as a mouse, and dragging inside a name box just selects text.
+  const { dragIndex, overIndex, setItemRef, onPointerDown, onPointerMove, onPointerUp, onPointerCancel } =
+    useDragReorder(categoryOrder.length, reorderCategory);
 
   const handleDelete = (id: string) => {
     const message = deleteCategory(id);
@@ -59,11 +57,7 @@ export function CategoriesScreen() {
           return (
             <div
               key={id}
-              draggable
-              onDragStart={() => setDragIndex(i)}
-              onDragOver={(e) => { e.preventDefault(); setOverIndex(i); }}
-              onDrop={(e) => { e.preventDefault(); handleDrop(i); }}
-              onDragEnd={() => { setDragIndex(null); setOverIndex(null); }}
+              ref={setItemRef(i)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 12, padding: '10px 6px',
                 borderBottom: i < categoryOrder.length - 1 ? '1px solid var(--color-divider)' : 'none',
@@ -71,7 +65,18 @@ export function CategoriesScreen() {
                 background: overIndex === i && dragIndex !== null && dragIndex !== i ? 'var(--color-accent-100)' : undefined,
               }}
             >
-              <span style={{ color: 'var(--color-neutral-600)', cursor: 'grab', flex: 'none' }}><IconGrip size={14} /></span>
+              <span
+                className="list-card-grip"
+                // Same 30px handle as List, but taking only the old icon's
+                // room, so the row's layout doesn't shift.
+                style={{ margin: '0 -8px' }}
+                onPointerDown={onPointerDown(i)}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerUp}
+                onPointerCancel={onPointerCancel}
+              >
+                <IconGrip size={14} />
+              </span>
 
               <input
                 type="color"

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useApp } from '../state/store';
 import { DAYS } from '../data/days';
 import { cellKey, type ClockId } from '../data/clocks';
@@ -7,6 +7,7 @@ import { localKeys } from '../lib/weekStats';
 import { splitBg, contrastInk } from '../lib/color';
 import { computeSplit } from '../lib/clockStats';
 import { useIsNarrow } from '../lib/responsive';
+import { isTouch } from '../lib/timeInput';
 
 const HATCH = 'repeating-linear-gradient(135deg,var(--color-neutral-200) 0 3px,var(--color-neutral-100) 3px 6px)';
 const HATCH_STRONG = 'repeating-linear-gradient(135deg,var(--color-neutral-300) 0 3px,var(--color-neutral-100) 3px 6px)';
@@ -18,6 +19,10 @@ export function WeekScreen() {
   const [drag, setDrag] = useState(false);
   const [hover, setHover] = useState<string | null>(null);
   const [picker, setPicker] = useState(false);
+  const [search, setSearch] = useState('');
+  // A tap also fires a mouse-down straight afterwards; this lets the cell's
+  // mouse-down handler ignore that one, so a tap isn't counted twice.
+  const fromTouch = useRef(false);
   // undefined = nothing copied yet; null = copied an empty/no-clock cell.
   const [clipboard, setClipboard] = useState<ClockId | null | undefined>(undefined);
 
@@ -54,8 +59,29 @@ export function WeekScreen() {
       }`
     : '';
 
+  const openPicker = () => { setSearch(''); setPicker(true); };
   const closePicker = () => setPicker(false);
   const doAssign = (id: ClockId | null) => { assign(selKeys, id); setSel({}); setPicker(false); };
+  const query = search.trim().toLowerCase();
+  const pickerClocks = query ? clockOrder.filter((id) => clocks[id].name.toLowerCase().includes(query)) : clockOrder;
+
+  // Escape closes the clock picker, as clicking outside it does.
+  useEffect(() => {
+    if (!picker) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setPicker(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [picker]);
+
+  // Phones have no Shift key, so there a tap adds an hour to the selection,
+  // or takes it out again if it's already selected.
+  const touchToggle = (key: string) => {
+    setSel((prev) => {
+      const next = { ...prev };
+      if (next[key]) delete next[key]; else next[key] = true;
+      return next;
+    });
+  };
   const doMarkLocal = (local: boolean) => { markLocal(selKeys, local); setSel({}); };
 
   // Ctrl/Cmd+C copies the first selected cell's clock; Ctrl/Cmd+V assigns it
@@ -87,7 +113,11 @@ export function WeekScreen() {
     <div style={{ padding: '0 var(--space-4) var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', background: 'var(--color-surface)', borderRadius: 'calc(var(--radius-lg)*1.1)', padding: '9px var(--space-4)', boxShadow: 'var(--shadow-sm)' }}>
         <span style={{ font: '700 11px var(--font-body)', letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--color-neutral-700)', flex: 'none' }}>Active hours</span>
-        <span style={{ fontSize: 13, color: 'var(--color-neutral-700)' }} data-noprint="1">Set per day: select any hours in the grid and mark them active or inactive. Select a cell and press Ctrl/Cmd+C to copy its clock, then select another and press Ctrl/Cmd+V to paste.</span>
+        <span style={{ fontSize: 13, color: 'var(--color-neutral-700)' }} data-noprint="1">
+          {isTouch()
+            ? 'Set per day: tap hours to select them (tap again to deselect), or tap a day or an hour to select the whole column or row, then assign a clock or mark them active or inactive.'
+            : 'Set per day: select any hours in the grid and mark them active or inactive. Select a cell and press Ctrl/Cmd+C to copy its clock, then select another and press Ctrl/Cmd+V to paste.'}
+        </span>
         {clipboard !== undefined && (
           <span className="tag tag-neutral mono" data-noprint="1" style={{ flex: 'none' }}>
             Copied {clipboard ? clocks[clipboard].name : 'empty'} — Ctrl/Cmd+V to paste
@@ -130,7 +160,15 @@ export function WeekScreen() {
                   <div
                     key={d}
                     title={`${dl} ${hh(i)}${out ? ' · inactive' : id ? ' · ' + clocks[id].name : ' · no clock yet'}`}
-                    onMouseDown={(e) => { e.preventDefault(); setDrag(true); pickKeys([key], e.shiftKey || e.metaKey || on); }}
+                    onPointerDown={(e) => {
+                      fromTouch.current = e.pointerType !== 'mouse';
+                      if (fromTouch.current) touchToggle(key);
+                    }}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      if (fromTouch.current) return;
+                      setDrag(true); pickKeys([key], e.shiftKey || e.metaKey || on);
+                    }}
                     onMouseEnter={() => { setHover(key); if (drag) pickKeys([key], true); }}
                     onDoubleClick={() => { if (id) openClock(id); }}
                     style={{
@@ -178,7 +216,7 @@ export function WeekScreen() {
         <div style={{ position: 'sticky', bottom: 14, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', background: 'var(--color-surface)', borderRadius: 999, padding: '9px var(--space-4)', boxShadow: 'var(--shadow-lg)' }}>
           <span className="mono" style={{ font: '700 13px var(--font-body)', whiteSpace: 'nowrap' }}>{selKeys.length} {selKeys.length === 1 ? 'hour' : 'hours'}</span>
           <span style={{ fontSize: 13, color: 'var(--color-neutral-700)', whiteSpace: 'nowrap' }}>assign</span>
-          <button className="btn btn-primary" onClick={() => setPicker(true)} style={{ padding: '6px 16px', fontSize: '12.5px', whiteSpace: 'nowrap' }}>Choose from library</button>
+          <button className="btn btn-primary" onClick={openPicker} style={{ padding: '6px 16px', fontSize: '12.5px', whiteSpace: 'nowrap' }}>Choose from library</button>
           <button
             className="week-toggle-local"
             onClick={() => doMarkLocal(allOut)}
@@ -192,18 +230,25 @@ export function WeekScreen() {
       )}
 
       {picker && (
-        <div className="dialog-backdrop" style={{ position: 'fixed', inset: 0, zIndex: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--space-4)' }}>
+        <div
+          className="dialog-backdrop"
+          onMouseDown={(e) => { if (e.target === e.currentTarget) closePicker(); }}
+          style={{ position: 'fixed', inset: 0, zIndex: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--space-4)' }}
+        >
           <div className="dialog" style={{ width: 'min(600px,94vw)', maxHeight: '78vh', display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
               <h3 className="dialog-title" style={{ margin: 0 }}>Choose a clock</h3>
               <span style={{ fontSize: 13, color: 'var(--color-neutral-700)' }}>for {selKeys.length} {selKeys.length === 1 ? 'hour' : 'hours'}</span>
             </div>
-            <input className="input" placeholder="Search clocks" style={{ width: '100%' }} />
+            <input className="input" placeholder="Search clocks" value={search} onChange={(e) => setSearch(e.target.value)} style={{ width: '100%' }} />
             <div style={{ overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 3 }}>
               {clockOrder.length === 0 && (
                 <div style={{ padding: '8px 12px', fontSize: 13, color: 'var(--color-neutral-700)' }}>No clocks yet — create one from the nav first.</div>
               )}
-              {clockOrder.map((id) => {
+              {clockOrder.length > 0 && pickerClocks.length === 0 && (
+                <div style={{ padding: '8px 12px', fontSize: 13, color: 'var(--color-neutral-700)' }}>No clocks match “{search.trim()}”.</div>
+              )}
+              {pickerClocks.map((id) => {
                 const c = clocks[id];
                 const split = computeSplit(c.segments, categoryOrder);
                 const n = keys.filter((k) => week[k] === id).length;

@@ -87,7 +87,9 @@ export function BacktimerScreen() {
 
   const commitOutTime = () => {
     const parsed = outDraft === null ? null : parseOutTime(outDraft);
-    if (parsed !== null) setBacktimerOutTime(normalizeOutTime(parsed));
+    // Backtimer works on a 60-minute dial, so anything past 60:00 is treated
+    // like any other unreadable entry: the box goes back to its old value.
+    if (parsed !== null && parsed <= 3600) setBacktimerOutTime(normalizeOutTime(parsed));
     setOutDraft(null);
   };
 
@@ -281,7 +283,7 @@ export function BacktimerScreen() {
                     onKeyDown={(e) => handleRowArrow(e, i, focusName)}
                   />
                   <button
-                    className="btn btn-ghost"
+                    className="btn btn-ghost list-card-delete"
                     onClick={() => removeBacktimerItem(it.id)}
                     title="Remove item"
                     style={{ padding: '4px 6px', color: 'var(--color-neutral-600)', flex: 'none' }}

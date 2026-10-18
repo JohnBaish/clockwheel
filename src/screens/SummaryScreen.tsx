@@ -30,13 +30,13 @@ export function SummaryScreen() {
           <span style={{ font: '700 11px var(--font-body)', letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--color-neutral-700)', flex: 'none' }}>Selected clock</span>
           <select
             className="input"
-            style={{ width: 240, padding: '6px 14px', fontSize: '13.5px' }}
+            style={{ width: 240, maxWidth: '100%', padding: '6px 14px', fontSize: isNarrow ? 16 : '13.5px' }}
             value={sumSel}
             onChange={(e) => setSumSel(e.target.value)}
           >
             {clockOrder.map((id) => <option key={id} value={id}>{clocks[id].name}</option>)}
           </select>
-          <button className="btn btn-ghost" onClick={() => openClock(sumSel)} style={{ color: 'var(--color-accent-700)', whiteSpace: 'nowrap' }}>Open clock</button>
+          {clocks[sumSel] && <button className="btn btn-ghost" onClick={() => openClock(sumSel)} style={{ color: 'var(--color-accent-700)', whiteSpace: 'nowrap' }}>Open clock</button>}
         </div>
 
         <div style={{ background: 'var(--color-surface)', borderRadius: 'calc(var(--radius-lg)*1.4)', padding: 'var(--space-4)', boxShadow: 'var(--shadow-sm)', overflow: 'auto' }}>

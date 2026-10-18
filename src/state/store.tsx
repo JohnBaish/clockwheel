@@ -5,6 +5,7 @@ import { SEED_CATEGORIES, SEED_CATEGORY_ORDER, NEXT_COLORS, type Category, type 
 import { seedBacktimer, type BacktimerState, type BacktimerItemSeed } from '../data/backtimer';
 import { contrastInk } from '../lib/color';
 import { isBacktimerHost } from '../lib/hostMode';
+import { screenFromHash } from '../lib/screenHash';
 
 export type Screen = 'guide' | 'lib' | 'clock' | 'list' | 'week' | 'summary' | 'categories' | 'backtimer';
 
@@ -73,8 +74,10 @@ function loadInitial(): PersistedState {
   // Backtimer screen — overriding whatever screen a previous visit to this
   // origin happened to save, so there's no way to end up looking at a
   // Clockmaker screen that Nav has hidden the links to.
+  // Otherwise, an address naming a screen (…/#week) opens that screen.
+  const fromHash = screenFromHash();
   const pin = (result: PersistedState): PersistedState =>
-    isBacktimerHost() ? { ...result, screen: 'backtimer' } : result;
+    isBacktimerHost() ? { ...result, screen: 'backtimer' } : fromHash ? { ...result, screen: fromHash } : result;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     // A truly first-ever visit (nothing saved yet) lands on the Guide
@@ -392,6 +395,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       // most backups for a long while) unreadable for no real benefit, since
       // nobody ever sees this raw string.
       const wrapper = parsed as Record<string, unknown>;
+      if (typeof wrapper === 'object' && wrapper !== null && wrapper.app === 'backtimer') {
+        return 'That’s a Backtimer export file. Import it at backtimer.baish.net instead.';
+      }
       if (typeof wrapper !== 'object' || wrapper === null || wrapper.app !== 'clockwheel' || typeof wrapper.state !== 'object' || wrapper.state === null) {
         return "That doesn't look like a Clockmaker export file.";
       }
@@ -404,10 +410,33 @@ export function AppProvider({ children }: { children: ReactNode }) {
       ) {
         return 'That file is missing data Clockmaker needs — it may be corrupted.';
       }
+      // Beyond the overall shape, check that everything the screens look up
+      // actually exists (fresh look 6.4): a hand-edited file naming a missing
+      // clock or category would otherwise import, then blank the page.
+      {
+        const cats = incoming.categories as Record<string, unknown>;
+        const clocks = incoming.clocks as Record<string, unknown>;
+        const isObj = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
+        const catsOk = (incoming.categoryOrder as unknown[]).every((id) =>
+          typeof id === 'string' && isObj(cats[id]) && typeof cats[id].name === 'string' && typeof cats[id].color === 'string')
+          && Object.values(cats).every((c) => isObj(c) && typeof c.name === 'string' && typeof c.color === 'string');
+        const clocksOk = (incoming.clockOrder as unknown[]).every((id) => typeof id === 'string' && isObj(clocks[id]))
+          && Object.values(clocks).every((c) =>
+            isObj(c) && typeof c.name === 'string' && typeof c.hour === 'number' && Array.isArray(c.segments)
+            && c.segments.every((seg: unknown) => isObj(seg) && typeof seg.n === 'string' && typeof seg.d === 'number'
+              && typeof seg.c === 'string' && isObj(cats[seg.c])));
+        const week = incoming.week;
+        const weekOk = week === undefined || (isObj(week) && Object.values(week).every((id) => typeof id === 'string' && isObj(clocks[id])));
+        if (!catsOk || !clocksOk || !weekOk) return 'That file is missing data Clockmaker needs — it may be corrupted.';
+      }
       if (confirm && !confirm()) return null;
       setState((s) => {
         const merged: PersistedState = { ...s, ...incoming, lastEditedAt: Date.now(), screen: 'lib' };
         if (!merged.clocks[merged.openClockId]) merged.openClockId = merged.clockOrder[0] ?? s.openClockId;
+        if (!merged.clocks[merged.sumSel]) merged.sumSel = merged.clockOrder[0] ?? s.sumSel;
+        // Older files may lack a category's text colour; work it out as the app does.
+        merged.categories = Object.fromEntries(Object.entries(merged.categories).map(([id, c]) =>
+          [id, c.ink ? c : { ...c, ink: contrastInk(c.color) }]));
         return merged;
       });
       return null;

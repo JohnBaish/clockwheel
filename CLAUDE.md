@@ -3021,3 +3021,70 @@ appears with the explainer (both are standalone-only), so its smaller margin
 doesn't affect anything else. Measured at 1000px and 390px: Reverse → section
 160px, section → footer line 32px, left edges still aligned, no sideways
 scroll.
+
+## Fresh look of Clockmaker and Backtimer, and the agreed fixes (reviewed 2026-10-17, built and live 2026-10-18)
+
+Full `/fresh-look` review of live `main` at e8f971b (report delivered as a
+PDF and as a side-panel page; nothing changed during the review). John's
+decisions, item by item, and what was built for each:
+
+- **2.1** Deleting every clock, then List/Clock (or Summary's "Open clock")
+  gave a blank page. *Yes:* `App.tsx` shows "No clocks yet. Press New clock
+  to start one." on Clock/List when the open clock doesn't exist, and
+  Summary hides "Open clock" in that state.
+- **2.2** A busy clock's short items kept labels that didn't fit (only 6
+  callouts allowed), spilling over neighbours. *Option b:* `ClockFace.tsx`
+  leaves such slices as colour only (`inner` now also requires `ratio <= 1`).
+  The Example clock is unaffected (13 inline + 5 callouts, all 18 named).
+- **2.3** An hour over 60:00 is drawn over its own start. *Leave.*
+- **3.1** Week's "Search clocks" box did nothing. *Option a:* it filters by
+  name (case-insensitive), shows "No clocks match …", clears on reopen.
+- **3.2** Phones could only select one hour, a whole day or a whole row.
+  *Yes:* on touch, tapping an hour adds/removes it (`onPointerDown` with
+  `pointerType !== 'mouse'`; a `fromTouch` ref skips the tap's follow-up
+  mouse-down). Phones get tap wording instead of the Ctrl/Cmd sentence.
+  Mouse behaviour (click, Shift-click, drag, copy/paste) unchanged.
+- **3.3** "Choose a clock" only closed with Cancel. *Yes:* Escape and a
+  click/tap outside close it.
+- **4.1/4.2** Categories reordering didn't work on touch, and dragging in a
+  name box dragged the row. *Yes:* switched to `useDragReorder` on the grip
+  only (`list-card-grip` with `margin: 0 -8px`, so the row layout is as before).
+- **5.1** Backtimer accepted out-times over 60:00, giving odd starts and an
+  Export that Import refused. *Option a:* over 60:00 is treated as
+  unreadable (box reverts); the walkthrough says "Please enter a time up to
+  60:00." Not handled: anyone whose saved out-time is already over 60:00
+  keeps it until they change it (very unlikely to exist).
+- **6.1** Four boxes under 16px made iPhone zoom. *Yes:* `.input` joins
+  `.plain-input` at 16px on phones; EditorHeader's hour picker and
+  Summary's clock picker set 16px inline on narrow screens.
+- **6.2** Phone-card bins were 28×24px. *Yes:* `.list-card-delete` gives a
+  44×44 tap area with negative margins (card size unchanged).
+- **6.3** Back left the site. *Yes:* each Clockmaker screen has its own
+  address (`#lib`, `#week` …; `src/lib/screenHash.ts`). `App.tsx` pushes a
+  history entry per screen change (the first render only replaces) and
+  follows `popstate`/`hashchange`; `loadInitial()` opens the screen named in
+  the address, else the saved one, as before. Standalone Backtimer's address
+  is left alone.
+- **6.4** A hand-edited backup naming a missing category imported, then
+  blanked the page. *Yes:* `importState` also checks every clock, segment,
+  category and Week entry refers to something real; fixes `sumSel`; fills a
+  missing category text colour with `contrastInk`.
+- **6.5** "0 clocks · all in use". *Yes:* the second tag is hidden with no clocks.
+- **6.6** A Backtimer file in Clockmaker's Import got a generic message.
+  *Yes:* "That’s a Backtimer export file. Import it at backtimer.baish.net instead."
+- **7.1–7.9** (phone buttons 34–36px, small face labels on phones, three-line
+  standalone toolbar, walkthrough Skip leaving 1:00, no-confirm deletes,
+  Backtimer over an hour, Week not keyboard-friendly, empty wedge under
+  60:00, 8 lint warnings). *Leave.*
+
+John agreed to skip a preview and go straight live after a second full
+check. Verified with Playwright against a built `vite preview`, at 1200px
+and at 390px with touch: 77 + 53 + 39 targeted checks covering every item
+above plus regressions (first visit → Guide, walkthrough end to end, List
+Tab/arrow keys, Library open/duplicate/done, print, Copy image, Reverse,
+Clear, Export→Import round trips, landing page), and the full screen sweep
+again (no sideways scroll, no errors, no phone box under 16px). Build clean;
+lint at the 8 known warnings. `HOUSE-STYLE.md` §6 updated (16px `.input`,
+44px icon tap areas, taps instead of Shift, Back stays inside the tool,
+handle-only drag). **Still for John to check on a real iPhone:** no zoom on
+the four boxes (6.1), tapping hours on Week (3.2), and the Back gesture (6.3).

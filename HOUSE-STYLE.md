@@ -4,7 +4,7 @@ The shared look, behaviour and ways of working behind John Baish's tools
 (Clockmaker, Backtimer, the baish.net landing page), written so a new
 project — starting with **Flowcharter** — can match them without
 re-deriving anything. Everything here is taken from what is live in this
-repo (`JohnBaish/clockwheel`) as of 2026-10-17.
+repo (`JohnBaish/clockwheel`) as of 2026-10-18.
 
 **Rule of thumb: copy, don't reinvent.** Copy the files listed below into
 the new project and build on them. If something here and the code
@@ -136,9 +136,17 @@ Every screen must work on a 390px-wide phone with no sideways scrolling.
   (e.g. a table on a computer, a stack of `.list-card`s on a phone) —
   render one or the other, never both hidden with CSS.
 - Text in input boxes is **16px** on phones, or iPhone zooms the page when
-  a box is tapped (handled by `global.css` for `.plain-input`; anything
-  with an inline font size needs it set explicitly).
-- Tap targets at least **44px** tall.
+  a box is tapped (handled by `global.css` for `.plain-input` and `.input`;
+  anything with an inline font size needs it set explicitly).
+- Tap targets at least **44px** tall. A small icon button (e.g. a bin on a
+  phone card) can keep its small icon inside a 44px tap area
+  (`.list-card-delete` in `global.css`).
+- **Phones have no Shift key.** Where Shift-click adds to a selection on a
+  computer, make a tap add or remove that item on a touch screen.
+- **Back must stay inside the tool.** If a tool has more than one screen,
+  give each its own address (`…/#week`, see `src/lib/screenHash.ts`), so
+  the phone's Back gesture returns to the previous screen instead of
+  leaving the site.
 - **Keyboards only open when focus happens during a tap.** If a button
   should open the keyboard (Add, Next), update state with `flushSync` and
   focus the new box inside the same click handler. Never auto-focus a box
@@ -151,6 +159,8 @@ Every screen must work on a 390px-wide phone with no sideways scrolling.
   visible button for it (a full-width "+ Add …" under the list).
 - Keep important buttons in the top ~60% of the screen while a keypad is
   open (it covers roughly the bottom 40%).
+- Drag-to-reorder uses `useDragReorder` on a grip handle only (never the
+  browser's own drag-and-drop, which ignores touch).
 
 ## 7. Icons, favicons and link previews
 

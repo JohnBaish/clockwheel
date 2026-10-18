@@ -88,7 +88,7 @@
      would lay out on a wide screen, rather than collapsing. */
   .nav-panel.nav-panel-static { display: contents; }
   /* iPhone zooms the page in when a box with text under 16px is tapped. */
-  .plain-input { font-size: 16px; }
+  .plain-input, .input { font-size: 16px; }
   /* Apple's minimum comfortable tap height. */
   .list-cards .plain-input { min-height: 44px; }
 }
@@ -102,6 +102,13 @@
   padding: 10px 12px; box-shadow: var(--shadow-sm);
 }
 .list-card-row { display: flex; align-items: center; gap: 8px; }
+/* The bin on a phone card: a 44px tap area (Apple's comfortable minimum)
+   around the same small icon, with negative margins so the card's own
+   height and spacing don't change. */
+.list-card-delete {
+  min-width: 44px; min-height: 44px; justify-content: center;
+  margin: -8px -10px -8px 0;
+}
 .list-card-grip {
   display: flex; align-items: center; justify-content: center;
   width: 30px; height: 30px; flex: none; margin-left: -6px;

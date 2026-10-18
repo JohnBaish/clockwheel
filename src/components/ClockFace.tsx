@@ -93,7 +93,10 @@ function buildFace(
     callouts = [...callouts].sort((a, b) => b.ratio - a.ratio).slice(0, MAX_CALLOUTS);
   }
   const outIds = new Set(callouts.map((s) => s.i));
-  const inner = scored.filter((s) => !outIds.has(s.i));
+  // A label that doesn't fit and missed the callout cap is left off entirely
+  // (the slice shows as colour only; its name is still in List) — drawn
+  // inline, it would spill across its neighbours (fresh look 2.2, 2026-10-18).
+  const inner = scored.filter((s) => !outIds.has(s.i) && s.ratio <= 1);
 
   const k: ReactNode[] = [
     <circle key="bg" cx={0} cy={0} r={RO + 1} fill="var(--color-bg)" />,

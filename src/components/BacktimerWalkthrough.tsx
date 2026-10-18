@@ -70,6 +70,7 @@ export function BacktimerWalkthrough({ onClose }: { onClose: () => void }) {
     if (step === 0) {
       const parsed = parseOutTime(outText);
       if (parsed === null) { if (!silent) setError('Please enter minutes and seconds, like 29:30.'); return false; }
+      if (parsed > 3600) { if (!silent) setError('Please enter a time up to 60:00.'); return false; }
       setBacktimerOutTime(normalizeOutTime(parsed));
     } else if (step === 1) {
       const trimmed = name.trim();

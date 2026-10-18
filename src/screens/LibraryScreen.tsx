@@ -46,7 +46,7 @@ export function LibraryScreen() {
         </div>
         <div style={{ display: 'flex', gap: 6, alignItems: 'center', minWidth: 0, flexWrap: 'wrap' }}>
           <span className="tag tag-neutral mono">{clockOrder.length} clock{clockOrder.length === 1 ? '' : 's'}</span>
-          <span className="tag tag-neutral mono">{unused ? `${unused} not in the week` : 'all in use'}</span>
+          {clockOrder.length > 0 && <span className="tag tag-neutral mono">{unused ? `${unused} not in the week` : 'all in use'}</span>}
         </div>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center', flex: 'none' }}>
           <input ref={fileInput} type="file" accept="application/json" onChange={handleImportFile} style={{ display: 'none' }} />
