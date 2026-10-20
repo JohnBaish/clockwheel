@@ -3196,9 +3196,9 @@ yesterday's weather anywhere in England." (John's choice of Claude's drafts). By
 John's standing reminder, the hub's search wording changes too: `<title>`
 "baish.net – free browser tools by John Baish" (general, so it needn't change
 with each new kind of tool) and description "Free browser tools by John Baish:
-Clockmaker for hot clocks, Backtimer for backtiming, Flowcharter for flowcharts
-and Hindcaster for yesterday's weather." (153 characters; "radio" dropped from
-Clockmaker's part to keep it short). The `og:` tags are unchanged. The head
+Clockmaker for radio clocks, Backtimer for backtiming, Flowcharter for flowcharts
+and Hindcaster for yesterday's weather." (155 characters; John: "radio clocks"
+rather than "hot clocks", which is American, as this is only the hub). The `og:` tags are unchanged. The head
 comment now says five links. `SEO-HANDOVER.md`: Hindcaster's column in the §1
 table, a note on how it followed the checklist, and items 11 and 12 updated.
 
