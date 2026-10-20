@@ -3185,3 +3185,25 @@ extra Add item under the last card is unchanged. Verified in Chromium at
 1200px and 390px (touch): Add item still adds a row and focuses its name;
 order total → Add item → warning with an overrun; Add segment and Add
 category still add; no sideways scroll, no page errors.
+
+## Hindcaster added to the baish.net landing page; hub title and description (2026-10-20, branch `landing-hindcaster`)
+
+John (from a Hindcaster session, stage 7 of `JohnBaish/hindcaster`): Hindcaster
+(live at `https://hindcaster.baish.net/`) joins the landing page. `landing.html`
+gains a fifth card, fourth in the list (after Flowcharter, before John's Blog,
+keeping the tools alphabetical): title **Hindcaster**, line "Look back at
+yesterday's weather anywhere in England." (John's choice of Claude's drafts). By
+John's standing reminder, the hub's search wording changes too: `<title>`
+"baish.net – free browser tools by John Baish" (general, so it needn't change
+with each new kind of tool) and description "Free browser tools by John Baish:
+Clockmaker for hot clocks, Backtimer for backtiming, Flowcharter for flowcharts
+and Hindcaster for yesterday's weather." (153 characters; "radio" dropped from
+Clockmaker's part to keep it short). The `og:` tags are unchanged. The head
+comment now says five links. `SEO-HANDOVER.md`: Hindcaster's column in the §1
+table, a note on how it followed the checklist, and items 11 and 12 updated.
+
+**Verified:** `npm run build` clean; `vite preview` of `/landing.html` in
+Chromium at 1200px and 390px (touch): five cards in the agreed order, all five
+links correct, the new title and description in the page, brand fonts loaded,
+no errors, no sideways scroll. **Couldn't be checked:** the real baish.net
+(served by `middleware.ts` only on that host).
