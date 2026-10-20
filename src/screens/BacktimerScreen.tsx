@@ -196,6 +196,9 @@ export function BacktimerScreen() {
         </div>
         <span className="tag tag-neutral mono">{rows.length} item{rows.length === 1 ? '' : 's'} · drag to reorder</span>
         <span className="tag tag-neutral mono">{dur(total)} total</span>
+        <button className="btn btn-ghost" onClick={addItemAndFocus} style={{ color: 'var(--color-accent-700)' }}>
+          <IconPlus size={15} />Add item
+        </button>
         {computed.length > 0 && computed[computed.length - 1].start < 0 && (
           <span className="tag" style={{ background: 'var(--color-accent-100)', color: 'var(--color-accent-800)' }}>
             starts {dur(wrapHour(computed[computed.length - 1].start))} — in the hour before this one
@@ -208,9 +211,6 @@ export function BacktimerScreen() {
           style={{ marginLeft: 'auto', color: 'var(--color-accent-700)' }}
         >
           <IconPrint size={15} />Print
-        </button>
-        <button className="btn btn-ghost" onClick={addItemAndFocus} style={{ color: 'var(--color-accent-700)' }}>
-          <IconPlus size={15} />Add item
         </button>
         {standalone && (
           <>

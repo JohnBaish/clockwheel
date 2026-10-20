@@ -3158,7 +3158,7 @@ and canonical added as a column in `SEO-HANDOVER.md` §1's table, plus a short
 note under the introduction. The work itself is in `JohnBaish/flowcharter`
 (merged there 2026-10-18; Search Console steps still to do). No code changed.
 
-## Add segment and Add category moved next to their labels (2026-10-20, branch `claude/awesome-goodall-9wwfqt`, not yet live)
+## Add segment, Add category and Add item moved next to their labels — LIVE (2026-10-20, branch `claude/awesome-goodall-9wwfqt`, merged to `main` the same day)
 
 John found Add segment hard to spot on a computer, sitting at the far right
 of List's toolbar. It now sits just right of "N segments · drag to reorder"
@@ -3177,4 +3177,11 @@ The "User-defined" kicker now sits above the row, so the heading, tag and
 button are centred on each other (measured: all three centres at the same
 y at 1200px). Phones unchanged (the button wraps under the heading).
 Backtimer: two mock-ups shown to John (Add item just after the "items ·
-drag to reorder" tag, or just after the total); not built yet.
+drag to reorder" tag, or just after the total). He chose the second:
+`BacktimerScreen.tsx`'s toolbar Add item now follows the "total" tag and
+comes *before* the overrun warning tag, so it doesn't jump along when that
+warning appears. Print/Import/Export/Clear stay on the right; the phone's
+extra Add item under the last card is unchanged. Verified in Chromium at
+1200px and 390px (touch): Add item still adds a row and focuses its name;
+order total → Add item → warning with an overrun; Add segment and Add
+category still add; no sideways scroll, no page errors.
