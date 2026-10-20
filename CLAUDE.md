@@ -3207,3 +3207,5 @@ Chromium at 1200px and 390px (touch): five cards in the agreed order, all five
 links correct, the new title and description in the page, brand fonts loaded,
 no errors, no sideways scroll. **Couldn't be checked:** the real baish.net
 (served by `middleware.ts` only on that host).
+
+**Merged to `main` 2026-10-20** at John's word (fast-forward; build clean first).
