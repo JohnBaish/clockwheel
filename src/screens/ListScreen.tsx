@@ -107,7 +107,7 @@ export function ListScreen() {
         <span style={{ font: '700 11px var(--font-body)', letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--color-neutral-700)' }}>
           {rows.length} segments · drag to reorder
         </span>
-        <button className="btn btn-ghost" onClick={addSegmentAndFocus} style={{ marginLeft: 'auto', color: 'var(--color-accent-700)' }}>
+        <button className="btn btn-ghost" onClick={addSegmentAndFocus} style={{ color: 'var(--color-accent-700)' }}>
           <IconPlus size={15} />Add segment
         </button>
       </div>

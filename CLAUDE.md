@@ -3157,3 +3157,16 @@ At John's say-so (checklist step 18): Flowcharter's title, search description
 and canonical added as a column in `SEO-HANDOVER.md` §1's table, plus a short
 note under the introduction. The work itself is in `JohnBaish/flowcharter`
 (merged there 2026-10-18; Search Console steps still to do). No code changed.
+
+## Add segment and Add category moved next to their labels (2026-10-20, branch `claude/awesome-goodall-9wwfqt`, not yet live)
+
+John found Add segment hard to spot on a computer, sitting at the far right
+of List's toolbar. It now sits just right of "N segments · drag to reorder"
+(`ListScreen.tsx`: dropped `marginLeft: 'auto'`). To match, Add category
+now sits just right of the "N categories" tag (`CategoriesScreen.tsx`: the
+same change on its button's wrapper). Nothing else changed. Phones: List
+looks exactly as before (the button there was already just right of the
+label, and its label already wrapped to two lines, which is unchanged);
+Categories' button now sits at the left under the heading instead of the
+right. Checked in Chromium at 1200px and 390px: no sideways scroll.
+Backtimer's Add item was left on the right (not asked).

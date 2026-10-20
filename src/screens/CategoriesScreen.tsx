@@ -36,7 +36,7 @@ export function CategoriesScreen() {
           <h2 style={{ margin: '1px 0 0', lineHeight: 1.05 }}>Categories</h2>
         </div>
         <span className="tag tag-neutral mono">{categoryOrder.length} categories</span>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center', flex: 'none' }}>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center', flex: 'none' }}>
           <button className="btn btn-primary" onClick={() => addCategory('New category')} style={{ padding: '8px 18px', fontSize: '13.5px', whiteSpace: 'nowrap' }}>
             <IconPlus size={15} />Add category
           </button>
