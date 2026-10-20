@@ -30,14 +30,14 @@ export function CategoriesScreen() {
 
   return (
     <div style={{ padding: '0 var(--space-6) var(--space-6)' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', padding: 'var(--space-3) 0', flexWrap: 'wrap' }}>
-        <div style={{ flex: 'none' }}>
-          <div className="card-kicker" style={{ margin: 0 }}>User-defined</div>
-          <h2 style={{ margin: '1px 0 0', lineHeight: 1.05 }}>Categories</h2>
-        </div>
-        <span className="tag tag-neutral mono">{categoryOrder.length} categories</span>
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center', flex: 'none' }}>
-          <button className="btn btn-primary" onClick={() => addCategory('New category')} style={{ padding: '8px 18px', fontSize: '13.5px', whiteSpace: 'nowrap' }}>
+      <div style={{ padding: 'var(--space-3) 0' }}>
+        <div className="card-kicker" style={{ margin: 0 }}>User-defined</div>
+        {/* The kicker sits outside this row so the tag and button centre on
+            the "Categories" heading itself, not on heading + kicker. */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', flexWrap: 'wrap', marginTop: 1 }}>
+          <h2 style={{ margin: 0, lineHeight: 1.05, flex: 'none' }}>Categories</h2>
+          <span className="tag tag-neutral mono">{categoryOrder.length} categories</span>
+          <button className="btn btn-primary" onClick={() => addCategory('New category')} style={{ padding: '8px 18px', fontSize: '13.5px', whiteSpace: 'nowrap', flex: 'none' }}>
             <IconPlus size={15} />Add category
           </button>
         </div>
