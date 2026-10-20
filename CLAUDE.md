@@ -3170,3 +3170,11 @@ label, and its label already wrapped to two lines, which is unchanged);
 Categories' button now sits at the left under the heading instead of the
 right. Checked in Chromium at 1200px and 390px: no sideways scroll.
 Backtimer's Add item was left on the right (not asked).
+
+**Follow-up, same day:** John saw that Add category wasn't level with the
+word "Categories": the row centred it on the kicker and heading together.
+The "User-defined" kicker now sits above the row, so the heading, tag and
+button are centred on each other (measured: all three centres at the same
+y at 1200px). Phones unchanged (the button wraps under the heading).
+Backtimer: two mock-ups shown to John (Add item just after the "items ·
+drag to reorder" tag, or just after the total); not built yet.
