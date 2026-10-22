@@ -3281,3 +3281,12 @@ message on Week or the standalone Backtimer; no errors, no sideways scroll.
 
 **Merged to `main` 2026-10-22** at John's word (he confirmed the safety-net
 wording). `HOUSE-STYLE.md` re-copied to Hindcaster and Flowcharter.
+
+## House style §16: starting a new tool (2026-10-22, docs only, straight to `main`)
+
+At John's request: a checklist for starting a new tool, with the prompt he
+pastes into the first thread (handover in the repo under any name but
+`CLAUDE.md`, thread started on `main`, Claude copies the house-style files
+from here, then spec, plan, notes and numbered questions before any
+building). §10's "Starting a project" points to it. Re-copied to Hindcaster
+and Flowcharter.
