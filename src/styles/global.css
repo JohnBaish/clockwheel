@@ -177,3 +177,10 @@
 .safety-net { margin: var(--space-6); padding: var(--space-6); text-align: center; }
 .safety-net p { margin: 0 0 var(--space-4); }
 @media (max-width: 720px) { .safety-net .btn { min-height: 44px; } }
+
+/* Touch screens wider than a phone (an iPad, an iPhone Duo opened out) get the
+   computer layout, but are tapped like a phone, so their boxes are 16px too
+   (John, 22 October 2026). */
+@media (pointer: coarse) {
+  .plain-input, .input { font-size: 16px; }
+}

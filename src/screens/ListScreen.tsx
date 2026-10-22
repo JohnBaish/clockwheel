@@ -6,7 +6,7 @@ import { useDragReorder } from '../lib/useDragReorder';
 import { useIsNarrow } from '../lib/responsive';
 import { IconGrip, IconPin, IconPlus, IconNote, IconTrash } from '../lib/icons';
 import { PINS_ENABLED, NOTES_ENABLED } from '../config';
-import { selectAllSoon, toColon } from '../lib/timeInput';
+import { isTouch, selectAllSoon, toColon } from '../lib/timeInput';
 import { flushSync } from 'react-dom';
 
 const NARROW = 720;
@@ -94,7 +94,8 @@ export function ListScreen() {
       style={{
         appearance: 'none', WebkitAppearance: 'none', border: 'none', cursor: 'pointer',
         background: categories[s.c].color, color: categories[s.c].ink, font: 'inherit',
-        fontSize: isNarrow ? 16 : undefined,
+        // 16px on any touch screen, or an iPhone zooms in (iPads too: John, 22 October 2026).
+        fontSize: isNarrow || isTouch() ? 16 : undefined,
       }}
     >
       {categoryOrder.map((id) => <option key={id} value={id}>{categories[id].name}</option>)}

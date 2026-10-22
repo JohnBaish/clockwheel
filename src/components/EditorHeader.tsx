@@ -7,6 +7,7 @@ import { copyClockImage, copyListImage } from '../lib/exportImage';
 import { IconPrint } from '../lib/icons';
 import { PINS_ENABLED } from '../config';
 import { useIsNarrow } from '../lib/responsive';
+import { isTouch } from '../lib/timeInput';
 
 const HOURS = Array.from({ length: 24 }, (_, h) => h);
 
@@ -74,7 +75,7 @@ export function EditorHeader() {
             value={clock.hour}
             onChange={(e) => setClockHour(clock.id, +e.target.value)}
             // 16px on phones: iPhone zooms in on anything smaller when it's tapped.
-            style={{ padding: '2px 8px', fontSize: isNarrow ? 16 : '11px', width: 'auto' }}
+            style={{ padding: '2px 8px', fontSize: isNarrow || isTouch() ? 16 : '11px', width: 'auto' }}
           >
             {HOURS.map((h) => <option key={h} value={h}>{String(h).padStart(2, '0')}:00</option>)}
           </select>

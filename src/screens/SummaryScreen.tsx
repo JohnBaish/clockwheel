@@ -5,6 +5,7 @@ import { splitBg } from '../lib/color';
 import { computeSplit } from '../lib/clockStats';
 import { relativeTime } from '../lib/time';
 import { useIsNarrow } from '../lib/responsive';
+import { isTouch } from '../lib/timeInput';
 
 export function SummaryScreen() {
   const { clocks, clockOrder, week, outside, sumSel, setSumSel, openClock, categories, categoryOrder } = useApp();
@@ -30,7 +31,7 @@ export function SummaryScreen() {
           <span style={{ font: '700 11px var(--font-body)', letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--color-neutral-700)', flex: 'none' }}>Selected clock</span>
           <select
             className="input"
-            style={{ width: 240, maxWidth: '100%', padding: '6px 14px', fontSize: isNarrow ? 16 : '13.5px' }}
+            style={{ width: 240, maxWidth: '100%', padding: '6px 14px', fontSize: isNarrow || isTouch() ? 16 : '13.5px' }}
             value={sumSel}
             onChange={(e) => setSumSel(e.target.value)}
           >

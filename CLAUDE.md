@@ -3290,3 +3290,23 @@ pastes into the first thread (handover in the repo under any name but
 from here, then spec, plan, notes and numbered questions before any
 building). §10's "Starting a project" points to it. Re-copied to Hindcaster
 and Flowcharter.
+
+## Typing boxes 16px on any touch screen — LIVE (2026-10-22, branch `touch-16px`, merged the same day)
+
+After a look at the sites at iPad and iPhone Duo sizes (from the Hindcaster
+thread): iPads and an opened-out iPhone Duo are wider than 720px, so they get
+the computer layout, whose typing boxes were 11–15px; an iPhone zooms in when
+such a box is tapped, and an iPad may too (not confirmed). John agreed (after
+before/after pictures) to make them 16px on any touch screen. `global.css`:
+`.plain-input, .input` 16px under `@media (pointer: coarse)`; the three inline
+sizes (List's category pill, the hour picker, Summary's clock picker) use
+`isNarrow || isTouch()`. Computers with a mouse are unchanged (screenshots
+compared pixel for pixel). `HOUSE-STYLE.md` §6 now says so, and that tablets
+get the computer layout. The same change was made in Hindcaster and
+Flowcharter.
+
+**Verified:** build clean, lint the known warnings, checks 12 of 12. In
+Chromium with touch at 744px (iPad mini), 820, 890×626 (Duo, estimated),
+1032 and 1180: every typing box and list 16px; no sideways scroll, no errors
+on any screen; at 1200px with a mouse, unchanged; phones unchanged.
+**Couldn't be checked:** a real iPad.
