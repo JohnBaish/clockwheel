@@ -3291,6 +3291,25 @@ from here, then spec, plan, notes and numbered questions before any
 building). §10's "Starting a project" points to it. Re-copied to Hindcaster
 and Flowcharter.
 
+## The baish.net overview PDF (2026-10-22, docs only, straight to `main`)
+
+At John's request, a 24-page PDF describing every baish.net site (purpose,
+features, design system with hex colours, tech and hosting, status, issues and
+ideas), with 32 captioned screenshots at 1440px and 390px, for sharing with
+Claude in other chats. Saved in `design/overview/` with its source
+(`overview.html`) and `make.sh`, which builds the three repos' `main`, serves
+them locally, takes the screenshots (`capture.mjs`, with sample content typed
+in), prepares them (`prep.py`) and writes the PDF (`pdf.mjs`, which stops on
+anything spilling off a page). `LIVE=1` photographs the live sites instead.
+The screenshots themselves (`img/`) aren't kept in git; `make.sh` remakes
+them. Made from local builds because this session's network blocks
+`*.baish.net`. **To keep up to date:** HOUSE-STYLE §16 now says to update it
+after each new tool goes live, with John allowing `baish.net` and its
+subdomains in the environment first; §1 lists it. Verified: `make.sh` run end
+to end from the repo (24 pages, about 6 MB, fonts loaded, no overflow, no
+page errors or sideways scrolling, preview servers stopped afterwards).
+Re-copied `HOUSE-STYLE.md` to Hindcaster and Flowcharter.
+
 ## Typing boxes 16px on any touch screen — LIVE (2026-10-22, branch `touch-16px`, merged the same day)
 
 After a look at the sites at iPad and iPhone Duo sizes (from the Hindcaster

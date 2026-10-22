@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>baish.net – an overview of John Baish's sites</title>
+<style>
+@font-face { font-family: Caprasimo; font-weight: 400; src: url('../../node_modules/@fontsource/caprasimo/files/caprasimo-latin-400-normal.woff2'); }
+@font-face { font-family: Figtree; font-weight: 400; src: url('../../node_modules/@fontsource/figtree/files/figtree-latin-400-normal.woff2'); }
+@font-face { font-family: Figtree; font-weight: 400; font-style: italic; src: url('../../node_modules/@fontsource/figtree/files/figtree-latin-400-italic.woff2'); }
+@font-face { font-family: Figtree; font-weight: 600; src: url('../../node_modules/@fontsource/figtree/files/figtree-latin-600-normal.woff2'); }
+@font-face { font-family: Figtree; font-weight: 700; src: url('../../node_modules/@fontsource/figtree/files/figtree-latin-700-normal.woff2'); }
+@page { size: A4; margin: 0; }
+:root { --bg:#f5ead8; --surface:#ebddc5; --ink:#201e1d; --accent:#c67139; --accent7:#8c491a; --muted:#645c50; --line:rgba(32,30,29,.16); }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #fff; }
+body { font: 400 9.6pt/1.45 Figtree, sans-serif; color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.page { width: 210mm; height: 297mm; padding: 13mm 14mm 12mm; position: relative; overflow: hidden; break-after: page; background: #fff; }
+.page:last-child { break-after: auto; }
+.folio { position: absolute; bottom: 6mm; left: 14mm; right: 14mm; display: flex; justify-content: space-between; font-size: 7.5pt; color: var(--muted); border-top: 1px solid var(--line); padding-top: 1.5mm; }
+h1, h2, h3 { font-family: Caprasimo, serif; font-weight: 400; margin: 0; }
+h1 { font-size: 30pt; line-height: 1.1; }
+h2 { font-size: 19pt; line-height: 1.15; margin-bottom: 1mm; }
+h3 { font-size: 11.5pt; margin: 3.2mm 0 1mm; }
+.kicker { font-size: 7.5pt; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 1mm; }
+.lede { font-size: 10.5pt; color: var(--muted); margin: 1mm 0 2mm; }
+p { margin: 0 0 1.6mm; }
+ul { margin: 0 0 1.6mm; padding-left: 4.5mm; }
+li { margin: 0 0 .6mm; }
+b, strong { font-weight: 700; }
+code { font-family: ui-monospace, Menlo, monospace; font-size: 8.3pt; background: #f5ead8; padding: 0 1px; border-radius: 2px; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+.box { background: var(--bg); border-radius: 3mm; padding: 3mm 4mm; margin: 2mm 0; }
+.box h3 { margin-top: 0; }
+table { border-collapse: collapse; width: 100%; font-size: 8.6pt; margin: 1mm 0 2mm; }
+th { text-align: left; font-size: 7pt; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--line); padding: 1mm 1.5mm; }
+td { border-bottom: 1px solid var(--line); padding: 1mm 1.5mm; vertical-align: top; }
+.sw { display: inline-flex; align-items: center; gap: 1.5mm; margin: 0 3mm 1.2mm 0; font-size: 8pt; }
+.sw i { display: inline-block; width: 5mm; height: 5mm; border-radius: 1.2mm; border: 1px solid var(--line); }
+.sw code { background: none; }
+.fav { display: inline-flex; align-items: center; gap: 2mm; margin-right: 4mm; font-size: 8pt; }
+.fav img { width: 9mm; height: 9mm; }
+figure { margin: 0 0 3mm; }
+figure img { display: block; width: 100%; border: 1px solid var(--line); border-radius: 1.5mm; }
+figcaption { font-size: 8pt; color: var(--muted); margin-top: 1.2mm; line-height: 1.35; }
+figcaption b { color: var(--ink); }
+.strips { display: flex; gap: 2.5mm; align-items: flex-start; }
+.strips img { border: 1px solid var(--line); border-radius: 1.5mm; display: block; }
+.row { display: flex; gap: 5mm; align-items: flex-start; }
+.note { font-size: 8pt; color: var(--muted); }
+.section-head { display: flex; align-items: center; gap: 4mm; margin-bottom: 1mm; }
+.section-head img { width: 12mm; height: 12mm; }
+.toc td { font-size: 9pt; }
+.sample { display: inline-block; font-size: 6.8pt; letter-spacing: .08em; text-transform: uppercase; background: #ffe1d0; color: #643312; border-radius: 99px; padding: 0 1.8mm; font-weight: 700; }
+.real { background: #e1eecc; color: #3d472b; }
+</style>
+</head>
+<body>
+
+<!-- ============ 1 COVER ============ -->
+<section class="page">
+  <div class="kicker">Overview · Thursday October 22nd 2026</div>
+  <h1>baish.net</h1>
+  <p class="lede" style="font-size:13pt">John Baish's five sites: what each is for, how it looks and works, how it's built, and where it stands. Written as background for discussing themes and ideas.</p>
+
+  <div class="row" style="margin:3mm 0 4mm">
+    <span class="fav"><img src="img/fav-baish.svg">baish.net</span>
+    <span class="fav"><img src="img/fav-backtimer.svg">Backtimer</span>
+    <span class="fav"><img src="img/fav-clockmaker.svg">Clockmaker</span>
+    <span class="fav"><img src="img/fav-flowcharter.svg">Flowcharter</span>
+    <span class="fav"><img src="img/fav-hindcaster.svg">Hindcaster</span>
+  </div>
+
+  <table class="toc">
+    <tr><th>Site</th><th>Address</th><th>In one line (its own wording)</th><th>Pages</th></tr>
+    <tr><td><b>baish.net</b> (hub)</td><td>www.baish.net</td><td>Free browser tools by John Baish, plus his old blog.</td><td>2–3</td></tr>
+    <tr><td><b>Backtimer</b></td><td>backtimer.baish.net</td><td>Work out exactly when each item needs to start to hit your out-time.</td><td>4–6</td></tr>
+    <tr><td><b>Clockmaker</b></td><td>clockmaker.baish.net</td><td>Display a broadcast hour in a circular layout.</td><td>7–11</td></tr>
+    <tr><td><b>Flowcharter</b></td><td>flowcharter.baish.net</td><td>Create a flowchart from a list, or build it step by step.</td><td>12–15</td></tr>
+    <tr><td><b>Hindcaster</b></td><td>hindcaster.baish.net</td><td>Look back at yesterday's weather anywhere in England.</td><td>16–22</td></tr>
+    <tr><td colspan="3"><b>What the sites have in common</b>: shared design system, principles and ways of working</td><td>23–24</td></tr>
+  </table>
+
+  <div class="box">
+    <h3>How the screenshots were made</h3>
+    <ul>
+      <li><b>From the live code, served locally.</b> This session's network settings block <code>*.baish.net</code>, so the live sites couldn't be opened directly. Each site was instead built from the current <code>main</code> branch of its GitHub repo, which is what Vercel deploys to the live addresses: <code>JohnBaish/clockwheel</code> at <code>d8c3aee</code> (hub, Backtimer, Clockmaker), <code>JohnBaish/flowcharter</code> at <code>16e472e</code>, <code>JohnBaish/hindcaster</code> at <code>8027377</code>. Nothing was changed or deployed.</li>
+      <li><b>Two things only Vercel does were reproduced by hand:</b> the hub and backtimer.baish.net are picked by web address on Vercel, so the hub was opened as <code>landing.html</code> and Backtimer with the app's own test switch <code>?host=backtimer</code>, which gives the same standalone presentation. Vercel's visit-statistics script doesn't exist locally (harmless).</li>
+      <li><b>Sizes:</b> computer at 1440px wide, phone at 390px wide with touch emulation (drawn at twice the resolution). All captures are full page. Very tall phone pages are split into strips shown side by side, read left to right.</li>
+      <li><b>Content:</b> captures marked <span class="sample">sample</span> use made-up content typed in for the picture (a running order, a flowchart). Clockmaker's clock is the app's own built-in Example. Hindcaster's figures are <span class="sample real">real</span>: its final update for Wednesday October 21st, made at 9:30am on October 22nd.</li>
+      <li><b>Checks:</b> Chromium reported no page errors and no sideways scrolling on any capture, and the brand fonts loaded every time.</li>
+      <li><b>Dark mode:</b> none of the sites has one. The house style says "Light theme only — there is no dark mode", and Flowcharter's spec lists dark mode under "not in this version". So there are no dark-mode captures.</li>
+      <li><b>Help and about panels</b> included: Clockmaker's and Flowcharter's Guide screens, Backtimer's first-visit walkthrough and its folded explainer, Flowcharter's "how would you like to make it?" card, Hindcaster's "About these figures", and each site's footer notice.</li>
+    </ul>
+  </div>
+
+  <div class="box">
+    <h3>Where the written pages come from</h3>
+    <p>The projects' own notes, read today: <code>HOUSE-STYLE.md</code> (shared by all), <code>SEO-HANDOVER.md</code>, each repo's <code>CLAUDE.md</code> log, and the <code>SPEC.md</code> and <code>PLAN.md</code> files for Flowcharter and Hindcaster (Clockmaker and Backtimer have no separate spec; their record is the log). Colours and versions were read from the code itself. Where something is an observation of mine rather than written down, it says so.</p>
+  </div>
+  <div class="folio"><span>baish.net overview</span><span>1</span></div>
+</section>
+
+<!-- ============ 2 HUB ============ -->
+<section class="page">
+  <div class="section-head"><img src="img/fav-baish.svg"><div><div class="kicker">Site 1 of 5</div><h2>baish.net — the hub</h2></div></div>
+  <p class="lede">A one-page front door at <b>www.baish.net</b> (the bare baish.net redirects there). Search title: "baish.net – free browser tools by John Baish".</p>
+  <div class="cols">
+    <div>
+      <h3>Purpose and audience</h3>
+      <p>For anyone who arrives at the domain out of curiosity, rather than at a particular tool. Before September 30th 2026 the bare domain went to John's old Blogspot blog; it now lands somewhere useful, and lists every tool.</p>
+      <h3>Main features</h3>
+      <ul>
+        <li>Five whole-card links: Backtimer, Clockmaker, Flowcharter, Hindcaster (added October 20th) and <b>John's Blog</b> (jbaish.blogspot.com, "daily blog entries from 2006 to 2010… archived for nostalgia and curiosity value").</li>
+        <li>Its own link-preview image (a lowercase "b" on the dial) and favicon.</li>
+        <li>Search basics: title, description, canonical address, robots.txt and sitemap; registered in Google Search Console (one Domain property covers every subdomain).</li>
+        <li>Standing rule from John: when tools are added or changed, update the hub's title and description to match.</li>
+      </ul>
+      <h3>Tech stack and hosting</h3>
+      <ul>
+        <li>Lives in the <b>clockwheel</b> repo (public) as <code>landing.html</code>, a third entry point in the same Vite build as Clockmaker and Backtimer, and the same Vercel project.</li>
+        <li>Deliberately <b>not</b> a React app: its script only imports the shared CSS and Vercel Analytics' plain <code>inject()</code>, so it loads in a few kilobytes rather than the app's bundle.</li>
+        <li>A small Vercel Edge Middleware (<code>middleware.ts</code>) serves it when the address is baish.net or www.baish.net, and gives each domain its own robots.txt and sitemap.xml.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Design system</h3>
+      <p>Exactly the shared baish.net style (page 23): cream page <code>#f5ead8</code>, cards in <code>#ebddc5</code>, ink <code>#201e1d</code>, terracotta <code>#c67139</code> for the small "JOHN BAISH" kicker. Card titles in Caprasimo, descriptions in Figtree. One centred column of rounded cards with a hover tint in terracotta: the one place in the family where a whole card says "click me".</p>
+      <div><span class="fav"><img src="img/fav-baish.svg">Favicon: lowercase "b" — ink stem, terracotta bowl, on the cream disc with terracotta ring</span></div>
+      <figure style="margin-top:2mm"><img src="img/og-baish.png"><figcaption><b>Link-preview image</b> (1200×630), as shown when the address is shared: "baish.net — John Baish's websites".</figcaption></figure>
+      <h3>Status</h3>
+      <ul>
+        <li>Live, complete. All four tools listed; Search Console set up October 17th; indexing requested again October 20th.</li>
+        <li>Nothing open in the notes beyond the update-the-hub rule above. clockwheel.baish.net (Clockmaker's old name) also still works; its canonical tag points to clockmaker.baish.net.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="folio"><span>baish.net overview · Hub</span><span>2</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">baish.net · screenshots</div>
+  <div class="row">
+    <figure style="flex:0 0 128mm"><img src="img/hub-desktop.jpg"><figcaption><b>Fig 1.</b> The hub on a computer (1440px, full page). Five cards in a centred column; tools in alphabetical order, the blog last.</figcaption></figure>
+    <figure style="flex:0 0 46mm"><img src="img/hub-phone.jpg"><figcaption><b>Fig 2.</b> The hub on a phone (390px, full page). The same cards, full width.</figcaption></figure>
+  </div>
+  <div class="box" style="margin-top:4mm">
+    <h3>Observation</h3>
+    <p>The hub is the only page that describes all the tools side by side, and it currently does it in one line each. Each card's line is its tool's own short description; none mentions who the tool is for (three of the four were built with broadcasters in mind). That's a possible theme for discussion: whether the hub should group or introduce the tools, or stay a plain list.</p>
+  </div>
+  <div class="folio"><span>baish.net overview · Hub</span><span>3</span></div>
+</section>
+
+<!-- ============ BACKTIMER ============ -->
+<section class="page">
+  <div class="section-head"><img src="img/fav-backtimer.svg"><div><div class="kicker">Site 2 of 5</div><h2>Backtimer</h2></div></div>
+  <p class="lede"><b>backtimer.baish.net</b> · "Backtimer – free backtiming calculator for radio and TV". Also a tab inside Clockmaker.</p>
+  <div class="cols">
+    <div>
+      <h3>Purpose and audience</h3>
+      <p>Radio and TV producers and presenters who need a sequence of items to finish exactly on time, typically the news at the top of the hour. You set the <b>out-time</b> and list the items before it with their durations; Backtimer works backwards and shows when each one has to start. It began on September 29th 2026 as a screen inside Clockmaker and was given its own address the same day, because people were to try it before Clockmaker.</p>
+      <h3>Main features</h3>
+      <ul>
+        <li>Out-time in minutes and seconds; "0:00" means the top of the hour and shows as 60:00.</li>
+        <li>Items listed latest first (the one just before the out-time at the top), each new item added below = earlier. Start times worked out live; anything that falls before :00 reads as a time in the previous hour (e.g. 58:22), in terracotta, with a note in the header.</li>
+        <li><b>Reverse</b> shows the same list earliest first, without changing the data. Drag the grip to reorder (mouse and touch).</li>
+        <li>Total running time; Print; Clear (with a confirmation); Import and Export of a small JSON file (standalone site only).</li>
+        <li><b>First-visit walkthrough:</b> four cards that collect the out-time and first item, so people end with a working row; "Don't show this again".</li>
+        <li>Phone-friendly entry: digits keypad with "." turned into ":", "3:" read as 3:00, a full-width Add item button.</li>
+        <li>A folded explainer ("What is backtiming?", "How do I use Backtimer?") for first-time visitors and search, and a link to Clockmaker and the hub in the footer.</li>
+        <li>Warns, and stops saving, if another browser tab has changed the list.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Design system</h3>
+      <p>The shared style (page 23). One screen, so no menu: the nav bar just says "Backtimer" with the "saved … ago" tag. A fixed-width table on a computer (Starts · Item · Dur); a stack of label-and-value cards on a phone. Durations sit in always-outlined boxes (<code>.outlined-input</code>) so they read as editable; start times are plain text, as they're worked out. Figtree with tabular figures for times.</p>
+      <div class="sw"><i style="background:#c67139"></i>terracotta <code>#c67139</code> — overrunning start times, buttons</div>
+      <div><span class="fav"><img src="img/fav-backtimer.svg">Favicon: the Clockmaker clock reversed out (solid terracotta disc, ink and cream hands), so the two read as a pair</span></div>
+      <h3>Tech stack and hosting</h3>
+      <ul>
+        <li>Same code as Clockmaker (repo <b>clockwheel</b>, public): Vite 8, React 19, TypeScript 6, Lucide icons, self-hosted fonts. Its own HTML shell, <code>backtimer.html</code>, for its title, preview image and favicon.</li>
+        <li>One Vercel project serves clockmaker, backtimer and baish.net; the app checks the address and shows only Backtimer on backtimer.baish.net. Because that's a different address, its saved list is separate from Clockmaker's Backtimer tab.</li>
+        <li>Data saved only in the browser (<code>localStorage</code>); anonymous Vercel visit statistics.</li>
+      </ul>
+      <h3>Status, known issues and ideas</h3>
+      <ul>
+        <li><b>Live</b>, shared with trial users since late September; walkthrough and phone entry live since October 13th, Import/Export since October 15th.</li>
+        <li>Deliberately left alone after the October 17th review: an overrun of more than an hour wraps round the dial (it can't tell one hour early from two); the phone toolbar wraps to three lines.</li>
+        <li>Not checked on a real iPhone: keyboard behaviour (only emulated).</li>
+        <li>No open feature requests in the notes.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="folio"><span>baish.net overview · Backtimer</span><span>4</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Backtimer · screenshots · working state</div>
+  <div class="row">
+    <div style="flex:1">
+      <figure><img src="img/bt-working-desktop.jpg"><figcaption><b>Fig 3.</b> <span class="sample">sample</span> A running order to the news at 60:00 (1440px, full page). Seven items totalling 17:15, from "Station ident" (starts 59:52) back to "Song" (42:45). Below: the folded explainer and the footer.</figcaption></figure>
+      <figure><img src="img/bt-explainer.jpg" style="width:70%"><figcaption><b>Fig 4.</b> The explainer with both parts opened (shown only on backtimer.baish.net, not in Clockmaker's tab).</figcaption></figure>
+    </div>
+    <figure style="flex:0 0 52mm"><img src="img/bt-working-phone.jpg"><figcaption><b>Fig 5.</b> <span class="sample">sample</span> The same list on a phone (390px, full page): one card per item, start time under the name, a full-width "+ Add item" button, then the explainer and footer.</figcaption></figure>
+  </div>
+  <div class="folio"><span>baish.net overview · Backtimer</span><span>5</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Backtimer · screenshots · first visit</div>
+  <div class="row">
+    <figure style="flex:1"><img src="img/bt-first-desktop.jpg"><figcaption><b>Fig 6.</b> First visit on a computer (1440px, full page). The getting-started walkthrough, step 1 of 4, sits under the empty table, centred on the Item column. Its four cards ask for the out-time, the last item's name and its duration, then show the first start time.</figcaption></figure>
+    <figure style="flex:0 0 46mm"><img src="img/bt-first-phone.jpg"><figcaption><b>Fig 7.</b> First visit on a phone (390px, full page). The card sits at the top, above where a phone keypad would cover the screen.</figcaption></figure>
+  </div>
+  <div class="folio"><span>baish.net overview · Backtimer</span><span>6</span></div>
+</section>
+
+<!-- ============ CLOCKMAKER ============ -->
+<section class="page">
+  <div class="section-head"><img src="img/fav-clockmaker.svg"><div><div class="kicker">Site 3 of 5</div><h2>Clockmaker</h2></div></div>
+  <p class="lede"><b>clockmaker.baish.net</b> · "Clockmaker – free radio hot clock &amp; format clock maker". Called Clockwheel until September 30th 2026.</p>
+  <div class="cols">
+    <div>
+      <h3>Purpose and audience</h3>
+      <p>Radio producers and programmers who plan the shape of a broadcast hour: the order and length of songs, news, travel, idents and features, known as a <b>format clock</b>, "hot clock" (American), broadcast clock or clockwheel. Clockmaker builds a clock for each hour, draws it as a circle or a list, and lays clocks out across a week. It was rebuilt in React from a Claude Design prototype and has been used at work by John since late September.</p>
+      <h3>Main features</h3>
+      <ul>
+        <li><b>Library</b> of clocks (open, duplicate, delete, rename), with Export/Import of the whole library as a backup.</li>
+        <li><b>List</b>: segments with name, category and duration; times worked out from the hour; keyboard-first (Tab, arrow keys), drag to reorder; a "balanced" tag when the hour adds up to 60:00, and a song count.</li>
+        <li><b>Clock</b>: the hour drawn as a ring, labels on the slices or as callouts with leader lines (callouts can be dragged; double-click resets); a percentage key by category.</li>
+        <li><b>Week</b> ("Schedule"): assign clocks to hours of the week, mark hours active or inactive, copy and paste, tap-to-select on phones.</li>
+        <li><b>Summary</b> of all clocks; <b>Categories</b> you can add, rename, recolour and reorder.</li>
+        <li><b>Backtimer</b> as a tab (page 4), and a <b>Guide</b> in John's own words, shown on a first visit.</li>
+        <li>Print (Clock, List, Backtimer, Guide) and Copy image (the clock as a PNG with the brand fonts embedded).</li>
+        <li>Each screen has its own address (#clock, #week…), so the phone's Back stays inside the tool. A safety net shows a message, not a blank page, if a screen fails.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Design system</h3>
+      <p>The shared style (page 23), in its fullest form: this repo holds the master copy. A nav bar with a terracotta "New clock" button and eight links (a hamburger on phones), a 1100px content column, small uppercase terracotta kickers over Caprasimo headings, and text-style action buttons top right (Print, Duplicate, Copy image, Done). The clock itself sits on a large rounded card.</p>
+      <p style="margin-bottom:.6mm">Example clock's category colours (all from the shared ramps or near them):</p>
+      <div class="sw"><i style="background:#ccdbb2"></i>Music <code>#ccdbb2</code></div>
+      <div class="sw"><i style="background:#d67f48"></i>Junction <code>#d67f48</code></div>
+      <div class="sw"><i style="background:#000"></i>News <code>#000000</code></div>
+      <div class="sw"><i style="background:#ffe1d0"></i>Imaging <code>#ffe1d0</code></div>
+      <div class="sw"><i style="background:#b0a6d6"></i>Content <code>#b0a6d6</code></div>
+      <p class="note">New clocks take colours from a rotating set of 14 terracottas, olives and creams for the Week grid.</p>
+      <div><span class="fav"><img src="img/fav-clockmaker.svg">Favicon: clock at 10:10, ink hour hand, terracotta minute hand, cream disc, terracotta ring</span></div>
+      <h3>Tech stack and hosting</h3>
+      <ul>
+        <li>Repo <b>JohnBaish/clockwheel</b> (public, no licence on purpose). Vite 8, React 19, TypeScript 6, Lucide icons, fonts self-hosted with @fontsource, oxlint. <code>npm run check</code>: 12 plain-script checks of the sums.</li>
+        <li>No backend: state in <code>localStorage</code> (key <code>clockwheel-state-v2</code>, never to be renamed). Vercel hosting from <code>main</code>; anonymous Vercel Web Analytics.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="folio"><span>baish.net overview · Clockmaker</span><span>7</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Clockmaker · status</div>
+  <div class="cols">
+    <div>
+      <h3>Current status</h3>
+      <ul>
+        <li><b>Live</b> and open to other users since early October (Guide and privacy wording written for them, October 4th to 6th).</li>
+        <li>A full "fresh look" review on October 17th led to more than a dozen fixes, live October 18th (empty states, busy clocks, Week search and phone selection, Categories drag on touch, iPhone zoom, the Back button, safer imports and more).</li>
+        <li>October 18th: the two-tab warning and the number rule. October 20th: Add buttons moved next to their labels. October 22nd: the safety net and automatic checks.</li>
+      </ul>
+      <h3>Known issues (reviewed and left alone)</h3>
+      <ul>
+        <li>Some phone buttons 34–36px tall (house rule is 44px); small clock-face labels on phones.</li>
+        <li>An hour over 60:00 draws over its own start; an hour under 60:00 leaves an empty wedge.</li>
+        <li>Some deletes have no confirmation; Week isn't keyboard-friendly; eight harmless lint warnings.</li>
+        <li>Not checked on real iPhones: no zoom on four boxes, tapping hours on Week, the Back gesture. Copy image not checked in Safari or Firefox.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Hidden, parked and out of scope</h3>
+      <ul>
+        <li><b>Pins (anchors) and per-segment notes</b> were built, then hidden behind switches at John's request for launch. The code and data are intact for a possible return.</li>
+        <li>Dropped with pins: "over by 2:30 before the 07:29 anchor".</li>
+        <li>Out of scope without a backend: change history, real shareable links, multi-user sharing. A "clear everything" button was considered and decided against.</li>
+        <li>An investigated report of callouts not returning to the ring couldn't be reproduced.</li>
+      </ul>
+      <div class="box">
+        <h3>Observation</h3>
+        <p>Clockmaker is the family's origin: the design system, house style, favicon and preview-image recipes, review procedure and much of the shared code (phone helpers, drag-to-reorder, two-tab warning) were first worked out here and are copied from this repo to the others.</p>
+      </div>
+    </div>
+  </div>
+  <figure style="margin-top:2mm"><img src="img/og-clockmaker.png" style="width:60%"><figcaption><b>Fig 8.</b> Clockmaker's link-preview image (1200×630).</figcaption></figure>
+  <div class="folio"><span>baish.net overview · Clockmaker</span><span>8</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Clockmaker · screenshots · an example hour</div>
+  <figure><img src="img/cm-clock-desktop.jpg"><figcaption><b>Fig 9.</b> The Clock screen on a computer (1440px, full page), showing the built-in <b>Example</b> clock for 10:00: 18 segments adding up to exactly 60:00 ("balanced", 8 songs). Short items too narrow for their label become callouts with leader lines (Ident, Travel, Tease next item, Audio / story, Weather / Trail / Travel). The key below gives each category's share of the hour.</figcaption></figure>
+  <div class="row">
+    <figure style="flex:0 0 52mm"><img src="img/cm-clock-phone.jpg"><figcaption><b>Fig 10.</b> The same clock on a phone (390px, full page), with the hamburger menu.</figcaption></figure>
+    <figure style="flex:1"><img src="img/cm-categories-desktop.jpg"><figcaption><b>Fig 11.</b> Categories (the nearest thing to a settings screen): add, rename, recolour, reorder; a category can't be deleted while a clock uses it.</figcaption></figure>
+  </div>
+  <div class="folio"><span>baish.net overview · Clockmaker</span><span>9</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Clockmaker · screenshots · List, Library and Week</div>
+  <div class="row">
+    <div style="flex:1">
+      <figure><img src="img/cm-list-desktop.jpg"><figcaption><b>Fig 12.</b> The Example clock as a List (1440px, full page): time worked out from 10:00, segment name, category pill, duration in an outlined box, drag grips and bins.</figcaption></figure>
+      <div class="row" style="gap:3mm"><figure style="flex:1"><img src="img/cm-library-desktop.jpg"><figcaption><b>Fig 13.</b> The Library (1440px), with Import/Export and the footer reminder that clocks are saved only in this browser.</figcaption></figure>
+      <figure style="flex:1"><img src="img/cm-week-desktop.jpg"><figcaption><b>Fig 14.</b> <span class="sample">sample</span> Week, with the Example clock given to 10:00 and 11:00 on weekdays. Hatched cells are inactive hours.</figcaption></figure></div>
+    </div>
+    <div class="strips" style="flex:0 0 64mm">
+      <img src="img/cm-list-phone-s1.jpg" style="width:31mm"><img src="img/cm-list-phone-s2.jpg" style="width:31mm">
+    </div>
+  </div>
+  <p class="note" style="margin-left:auto;width:64mm;margin-top:-1mm"><b style="color:var(--ink)">Fig 15.</b> The List on a phone (390px, full page, in two strips): one card per segment, then a full-width "+ Add segment".</p>
+  <div class="folio"><span>baish.net overview · Clockmaker</span><span>10</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Clockmaker · screenshots · the Guide (help)</div>
+  <div class="row">
+    <figure style="flex:1"><img src="img/cm-guide-desktop.jpg"><figcaption><b>Fig 16.</b> The Guide on a computer (1440px, full page), shown automatically on a first visit. John's own text: one short section per screen, a section on the terms "format clock, hot clock, broadcast clock", and "About Clockmaker" with the privacy wording and contact address.</figcaption></figure>
+    <div style="flex:0 0 64mm">
+      <div class="strips"><img src="img/cm-guide-phone-s1.jpg" style="width:31mm"><img src="img/cm-guide-phone-s2.jpg" style="width:31mm"></div>
+      <p class="note" style="margin-top:1.2mm"><b style="color:var(--ink)">Fig 17.</b> The Guide on a phone (390px, full page, in two strips).</p>
+    </div>
+  </div>
+  <div class="folio"><span>baish.net overview · Clockmaker</span><span>11</span></div>
+</section>
+
+<!-- ============ FLOWCHARTER ============ -->
+<section class="page">
+  <div class="section-head"><img src="img/fav-flowcharter.svg"><div><div class="kicker">Site 4 of 5</div><h2>Flowcharter</h2></div></div>
+  <p class="lede"><b>flowcharter.baish.net</b> · "Flowcharter – free flowchart maker from a simple list". Started October 15th 2026.</p>
+  <div class="cols">
+    <div>
+      <h3>Purpose and audience</h3>
+      <p>Anyone who needs to describe a fairly simple process as a flowchart (a few steps to a couple of dozen, with the odd question and loop) without dragging boxes about. You type the steps as a list, or answer questions on cards, and Flowcharter draws the chart to the usual conventions, from John's guide <i>Flowchart Symbols: A Simple Guide</i>. Big decision trees must work but aren't what it's optimised for. Its examples were changed from newsreader rotas to booking a restaurant table on October 18th, to keep them general.</p>
+      <h3>Main features</h3>
+      <ul>
+        <li><b>List</b>: one row per step; the shape type is guessed from the words (a "?" makes a Question; "Start"/"End" words make a Start/End) and can be chosen; questions have 2–6 answers, each with a "goes to" (including "+ New step"); loops; "nothing leads here" flags; Undo after a delete.</li>
+        <li><b>Chart</b>: drawn automatically, with right-angled lines, answers on the lines, and a key of the shapes used. Direction Automatic (picks down or across to fit) or forced. Click a box or answer to change its words.</li>
+        <li><b>Step by step</b>: conversational cards ("What happens next?") that build the chart as you go, with the chart drawn beside them; Back really undoes; switch to the List at any time.</li>
+        <li>Library with Export/Import; Print (paper direction follows the chart); Copy image (PNG with fonts embedded); Full screen for wide charts on phones; Guide shown on a first visit.</li>
+        <li>Two-tab warning; Back gesture stays inside the tool; safety net.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Design system</h3>
+      <p>The shared style (page 23) for the page; a nav with a terracotta "New chart" button and two links (Library, Guide), which stay in the bar on phones. A List | Chart pair of tabs with small icons. The chart has its own palette: seven pale fills, each with a 1.5px ink outline and ink text, checked for at least 10:1 contrast so a black-and-white print still reads.</p>
+      <div class="sw"><i style="background:#d8e6bd"></i>Start / End <code>#d8e6bd</code></div>
+      <div class="sw"><i style="background:#d2def2"></i>Action <code>#d2def2</code></div>
+      <div class="sw"><i style="background:#f4dd8e"></i>Question <code>#f4dd8e</code></div>
+      <div class="sw"><i style="background:#e4d3f0"></i>Data in/out <code>#e4d3f0</code></div>
+      <div class="sw"><i style="background:#bfe3e1"></i>Standard routine <code>#bfe3e1</code></div>
+      <div class="sw"><i style="background:#f3cfd6"></i>Document <code>#f3cfd6</code></div>
+      <div class="sw"><i style="background:#f7cba9"></i>Delay <code>#f7cba9</code></div>
+      <div><span class="fav"><img src="img/fav-flowcharter.svg">Favicon: an ink box, a line and a terracotta dot on the cream disc</span></div>
+      <h3>Tech stack and hosting</h3>
+      <ul>
+        <li>Repo <b>JohnBaish/flowcharter</b> (public). The same stack as Clockmaker plus <b>elkjs</b> (the Eclipse layout engine, loaded only when a chart is drawn) for the layout; text measured in the real font to size each shape.</li>
+        <li>All list rules in one file of plain functions, tested by <code>npm run check</code> (34 list checks and 12 layout checks, run on ten test charts both ways).</li>
+        <li><code>localStorage</code> key <code>flowcharter-state-v1</code>; its own Vercel project; Web Analytics on.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="folio"><span>baish.net overview · Flowcharter</span><span>12</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Flowcharter · status · and a flowchart from a short list</div>
+  <div class="cols" style="grid-template-columns: 1fr 1.25fr">
+    <div>
+      <h3>Current status</h3>
+      <ul>
+        <li><b>Live</b> since October 15th, first tried by about three people; on the hub since October 16th; search set up October 18th.</li>
+        <li>Built in five stages (list, chart, launch, "+ New step", the cards), then a full review (October 17th) with all its fixes and optional items built.</li>
+        <li>October 20th: Back undoes on the cards; editing words on the Chart; the List | Chart tabs. October 22nd: safety net and wording.</li>
+      </ul>
+      <h3>Known issues and open points</h3>
+      <ul>
+        <li>The Guide is a trimmed draft; John plans to rethink its length and look.</li>
+        <li>Left alone after review: a path set to "ends here" without an End box counts as finished on the cards; returning to the cards starts at the first loose end.</li>
+        <li>Forced "Across" can route a loop the long way round (Automatic avoids it).</li>
+        <li>Not checked on a real iPhone: pinch-zoom in Full screen, dashed lines in Safari.</li>
+      </ul>
+      <h3>Ideas and not in this version</h3>
+      <ul>
+        <li><b>Parked:</b> moving boxes by hand (the data still has room for it).</li>
+        <li><b>Not now:</b> swimlanes ("possibly never"), share links, automatic connector pairs for long lines, dark mode.</li>
+      </ul>
+    </div>
+    <figure><img src="img/fc-chart-desktop.jpg"><figcaption><b>Fig 18.</b> <span class="sample">sample</span> The Chart drawn from an eight-row list, "Booking a table" (1440px, full page). Automatic chose Down. The question's "No" loops back to "Choose a restaurant"; the key lists only the shapes used.</figcaption></figure>
+  </div>
+  <figure style="width:60%"><img src="img/og-flowcharter.png"><figcaption><b>Fig 19.</b> Flowcharter's link-preview image.</figcaption></figure>
+  <div class="folio"><span>baish.net overview · Flowcharter</span><span>13</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Flowcharter · screenshots · List, phone and the cards</div>
+  <div class="row">
+    <div style="flex:1">
+      <figure><img src="img/fc-list-desktop.jpg"><figcaption><b>Fig 20.</b> <span class="sample">sample</span> The list behind Fig 18 (1440px, full page): text, type (shape), and where each row goes; the question's two answers sit indented beneath it.</figcaption></figure>
+      <figure><img src="img/fc-steps-desktop.jpg"><figcaption><b>Fig 21.</b> "New chart" asks how you'd like to make it: Step by step (the cards) or a blank list.</figcaption></figure>
+    </div>
+    <figure style="flex:0 0 42mm"><img src="img/fc-chart-phone.jpg"><figcaption><b>Fig 22.</b> <span class="sample">sample</span> The chart on a phone (390px, full page), shrunk to fit the width.</figcaption></figure>
+    <div style="flex:0 0 42mm">
+      <div class="strips"><img src="img/fc-list-phone-s1.jpg" style="width:20mm"><img src="img/fc-list-phone-s2.jpg" style="width:20mm"></div>
+      <p class="note" style="margin-top:1.2mm"><b style="color:var(--ink)">Fig 23.</b> <span class="sample">sample</span> The list on a phone (two strips): one card per step.</p>
+    </div>
+  </div>
+  <div class="folio"><span>baish.net overview · Flowcharter</span><span>14</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Flowcharter · screenshots · the Guide (help)</div>
+  <div class="row">
+    <figure style="flex:1"><img src="img/fc-guide-desktop.jpg"><figcaption><b>Fig 24.</b> The Guide on a computer (1440px, full page), shown on a first visit to an empty Library: the two ways to build, the shapes with their meanings (drawn as real shapes), tips, "What's a flowchart?" and where charts are kept.</figcaption></figure>
+    <div style="flex:0 0 58mm">
+      <div class="strips"><img src="img/fc-guide-phone-s1.jpg" style="width:28mm"><img src="img/fc-guide-phone-s2.jpg" style="width:28mm"></div>
+      <p class="note" style="margin-top:1.2mm"><b style="color:var(--ink)">Fig 25.</b> The Guide on a phone (two strips).</p>
+    </div>
+  </div>
+  <div class="folio"><span>baish.net overview · Flowcharter</span><span>15</span></div>
+</section>
+
+<!-- ============ HINDCASTER ============ -->
+<section class="page">
+  <div class="section-head"><img src="img/fav-hindcaster.svg"><div><div class="kicker">Site 5 of 5</div><h2>Hindcaster</h2></div></div>
+  <p class="lede"><b>hindcaster.baish.net</b> · "Hindcaster – yesterday's weather in England". Tagline: "See yesterday's and last night's weather at a glance." Started October 17th 2026.</p>
+  <div class="cols">
+    <div>
+      <h3>Purpose and audience</h3>
+      <p>Broadcast people who need reliable figures for yesterday and last night to read on air, and weather enthusiasts. It answers "what was the weather yesterday?" for anywhere in England. The Met Office's free feed keeps only 48 hours, so Hindcaster collects and stores the readings itself. The name plays on "forecaster" (a "hindcast" is really a meteorological term for re-running a model over the past; used loosely, on purpose).</p>
+      <h3>Main features</h3>
+      <ul>
+        <li><b>Choose a place</b> by postcode district (2,210 in England), ceremonial county (48), region (9) or all of England. The last choice is remembered on the device. The choice is kept after "#" in the address, so it never reaches a server.</li>
+        <li><b>Summary</b> in plain sentences: the day and night's weather across the area, highs and lows ("around freezing point"), rain spells, wind and gusts.</li>
+        <li><b>Weather stations</b> (Met Office): hourly high 9am–9pm, wind, daytime weather, and the night's low 9pm–9am. A postcode gets three stations around it; an area shows highest, middle and lowest per measure, plus the full list.</li>
+        <li><b>Rainfall</b> (Environment Agency gauges), midnight to midnight: the eight nearest gauges for a postcode, with distance and bars; for an area, the spread and the wettest and driest.</li>
+        <li><b>Compared with a year ago</b>: three cards (high, low, rain) against the same places over a fortnight centred a year earlier, with small strip charts on fixed scales; the section can be moved to the top.</li>
+        <li><b>Three updates a day</b>: early (5:50am, the night flagged "incomplete"), final (9:30am), and from tonight an evening update (9:30pm, the day so far).</li>
+        <li>"About these figures", print rules, clock-change notes, and checks on implausible gauge readings.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Design system</h3>
+      <p>The shared style (page 23), applied to a reading page rather than an editing tool: no "saved" tag, just a tag naming the update ("Wednesday's final update · 9:30am"). A place bar with a "Change" button, a date heading, a Summary card, then sections each ending in a small grey source line. Tables on a computer, label-and-value cards on a phone (labels in one narrow column, values aligned beside them). Small green "FINAL" / "MIDNIGHT TO MIDNIGHT" badges; a terracotta "NIGHT INCOMPLETE" in the early update.</p>
+      <div class="sw"><i style="background:#c67139"></i>this year <code>#c67139</code></div>
+      <div class="sw"><i style="background:#474238"></i>a year ago <code>#474238</code></div>
+      <div class="sw"><i style="background:#ffc6a5"></i>rain bars <code>#ffc6a5</code></div>
+      <p class="note">Chart colours checked for colour-blind readers; temperatures don't start at zero, rain does.</p>
+      <div><span class="fav"><img src="img/fav-hindcaster.svg">Favicon: terracotta sun behind an ink cloud, on the cream disc and ring (the first to need shapes, not two strokes)</span></div>
+      <h3>Data sources</h3>
+      <ul>
+        <li><b>Met Office Weather DataHub</b>, land observations: 92 stations (80 in England, the rest just over the borders), 89 reporting. Free plan, 360 requests a day; Hindcaster caps itself at 330.</li>
+        <li><b>Environment Agency</b> real-time rainfall: 829 of 995 gauges offered, after checks of each gauge's live readings against the EA's quality-checked totals, re-run monthly.</li>
+        <li>Last year: <b>MIDAS Open</b> hourly temperatures (CEDA) and the <b>EA Hydrology</b> archive. Place names, postcodes and boundaries from <b>Ordnance Survey</b> open data. Each source credited word for word, plus "not connected with or endorsed by the Met Office or the Environment Agency".</li>
+      </ul>
+    </div>
+  </div>
+  <div class="folio"><span>baish.net overview · Hindcaster</span><span>16</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Hindcaster · tech, status and plans</div>
+  <div class="cols">
+    <div>
+      <h3>Tech stack and hosting</h3>
+      <ul>
+        <li>Repo <b>JohnBaish/hindcaster</b>, <b>private</b> (it stores another organisation's raw readings). Page: Vite 8, React 19, TypeScript 6; no icon library.</li>
+        <li><b>A collector</b> (Node scripts) runs in GitHub Actions three times a day, started by cron-job.org (GitHub's own schedule proved late or absent). It fetches, stores the readings in <code>data/</code> in the repo (about 150 MB a year), works out the update and commits it to <code>main</code>; each commit makes Vercel rebuild the site.</li>
+        <li>All figure rules (windows, highs, lows, rain totals, which update) are plain functions with four sets of automatic checks.</li>
+        <li>The page's figures are split into parts loaded only by the views that need them. Nothing about a choice is sent to the server; visit statistics have the "#" part removed.</li>
+        <li>Secrets: the Met Office key lives only as a GitHub Actions secret.</li>
+        <li>Monthly GitHub job re-checks the gauges (2nd of each month).</li>
+      </ul>
+      <h3>Current status</h3>
+      <ul>
+        <li><b>Live</b> for all of England since October 20th (the first version covered only the Reading area); on the hub and in Search Console the same day. Year-ago comparison live October 20th, widened to a fortnight October 21st.</li>
+        <li>The evening update was merged today; its first run is due tonight at 9:30pm.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Known issues and things to watch</h3>
+      <ul>
+        <li>The 9pm reading counts in both day and night, which can tip a day's sky towards "sunny" (John: "we should definitely come back to this").</li>
+        <li>The EA's bulk rain list sometimes leaves gauges out (139 one morning); a one-by-one fallback now fills them in.</li>
+        <li>Some gauge place lines are quirky (Hornsey reads "near City of London").</li>
+        <li>In summer, "the night isn't over" at 5:50am when it's already light (late April to mid-August); wording to decide.</li>
+      </ul>
+      <h3>Dates in the plan</h3>
+      <table>
+        <tr><td>2 Nov 2026</td><td>first automatic monthly gauge re-check</td></tr>
+        <tr><td>by 25 Dec 2026</td><td>a NOAA stand-in for last year's temperatures until MIDAS Open publishes 2026 (about July 2027)</td></tr>
+        <tr><td>16 Jan 2027</td><td>cron-job.org's GitHub token expires: renew, or updates stop</td></tr>
+        <tr><td>from 20 Oct 2027</td><td>last year's figures from Hindcaster's own stored readings</td></tr>
+      </table>
+      <h3>Ideas logged for later</h3>
+      <ul>
+        <li>True daily highs and lows (not hourly); records ("coldest October night since…") from MIDAS Open.</li>
+        <li>A page per county for search; Scotland, Wales and Northern Ireland rainfall; University of Reading observatory data (needs permission); reporting faulty EA feeds; rethinking the England-wide summary.</li>
+      </ul>
+    </div>
+  </div>
+  <figure style="width:58%;margin-top:2mm"><img src="img/og-hindcaster.png"><figcaption><b>Fig 26.</b> Hindcaster's link-preview image.</figcaption></figure>
+  <div class="folio"><span>baish.net overview · Hindcaster</span><span>17</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Hindcaster · screenshots · choosing a place</div>
+  <div class="row">
+    <figure style="flex:1"><img src="img/hc-chooser-desktop.jpg"><figcaption><b>Fig 27.</b> The chooser on a computer (1440px, full page), what a first-time visitor and search engines see: a postcode box, a choice of county or region, and All of England. The paragraph beneath says what the tool does.</figcaption></figure>
+    <figure style="flex:0 0 50mm"><img src="img/hc-chooser-phone.jpg"><figcaption><b>Fig 28.</b> The chooser on a phone (390px, full page).</figcaption></figure>
+  </div>
+  <div class="folio"><span>baish.net overview · Hindcaster</span><span>18</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Hindcaster · screenshots · results for a postcode (1 of 2)</div>
+  <figure><img src="img/hc-rg4-desktop-part1.jpg"><figcaption><b>Fig 29a.</b> <span class="sample real">real figures</span> Postcode district <b>RG4</b> (Caversham, Reading), Wednesday October 21st, final update (1440px, top half of the full page). The Summary, then the three stations chosen round the postcode (Benson, Odiham, Heathrow) with hourly highs, wind, daytime weather and the night's low, then the eight nearest rain gauges.</figcaption></figure>
+  <div class="folio"><span>baish.net overview · Hindcaster</span><span>19</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Hindcaster · screenshots · results for a postcode (2 of 2)</div>
+  <figure><img src="img/hc-rg4-desktop-part2.jpg"><figcaption><b>Fig 29b.</b> <span class="sample real">real figures</span> RG4, bottom half: "Compared with a year ago" (hourly high 2.6°C cooler, night's low 1.6°C cooler, 8.0 mm more rain than the fortnight a year earlier), "About these figures" (the help panel) and the footer.</figcaption></figure>
+  <div class="folio"><span>baish.net overview · Hindcaster</span><span>20</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Hindcaster · screenshots · on a phone</div>
+  <div class="row">
+    <div style="flex:0 0 102mm">
+      <div class="strips"><img src="img/hc-rg4-phone-s1.jpg" style="width:33mm"><img src="img/hc-rg4-phone-s2.jpg" style="width:33mm"><img src="img/hc-rg4-phone-s3.jpg" style="width:33mm"></div>
+    </div>
+    <div style="flex:1">
+      <p class="note"><b style="color:var(--ink)">Fig 30.</b> <span class="sample real">real figures</span> RG4 on a phone (390px, full page, in three strips, read left to right). Each station becomes a card with labels in a narrow column and values aligned beside them; the gauges become a list with bars; the year-ago cards stack.</p>
+      <figure style="margin-top:4mm"><img src="img/hc-about.jpg"><figcaption><b>Fig 31.</b> "About these figures" close up (computer): the time windows, why figures can differ from other sources, how last year is compared, the note on gauge names, and the not-endorsed line.</figcaption></figure>
+    </div>
+  </div>
+  <div class="folio"><span>baish.net overview · Hindcaster</span><span>21</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">Hindcaster · screenshots · a county view</div>
+  <div class="strips">
+    <img src="img/hc-berkshire-desktop-s1.jpg" style="width:89mm"><img src="img/hc-berkshire-desktop-s2.jpg" style="width:89mm">
+  </div>
+  <p class="note" style="margin-top:1.5mm"><b style="color:var(--ink)">Fig 32.</b> <span class="sample real">real figures</span> <b>Berkshire</b> (1440px, full page, in two strips). An area view: the Summary, then highest, middle and lowest for each measure with the station and place, a folded list of all stations warmest first, the rainfall spread across the county's gauges with the wettest and driest, and the year-ago comparison averaged across them.</p>
+  <div class="folio"><span>baish.net overview · Hindcaster</span><span>22</span></div>
+</section>
+
+<!-- ============ COMMON ============ -->
+<section class="page">
+  <div class="kicker">What the sites have in common · 1 of 2</div>
+  <h2>One family: the shared design system</h2>
+  <p class="lede">Written down in <code>HOUSE-STYLE.md</code>, whose master copy lives in the clockwheel repo and is copied into each project. Its own opening: "These are models, not laws… a basic structure 'we can vary depending on the task and mood'." Rule of thumb: <b>copy, don't reinvent</b>.</p>
+  <div class="cols">
+    <div>
+      <h3>Colour</h3>
+      <div class="sw"><i style="background:#f5ead8"></i>page cream <code>#f5ead8</code></div>
+      <div class="sw"><i style="background:#ebddc5"></i>surface <code>#ebddc5</code></div>
+      <div class="sw"><i style="background:#201e1d"></i>ink <code>#201e1d</code></div><br>
+      <div class="sw"><i style="background:#c67139"></i>terracotta accent <code>#c67139</code></div>
+      <div class="sw"><i style="background:#8c491a"></i>dark terracotta <code>#8c491a</code></div><br>
+      <div class="sw"><i style="background:#645c50"></i>muted text <code>#645c50</code></div>
+      <div class="sw"><i style="background:#7a8a5e"></i>olive (rare) <code>#7a8a5e</code></div>
+      <div class="sw"><i style="background:rgba(32,30,29,.16)"></i>divider: ink at 16%</div>
+      <p class="note">Each of neutral, terracotta and olive has a 100–900 ramp. Light theme only. Extra palettes per tool sit on top: Clockmaker's categories, Flowcharter's seven shape fills, Hindcaster's chart colours.</p>
+      <h3>Type</h3>
+      <ul>
+        <li><b style="font-family:Caprasimo;font-weight:400;font-size:11pt">Caprasimo</b> (400 only) for headings and buttons. Never bold or italic: the browser fakes it, and John found it "mushy".</li>
+        <li><b>Figtree</b> 400/600/700 for body text, 15px base; tabular figures for columns of numbers.</li>
+        <li>Both <b>self-hosted</b>, never from Google Fonts, so visitors' IP addresses aren't sent to Google.</li>
+      </ul>
+      <h3>Shape and layout</h3>
+      <ul>
+        <li>Soft rounded cards (radius 8/16/28px), soft ink-tinted shadows, spacing on a 4.4px step.</li>
+        <li>Nav bar in the surface colour; a 1100px centred content column; small uppercase terracotta kickers above Caprasimo headings; text-style action buttons top right (Print lives on each screen, not in the nav).</li>
+        <li>Footer notice at the foot of each tool's main screen, small, grey and centred.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Phones (390px) as a first-class case</h3>
+      <ul>
+        <li>No sideways scrolling; genuinely different markup where needed (tables become cards).</li>
+        <li>16px text in boxes (or iPhone zooms), 44px tap targets, keyboards opened inside the tap, digits keypad with "." for ":", visible buttons where a computer would use Tab or Shift, Back staying inside the tool.</li>
+      </ul>
+      <h3>Icons, favicons, previews</h3>
+      <ul>
+        <li>Lucide icons at stroke 2.75. Favicons hand-drawn on one recipe (a disc, a terracotta ring or fill, two round-capped strokes), each a variation, checked at a real 16px.</li>
+        <li>Link-preview images 1200×630 on one template: illustration left, name in Caprasimo 72px, tagline in Figtree.</li>
+      </ul>
+      <div class="row" style="margin:2mm 0">
+        <img src="img/fav-baish.svg" style="width:11mm"><img src="img/fav-backtimer.svg" style="width:11mm"><img src="img/fav-clockmaker.svg" style="width:11mm"><img src="img/fav-flowcharter.svg" style="width:11mm"><img src="img/fav-hindcaster.svg" style="width:11mm">
+      </div>
+      <h3>Technology and hosting</h3>
+      <ul>
+        <li>Vite + React + TypeScript, oxlint, no backend, no accounts; the same versions in every repo (Vite 8, React 19, TypeScript 6).</li>
+        <li>GitHub → Vercel, deploying <code>main</code>; each tool on its own <code>*.baish.net</code> address; anonymous Vercel Web Analytics (no cookies).</li>
+        <li>Plain-script automatic checks (<code>npm run check</code>) where the rules matter; error-boundary "safety net" so a fault never shows a blank page.</li>
+        <li>Search: title "Name – free … ", description, canonical, robots.txt, sitemap, a visible explanation for first-time visitors, "More free tools at www.baish.net." in every footer; one Search Console property for the whole domain.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="folio"><span>baish.net overview · In common</span><span>23</span></div>
+</section>
+
+<section class="page">
+  <div class="kicker">What the sites have in common · 2 of 2</div>
+  <h2>Principles written down</h2>
+  <div class="cols">
+    <div>
+      <h3>Privacy as a core value</h3>
+      <ul>
+        <li>"Not sending data is a core value of every tool" (John). Nothing a person types or chooses goes to a server; work is saved in their own browser, with Export/Import for backups.</li>
+        <li>Wording is careful to say only what's true: "The data you enter here is not collected…", "We collect anonymous visit statistics (no cookies, no personal data)…".</li>
+        <li>Never rename a storage key once live, or people's work silently disappears. Saved preferences survive private windows.</li>
+        <li>Other people's data: read each licence and copy the attribution word for word.</li>
+      </ul>
+      <h3>Voice and identity</h3>
+      <ul>
+        <li>Each tool is "a free-to-use personal project by John Baish", with one contact address, workshop@baish.net (plain text, not a link).</li>
+        <li>British spelling; plain English. John decides all wording.</li>
+        <li>Wording rules: "less than"/"more than", not "under"/"over"; no sentence ending in a preposition; dates month first with an ordinal ("Friday October 16th"); "12 to 15°C", not a dash; numbers one to nine as words in sentences, 10 and above as digits; halves rounded away from zero.</li>
+        <li>Destructive actions with no undo ask first, saying exactly what will be lost.</li>
+      </ul>
+      <h3>Help built in</h3>
+      <p>Each tool explains itself on a first visit: Guide screens (Clockmaker, Flowcharter), a walkthrough and explainer (Backtimer), a chooser sentence and "About these figures" (Hindcaster).</p>
+    </div>
+    <div>
+      <h3>Ways of working</h3>
+      <ul>
+        <li>Agree before building; show rendered pictures of options (A, B, C) on a computer and a phone. Questions in numbered batches so John can reply by number.</li>
+        <li>A spec and staged plan for each new tool; every stage on a branch; merge to <code>main</code> only when John says (notes and checks excepted).</li>
+        <li>Check in a real browser at computer and phone widths, and say what couldn't be checked (often a real iPhone).</li>
+        <li>Never stand in made-up figures for real ones; log mistakes openly as corrections; a dated log entry for every change.</li>
+        <li>The "fresh look": a full, numbered review of a tool on computer and phone, delivered as a phone-friendly PDF, changing nothing until John picks.</li>
+      </ul>
+      <div class="box">
+        <h3>Possible themes for discussion</h3>
+        <p class="note" style="color:var(--ink)">My observations from reading the notes, not written down by John:</p>
+        <ol style="padding-left:4.5mm;margin:0">
+          <li><b>Broadcasting runs through three of the four tools</b> (backtiming, format clocks, figures to read on air); Flowcharter is the general-purpose one.</li>
+          <li><b>Two kinds of tool:</b> editors that keep your work in the browser (Backtimer, Clockmaker, Flowcharter) and a reading tool fed by collected public data (Hindcaster), which brought scheduled jobs, secrets and data licences into the family.</li>
+          <li><b>Shared conventions recur:</b> list-and-picture views of the same thing (Clockmaker's List/Clock, Flowcharter's List/Chart), step-through cards (Backtimer, Flowcharter), Print and Copy image.</li>
+          <li><b>The hub</b> introduces the tools in one line each, without audiences or grouping.</li>
+          <li><b>Light theme only</b> across all five, by choice so far.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <div class="folio"><span>baish.net overview · In common</span><span>24</span></div>
+</section>
+
+</body>
+</html>
