@@ -3209,3 +3209,13 @@ no errors, no sideways scroll. **Couldn't be checked:** the real baish.net
 (served by `middleware.ts` only on that host).
 
 **Merged to `main` 2026-10-20** at John's word (fast-forward; build clean first).
+
+## Fresh-look PDF script: every font style checked (2026-10-22, straight to `main`)
+
+The fresh-look PDF script (`.claude/skills/fresh-look/make-pdf.mjs`) checked only the
+brand font styles a report happened to use: an unused style shows as "unloaded",
+which also ends in "loaded", so it passed unchecked. It now loads every brand style
+and accepts only ": loaded". Tested: the right repo path gives all four loaded and
+a PDF; a wrong path stops with the font message and no PDF. Found while making the
+house-style questions PDF from Hindcaster (question I3); John said yes. Copied to
+Hindcaster; Flowcharter still has the old copy.
