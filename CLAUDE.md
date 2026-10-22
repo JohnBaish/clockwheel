@@ -3239,3 +3239,10 @@ rounding). Then, from John's later answers: B3 (work facts out with code,
 in §10), E3 (charts, §5) and H3 (automatic checks, §10). **Still open:** F2 (Backtimer's fold-out lines are 39px on a phone;
 pictures sent), J2 (explained again), and A4 (standing permission to merge,
 to discuss). Not merged.
+
+**Then (same day):** John agreed J2 and the proposal for A4 (when to merge
+without asking: notes, documents, review files and checking scripts; never
+anything visitors could see, prototype branches, scheduled jobs, secrets,
+settings or deleting), now in `HOUSE-STYLE.md` §10. Under that rule, merged
+to `main` (notes only). F2 agreed: done separately (Backtimer's fold-out
+lines taller on phones).

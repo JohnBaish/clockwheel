@@ -327,8 +327,20 @@ and add its tags. Nothing else needs fixing or remaking first.
 - Build new features on a **branch**, not `main`. Vercel gives every
   branch a private preview at
   `https://<project>-git-<branch>-john-baish.vercel.app` (append
-  `?host=…` overrides as needed). Merge to `main` only when he says so.
-  Small agreed wording fixes can go straight to `main`.
+  `?host=…` overrides as needed).
+- **When to merge** (agreed with John, 2026-10-22):
+  - *Without asking:* notes and documents (logs, plans, specs, this file,
+    handovers, mock-ups and previews), the fresh-look review files, and
+    checking scripts. Say afterwards what was merged.
+  - *Only when John says so:* anything a visitor could see or feel (page
+    code, styles, wording, images, search tags, the rules that make the
+    figures), and anything on a prototype branch.
+  - *Also only when John says so,* though visitors don't see them
+    directly: scheduled jobs and collectors (they change live data, and
+    John re-saves them on GitHub), and anything touching secrets,
+    settings, other services or deleting.
+  - A small change John has already agreed in so many words can go
+    straight to `main` once it's checked.
 - **Automatic checks:** a tool with rules worth getting right (sums,
   rounding, dates, sentences built from figures) gets an `npm run check`
   of plain scripts that try the rules on known examples and fail loudly
