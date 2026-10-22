@@ -3235,7 +3235,7 @@ servers; §11 and the fresh-look skill: every real data state, every
 generated sentence; §12 search defaults can be broken on purpose, one-page
 tools; new §15 Wording ("less than"/"more than", no sentence ending in a
 preposition, month-first dates, "to" for ranges, one time style per tool,
-rounding). **Still open:** B3 (work facts out with code), E3 (charts), H3
-(automatic checks), F2 (Backtimer's fold-out lines are 39px on a phone;
+rounding). Then, from John's later answers: B3 (work facts out with code,
+in §10), E3 (charts, §5) and H3 (automatic checks, §10). **Still open:** F2 (Backtimer's fold-out lines are 39px on a phone;
 pictures sent), J2 (explained again), and A4 (standing permission to merge,
 to discuss). Not merged.

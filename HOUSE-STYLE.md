@@ -145,6 +145,14 @@ every value starting at the same left edge beside it (a two-column grid),
 not values pushed to the right edge. Chosen as "option B" in Hindcaster
 (2026-10-20).
 
+**Charts:** use fixed scales, so a small difference looks small and a
+large one large; don't let each chart stretch to fit its own figures.
+Things that can be "none" (rain, counts) start at zero; temperatures
+don't, since 0°C isn't "nothing" and the dots are read by their gaps.
+Check the colours for colour-blind readers and against both backgrounds
+(the dataviz skill's validator). Pattern: Hindcaster's year-ago charts,
+`scaleFor()` in `src/lib/yearAgo.ts`.
+
 **Printing:** besides `data-noprint` and `.print-only`, keep table rows,
 cards, headings with what follows them, and any self-contained section whole
 across pages (`break-inside: avoid`, `break-after: avoid`); a long table may
@@ -312,14 +320,21 @@ and add its tags. Nothing else needs fixing or remaking first.
   notes' "read these first" order.
 - **Accuracy:** never stand in made-up figures for real ones; anything made
   up is labelled "Illustration only", and test data comes from real
-  examples. When Claude gets something wrong, log it openly as a
-  "Correction:" entry.
+  examples. Work facts out (weekdays, clock-change dates, sunrise times,
+  distances) with code rather than from memory. When Claude gets something
+  wrong, log it openly as a "Correction:" entry.
 - In the notes, mark Claude's own wording or choices "for John to confirm".
 - Build new features on a **branch**, not `main`. Vercel gives every
   branch a private preview at
   `https://<project>-git-<branch>-john-baish.vercel.app` (append
   `?host=…` overrides as needed). Merge to `main` only when he says so.
   Small agreed wording fixes can go straight to `main`.
+- **Automatic checks:** a tool with rules worth getting right (sums,
+  rounding, dates, sentences built from figures) gets an `npm run check`
+  of plain scripts that try the rules on known examples and fail loudly
+  if an answer changes (Hindcaster's `scripts/check-*.ts`, no test
+  library). Prove a new check works by breaking the thing it checks and
+  seeing it fail. Clockmaker has none yet.
 - Check work in a real browser (Playwright) at 1200px and at 390px with
   touch emulation — not just "it builds". Say plainly what couldn't be
   checked (e.g. a real iPhone keyboard).
