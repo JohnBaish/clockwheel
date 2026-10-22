@@ -172,3 +172,8 @@
   .stale-bar { flex-direction: column; gap: 8px; text-align: center; }
   .stale-btn { min-height: 44px; }
 }
+
+/* The safety net (SafetyNet.tsx): shown instead of a screen that failed to draw. */
+.safety-net { margin: var(--space-6); padding: var(--space-6); text-align: center; }
+.safety-net p { margin: 0 0 var(--space-4); }
+@media (max-width: 720px) { .safety-net .btn { min-height: 44px; } }

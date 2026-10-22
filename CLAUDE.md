@@ -3257,3 +3257,24 @@ unchanged (39px). Verified in Chromium against `vite preview` at 390px with
 touch and at 1200px: heights 46 and 39, both parts still open on tap or
 click, no sideways scroll, no page errors; build clean, lint at the 8 known
 warnings.
+
+## Safety net and automatic checks (K1, K2) (2026-10-22, branch `house-style-k1-k2`)
+
+From the house-style follow-up questions, both agreed by John. **K1:**
+`src/components/SafetyNet.tsx` wraps the screens in `App.tsx` (keyed by
+screen): if one fails while drawing, "Sorry, this screen couldn’t be shown.
+Your clocks are still saved in this browser." with **Go to the Library**
+("Your list is …" and **Reload the page** on the standalone Backtimer, and on
+the Library itself). Wording Claude's, for John to confirm. **K2:**
+`npm run check` (`scripts/check-sums.ts`, Node runs it directly): 12 checks of
+the sums, including the ones fixed after real use (0:00 as the top of the
+hour, rows before :00 reading as the hour before, "3:" as 3:00, "." for ":"),
+the hour balance, clock times, the number rule and the two-tab comparison.
+`HOUSE-STYLE.md` §5 and §10 now point to both.
+
+**Verified:** build clean, lint at the 8 known warnings, checks 12 of 12;
+breaking `normalizeOutTime` and `wrapHour` on purpose made the matching
+checks fail. In Chromium at 1200px and 390px with touch, a scratch build with
+a deliberate fault in Week and Backtimer: the message and button show (44px
+on a phone), Go to the Library opens the Library; the real build shows no
+message on Week or the standalone Backtimer; no errors, no sideways scroll.

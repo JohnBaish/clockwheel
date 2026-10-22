@@ -13,6 +13,7 @@ import { SummaryScreen } from './screens/SummaryScreen';
 import { CategoriesScreen } from './screens/CategoriesScreen';
 import { BacktimerScreen } from './screens/BacktimerScreen';
 import { GuideScreen } from './screens/GuideScreen';
+import { SafetyNet } from './components/SafetyNet';
 
 function Shell() {
   const { screen, setScreen, clocks, openClockId, changedElsewhere } = useApp();
@@ -54,6 +55,11 @@ function Shell() {
       )}
       <Nav screen={screen} onNavigate={setScreen} />
       <div style={{ width: '100%', maxWidth: '1100px', margin: '0 auto' }}>
+        <SafetyNet
+          key={screen}
+          what={isBacktimerHost() ? 'list is' : 'clocks are'}
+          onLibrary={isBacktimerHost() || screen === 'lib' ? undefined : () => setScreen('lib')}
+        >
         {screen === 'week' && <WeekHeader />}
         {isEditor && <EditorHeader />}
         {screen === 'guide' && <GuideScreen />}
@@ -69,6 +75,7 @@ function Shell() {
         {screen === 'week' && <WeekScreen />}
         {screen === 'categories' && <CategoriesScreen />}
         {screen === 'backtimer' && <BacktimerScreen />}
+        </SafetyNet>
       </div>
     </div>
   );
