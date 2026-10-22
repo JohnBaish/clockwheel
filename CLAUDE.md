@@ -3278,3 +3278,6 @@ checks fail. In Chromium at 1200px and 390px with touch, a scratch build with
 a deliberate fault in Week and Backtimer: the message and button show (44px
 on a phone), Go to the Library opens the Library; the real build shows no
 message on Week or the standalone Backtimer; no errors, no sideways scroll.
+
+**Merged to `main` 2026-10-22** at John's word (he confirmed the safety-net
+wording). `HOUSE-STYLE.md` re-copied to Hindcaster and Flowcharter.
