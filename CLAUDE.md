@@ -3246,3 +3246,14 @@ anything visitors could see, prototype branches, scheduled jobs, secrets,
 settings or deleting), now in `HOUSE-STYLE.md` §10. Under that rule, merged
 to `main` (notes only). F2 agreed: done separately (Backtimer's fold-out
 lines taller on phones).
+
+## Backtimer's fold-out lines taller on phones — LIVE (2026-10-22, straight to `main`)
+
+F2 from the house-style questions, agreed by John: on phones (≤720px) the
+standalone Backtimer's "What is backtiming?" and "How do I use Backtimer?"
+lines are now 46px tall (were 39px, under the house style's 44px), by
+`padding: 12px 0` on `.backtimer-about summary` in `global.css`. Computers
+unchanged (39px). Verified in Chromium against `vite preview` at 390px with
+touch and at 1200px: heights 46 and 39, both parts still open on tap or
+click, no sideways scroll, no page errors; build clean, lint at the 8 known
+warnings.
