@@ -3219,3 +3219,23 @@ and accepts only ": loaded". Tested: the right repo path gives all four loaded a
 a PDF; a wrong path stops with the font message and no PDF. Found while making the
 house-style questions PDF from Hindcaster (question I3); John said yes. Copied to
 Hindcaster; Flowcharter still has the old copy.
+
+## House style: what Hindcaster taught us (2026-10-22, branch `house-style-hindcaster`)
+
+John answered 39 questions comparing Hindcaster's work with the house style
+(PDF "House style: questions from Hindcaster", 22 October). `HOUSE-STYLE.md`
+gains: "models, not laws" at the top; §5 safety net, label-and-value phone
+cards, print rules; §6 code boxes and lists of choices; §7 favicon fallback
+and the options page; §8 not sending data as a core value, private-window
+storage, Hindcaster's privacy sentence, other people's data (ask John
+first); §9 Vercel lessons, keys and tokens, cron-job.org for timed jobs;
+§10 starting a project, numbered question batches, handovers, labelled
+options, accuracy and corrections, network sites, git safety, preview
+servers; §11 and the fresh-look skill: every real data state, every
+generated sentence; §12 search defaults can be broken on purpose, one-page
+tools; new §15 Wording ("less than"/"more than", no sentence ending in a
+preposition, month-first dates, "to" for ranges, one time style per tool,
+rounding). **Still open:** B3 (work facts out with code), E3 (charts), H3
+(automatic checks), F2 (Backtimer's fold-out lines are 39px on a phone;
+pictures sent), J2 (explained again), and A4 (standing permission to merge,
+to discuss). Not merged.
