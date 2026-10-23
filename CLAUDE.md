@@ -3353,3 +3353,10 @@ few lines in `index.html` so there's no flash; light by default; the footer
 line). §16 gains step 9: late in the design, ask John whether a new tool should
 have dark mode. Clockmaker, Backtimer and Flowcharter are unchanged (John may
 come back to them). Re-copied to Hindcaster.
+
+## House style §15: temperatures stay "20°C" (2026-10-23, docs only, straight to `main`)
+
+John looked at mock-ups of Hindcaster with "20 °C" (the SI rule: a space
+before °C) and chose to keep "20°C", as the Met Office writes it. §15 now says
+so, so it isn't reopened. No app code changed. Re-copied to Hindcaster and
+Flowcharter.

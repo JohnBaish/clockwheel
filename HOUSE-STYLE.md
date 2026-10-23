@@ -558,6 +558,9 @@ John decides wording; these are his standing preferences, from Hindcaster
   16th", "October 18th to 20th 2025". Existing places that do otherwise are
   left as they are unless John asks (Clockmaker's Summary "18 Oct").
 - **Ranges:** "12 to 15°C", not a dash, so a range can't be read as a minus.
+- **Temperatures:** "20°C", with no space before the degree sign, as the
+  Met Office writes it (John, 23 October, after seeing "20 °C", the SI
+  rule, mocked up). Other units keep their space: "3.5 mm", "16 mph".
 - **Times:** each tool keeps one style. Clock times written for reading
   use a full stop between hours and minutes, the British way: "5.50am",
   "9.15pm"; on the hour "3pm", "midday", "midnight" (John, 23 October;
