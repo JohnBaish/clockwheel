@@ -3329,3 +3329,13 @@ Chromium with touch at 744px (iPad mini), 820, 890×626 (Duo, estimated),
 1032 and 1180: every typing box and list 16px; no sideways scroll, no errors
 on any screen; at 1200px with a mouse, unchanged; phones unchanged.
 **Couldn't be checked:** a real iPad.
+
+## House style §15: times with a full stop (2026-10-23, branch `house-style-times`, merged the same day)
+
+John chose, after before/after pictures from Hindcaster, "9.30am" rather than
+"9:30am" for clock times written for reading. §15 now says so (on the hour:
+"3pm", "midday", "midnight"), for new tools too. Clockmaker's 24-hour "06:00"
+and the minutes:seconds timings in Clockmaker and Backtimer ("29:30", "60:00")
+are unchanged. No 12-hour times appear in Clockmaker, Backtimer, Flowcharter or
+the landing page, so no app code changed here. Re-copied to Hindcaster and
+Flowcharter.
