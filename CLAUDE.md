@@ -3339,3 +3339,17 @@ and the minutes:seconds timings in Clockmaker and Backtimer ("29:30", "60:00")
 are unchanged. No 12-hour times appear in Clockmaker, Backtimer, Flowcharter or
 the landing page, so no app code changed here. Re-copied to Hindcaster and
 Flowcharter.
+
+## House style §2 and §16: dark mode as an option (2026-10-23, docs only, straight to `main`)
+
+John asked, after Hindcaster's dark mode went live, for the house style to
+record it as the option for future dark modes. §2 no longer says "Light theme
+only — there is no dark mode": light stays the default house look, and dark mode
+is optional tool by tool, with Hindcaster's agreed colours (its "option B", a
+step lighter than a first near-black version John found too dark), their
+contrast, and how it's built (dark values in the tool's `global.css`, screen
+only so printing stays light; the switch at the top right; `localStorage` and a
+few lines in `index.html` so there's no flash; light by default; the footer
+line). §16 gains step 9: late in the design, ask John whether a new tool should
+have dark mode. Clockmaker, Backtimer and Flowcharter are unchanged (John may
+come back to them). Re-copied to Hindcaster.
