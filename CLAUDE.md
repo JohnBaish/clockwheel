@@ -3360,3 +3360,22 @@ John looked at mock-ups of Hindcaster with "20 °C" (the SI rule: a space
 before °C) and chose to keep "20°C", as the Met Office writes it. §15 now says
 so, so it isn't reopened. No app code changed. Re-copied to Hindcaster and
 Flowcharter.
+
+## Lightreader added to the baish.net landing page (2026-10-28, branch `landing-lightreader`)
+
+John (from the Lightreader session, `JohnBaish/lightreader`, now live at
+`https://lightreader.baish.net/`): a sixth card, after Hindcaster and before John's Blog
+(tools alphabetical): **Lightreader**, "Sunrise, sunset and light-based facts for English
+places you choose." (its link-preview wording, John's choice). The hub's search description:
+naming every tool came to 191 characters (Google cuts at about 155), so John chose option A,
+"Free browser tools by John Baish: radio clocks, backtiming, flowcharts, yesterday's weather,
+and sunrise and sunset times." (122). Title and `og:` tags unchanged; the head comment now says
+six links. `SEO-HANDOVER.md`: Lightreader's column in the §1 table, the new hub description,
+items 11 and 12.
+
+**Verified:** `npm run build` clean; `vite preview` of `/landing.html` in Chromium at 1200px and
+390px (touch): six cards in order, every link right, brand fonts loaded, no errors, no sideways
+scroll. Pictures in Lightreader's repo, `design/previews/baish-hub-lightreader-*.png`.
+**Couldn't be checked:** the real www.baish.net (served by `middleware.ts` only on that host).
+
+**Merged to `main` 2026-10-28** at John's word (fast-forward; build clean first).
