@@ -5,6 +5,8 @@ what that did and didn't touch. Historical entries throughout this file
 that say "Clockwheel" are accurate records of what the app was called at
 the time they were written; they're deliberately not rewritten.)
 
+**Project tracker:** when something significant changes (a stage finished, a decision made, something goes live or is parked), update the relevant files (`clockmaker.md`, `backtimer.md` or `baish-net-hub.md`) and their lines in `INDEX.md` in `JohnBaish/baish.net-directory`, following that repo's README.
+
 **Starting a new tool in the same style (e.g. Flowcharter)? Read
 `HOUSE-STYLE.md` first** — the shared design system, phone rules, privacy
 wording, hosting and ways of working, in one short file.
@@ -3452,3 +3454,9 @@ mode if you change it. Use Export …". Standalone Backtimer footer, a separate 
 "clear it", which doesn't reset the theme, stays true): "Your choice of light or dark mode, if you change it, is also kept
 only in this browser." The Guide and the baish.net page are unchanged. Checked at 1200px and 390px with touch, in light
 and dark: the wording shows, no errors, no sideways scroll. At John's word, the branch was merged to `main` with the dark mode work.
+
+### 2026-10-29 — project tracker line (notes only, straight to `main`)
+
+At John's request: a line near the top asking future sessions to update
+this project's file in the project tracker (`JohnBaish/baish.net-directory`)
+when something significant changes.
