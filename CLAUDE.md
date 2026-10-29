@@ -3401,3 +3401,11 @@ Clockmaker uses that Hindcaster didn't: neutral-200 to -600 and -900, accent-200
 and printing would stay light). Noted for John: the "News" category is pure black, which sits darker
 than the dark page; category colours are the user's own and were left alone. Checked: no errors, no
 sideways scroll. Waiting for John before anything is built.
+
+**Same day, John's follow-up:** the List's category pills looked too bright on the dark page. Two
+calmer versions mocked up (pictures `pills-{now,B,C}-*.png`, script `pills-mock.cjs`), dark mode
+only: **B** outlined (no fill, a border in the category colour, cream text); **C** tinted (the
+colour at 22% on the page, text the colour lightened). A darker fill with cream text was tried on
+paper and dropped: it falls to 3.1:1 for the pale colours. Both B and C pass 4.5:1 for every seed
+colour; colours darker than the page (News's black) keep their own fill with cream text and a faint
+edge. Waiting for John's choice.
