@@ -184,3 +184,75 @@
 @media (pointer: coarse) {
   .plain-input, .input { font-size: 16px; }
 }
+
+/* Dark mode (John, 29 October 2026; HOUSE-STYLE §2): follows the device unless the visitor uses
+   the switch (src/lib/theme.ts). The house dark colours, as Hindcaster's, plus the ramp steps
+   Clockmaker uses that Hindcaster doesn't (neutral-200 to -600 and -900, accent-200). Screen
+   only, so a printed page is always light; Copy image is always light too (exportImage.ts). */
+@media screen {
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --color-bg: #2a2723;
+    --color-surface: #37332e;
+    --color-text: #e8dfcf;
+    --color-accent: #dd8a56;
+    --color-divider: color-mix(in srgb, #e8dfcf 16%, transparent);
+    --color-neutral-100: #423d36;
+    --color-neutral-200: #4b453d;
+    --color-neutral-300: #5b544a;
+    --color-neutral-400: #776e61;
+    --color-neutral-500: #9a9080;
+    --color-neutral-600: #a89d8b;
+    --color-neutral-700: #b0a593;
+    --color-neutral-800: #e3d9c7;
+    --color-neutral-900: #f0e8da;
+    --color-accent-100: #4a2a14;
+    --color-accent-200: #6a3a1c;
+    --color-accent-300: #b2622d;
+    --color-accent-600: #e8935d;
+    --color-accent-700: #f2a573;
+    --color-accent-800: #ffc6a5;
+    --color-accent-2-100: #2f3a20;
+    --color-accent-2-800: #d4e4b8;
+    --shadow-sm: 0 0 0 1px color-mix(in srgb, #e8dfcf 6%, transparent), 0 1px 2px #0006;
+    --shadow-md: 0 0 0 1px color-mix(in srgb, #e8dfcf 7%, transparent), 0 3px 10px #0008;
+    --shadow-lg: 0 0 0 1px color-mix(in srgb, #e8dfcf 8%, transparent), 0 12px 32px #000a;
+  }
+  /* The List's category pills: outlined in the category's colour, with cream text (John's option
+     B), so they don't glare. A colour darker than the page (News's black) keeps its own fill, with
+     a faint edge so it shows. The clock face's wedges keep their full colours. */
+  :root[data-theme="dark"] .cat-pill { background: transparent !important; color: var(--color-text) !important; box-shadow: inset 0 0 0 2px var(--pill); }
+  :root[data-theme="dark"] .cat-pill[data-darker] { background: var(--pill) !important; box-shadow: inset 0 0 0 1px color-mix(in srgb, #e8dfcf 28%, transparent); }
+  /* The clock face's ink (ticks, :00 labels, hub hour, leader lines) drawn in the page's text
+     colour. Copy image serialises the face without this stylesheet, so the copy stays light. */
+  :root[data-theme="dark"] #clock-face-svg [stroke="#201e1d"] { stroke: var(--color-text); }
+  :root[data-theme="dark"] #clock-face-svg [fill="#201e1d"] { fill: var(--color-text); }
+  :root[data-theme="dark"] #clock-face-svg [stroke="rgba(32,30,29,.55)"] { stroke: color-mix(in srgb, var(--color-text) 55%, transparent); }
+  :root[data-theme="dark"] #clock-face-svg [fill="rgba(32,30,29,.55)"] { fill: color-mix(in srgb, var(--color-text) 55%, transparent); }
+  :root[data-theme="dark"] #clock-face-svg [stroke="rgba(32,30,29,.34)"] { stroke: color-mix(in srgb, var(--color-text) 40%, transparent); }
+  :root[data-theme="dark"] #clock-face-svg [stroke="rgba(32,30,29,.28)"] { stroke: color-mix(in srgb, var(--color-text) 34%, transparent); }
+  :root[data-theme="dark"] #clock-face-svg [stroke="rgba(32,30,29,.26)"] { stroke: color-mix(in srgb, var(--color-text) 26%, transparent); }
+}
+
+/* The dark mode switch (as Hindcaster's): last in the nav bar on a computer; on a phone it sits on
+   the top row, with the menu beneath. */
+.theme-switch { order: 1; display: inline-flex; align-items: center; gap: 8px; flex: none; background: none; border: 0; padding: 4px 0; cursor: pointer; color: var(--color-neutral-700); font: inherit; }
+.theme-switch:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 999px; }
+.theme-switch-label { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+.theme-switch-track { position: relative; width: 46px; height: 26px; border-radius: 999px; background: color-mix(in srgb, var(--color-text) 18%, transparent); transition: background 0.2s; }
+.theme-switch-knob { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: var(--color-bg); box-shadow: 0 1px 3px #0004; display: grid; place-items: center; color: var(--color-accent); transition: transform 0.2s; }
+.theme-switch[aria-checked="true"] .theme-switch-track { background: var(--color-accent); }
+.theme-switch[aria-checked="true"] .theme-switch-knob { transform: translateX(20px); }
+.theme-switch svg { width: 12px; height: 12px; display: block; }
+@media (prefers-reduced-motion: reduce) {
+  .theme-switch-track, .theme-switch-knob { transition: none; }
+}
+@media (max-width: 720px) {
+  /* Tighter gaps across the top row on a phone, and the page's own side margin (the inline
+     style in Nav.tsx sets the computer's), so the switch fits beside New clock on a 375px phone. */
+  .nav { column-gap: var(--space-2); padding-left: var(--space-4) !important; padding-right: var(--space-4) !important; }
+  .theme-switch { min-height: 44px; }
+  .theme-switch-label { display: none; }
+}
+/* The baish.net page has no nav bar: the switch sits at the top right of the page. */
+.landing-switch { position: absolute; top: var(--space-3); right: var(--space-4); }

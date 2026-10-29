@@ -9,18 +9,28 @@ export interface CategorySet {
   order: CategoryId[];
 }
 
-/** Black or white ink, whichever reads better against a given swatch colour —
- *  so a freshly-chosen category colour is always legible without asking the
- *  user to also pick a text colour. Uses the sRGB relative-luminance formula. */
-export function contrastInk(hex: string): string {
+/** sRGB relative luminance of a "#rrggbb" (or "#rgb") colour, 0 for black to 1 for white. */
+export function luminance(hex: string): number {
   const n = hex.replace('#', '');
   const full = n.length === 3 ? n.split('').map((c) => c + c).join('') : n;
   const r = parseInt(full.slice(0, 2), 16) / 255;
   const g = parseInt(full.slice(2, 4), 16) / 255;
   const b = parseInt(full.slice(4, 6), 16) / 255;
   const lin = (c: number) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
-  const luminance = 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
-  return luminance > 0.45 ? '#201e1d' : '#f9f4ed';
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+}
+
+/** Black or white ink, whichever reads better against a given swatch colour —
+ *  so a freshly-chosen category colour is always legible without asking the
+ *  user to also pick a text colour. Uses the sRGB relative-luminance formula. */
+export function contrastInk(hex: string): string {
+  return luminance(hex) > 0.45 ? '#201e1d' : '#f9f4ed';
+}
+
+/** True for a colour darker than the dark-mode page (#2a2723), which an outline alone
+ *  wouldn't show against it (News's black): global.css then keeps the pill's fill. */
+export function darkerThanDarkPage(hex: string): boolean {
+  return luminance(hex) < luminance('#2a2723');
 }
 
 /** A horizontal stacked-percentage gradient for a category split, e.g. the mix bar. */

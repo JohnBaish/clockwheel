@@ -56,11 +56,12 @@ function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
 // (var(--color-bg), var(--color-neutral-700)) so it matches the app's theme.
 // That works fine live on the page, but a serialized SVG rendered standalone
 // (as below, to rasterize it) has no access to the page's stylesheet, so
-// those var() references would silently resolve to nothing. Reading their
-// live computed values and inlining them as a <style> block at the top of
-// the serialized SVG fixes that without hardcoding a second copy of the
-// theme's colors here.
-const EXPORTED_CSS_VARS = ['--color-bg', '--color-neutral-700'];
+// those var() references would silently resolve to nothing. Inlining their
+// values as a <style> block at the top of the serialized SVG fixes that.
+// They're always the light theme's values (organic.css), so a copy made in
+// dark mode is the same light image as ever (John, 29 October 2026: Copy
+// image and printing stay light).
+const EXPORTED_CSS_VARS: Record<string, string> = { '--color-bg': '#f5ead8', '--color-neutral-700': '#645c50' };
 
 // Same problem for fonts: a standalone SVG image can't see the page's web
 // fonts, so without this the copied clock falls back to the device's default
@@ -109,9 +110,8 @@ export async function copyClockImage(svg: SVGSVGElement, filename: string): Prom
   const width = vb && vb.width ? vb.width : svg.clientWidth;
   const height = vb && vb.height ? vb.height : svg.clientHeight;
 
-  const computed = getComputedStyle(document.documentElement);
   const fonts = await clockFontFaces();
-  const styleBlock = `<style>${fonts}:root{${EXPORTED_CSS_VARS.map((v) => `${v}:${computed.getPropertyValue(v).trim()};`).join('')}}</style>`;
+  const styleBlock = `<style>${fonts}:root{${Object.entries(EXPORTED_CSS_VARS).map(([v, value]) => `${v}:${value};`).join('')}}</style>`;
   const svgStr = new XMLSerializer().serializeToString(svg).replace(/^(<svg[^>]*>)/, `$1${styleBlock}`);
   const svgBlob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
   const url = URL.createObjectURL(svgBlob);

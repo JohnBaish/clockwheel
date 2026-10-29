@@ -3413,3 +3413,35 @@ edge. Waiting for John's choice.
 **John's choices (same day):** pills option B (outlined), since the clock face keeps its full
 colours; Flowcharter's chart on the filled card. The Categories screen (where colours are chosen)
 was shown again from the first round of mock-ups; it needs no special treatment.
+
+## Dark mode built for Clockmaker, Backtimer and the baish.net page (2026-10-29, branch `claude/sharp-ritchie-uzbr9y`, not merged)
+
+**John:** build it, with outlined pills (B) and nothing else changed from the mock-ups; he'll look at
+the preview later today. **What:**
+- `src/lib/theme.ts` (no React, so `landing.ts` can use it): follows the device until the visitor
+  uses the switch; only a choice that differs from the device is kept, key `clockwheel-theme`
+  (each domain keeps its own); live change when the device changes. The same rule in a few lines in
+  `index.html`, `backtimer.html` and `landing.html`, before the page draws.
+- `src/components/ThemeSwitch.tsx`, last in the nav bar (`order: 1`); on the baish.net page,
+  `landing.ts` adds the same switch at the top right (`.landing-switch`).
+- `global.css`: the house dark colours under `@media screen` (so printing stays light), plus the ramp
+  steps Clockmaker uses that Hindcaster doesn't; the List's pills outlined (`.cat-pill` with the
+  colour in `--pill`; `data-darker` keeps a fill for colours darker than the page, via
+  `darkerThanDarkPage()` in `color.ts`); the clock face's ink in the text colour.
+- `exportImage.ts`: the two colours inlined into Copy image are now fixed light values, so a copy
+  made in dark mode is the same light image as ever.
+- **Phones, both themes:** the nav bar's side padding is now the page's own 17.6px (was 26.4px) and
+  its gaps tighter, so the switch fits on the top row at 375px; a 320px screen wraps it to a
+  second row.
+
+**Verified:** `npx tsc -b`, lint (the 8 known warnings; a ninth, from the mock-up script saved this
+morning, fixed), `npm run check` (12), build. In Chromium at 1200px and 390px with touch, for
+Clockmaker, the standalone Backtimer and the baish.net page: light and dark devices open to match;
+the switch's choice kept across a reload; setting it back to match the device clears it; the page
+follows the device changing live; prints light; no errors; no sideways scroll on any screen in
+dark. Pills: Music outlined with cream text, News black with cream text. Clock face ticks in the
+text colour. Copy image of the clock and of the list compared pixel for pixel in light and dark:
+identical. **Couldn't be checked:** a real phone; Safari.
+
+**For John:** the Library footer and the Guide say clocks are saved only in this browser; they
+don't mention the light or dark choice (Hindcaster's footer does). Wording left as it is.

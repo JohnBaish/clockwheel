@@ -3,6 +3,7 @@ import { Menu, X } from 'lucide-react';
 import { useApp, type Screen } from '../state/store';
 import { relativeTime } from '../lib/time';
 import { isBacktimerHost } from '../lib/hostMode';
+import { ThemeSwitch } from './ThemeSwitch';
 
 const LINKS: { screen: Screen; label: string }[] = [
   { screen: 'lib', label: 'Library' },
@@ -82,6 +83,7 @@ export function Nav({ screen, onNavigate }: { screen: Screen; onNavigate: (s: Sc
           <span className="tag tag-neutral mono" data-noprint="1" style={{ marginLeft: backtimerOnly ? 'auto' : undefined }}>saved {relativeTime(lastEditedAt, now)}</span>
         )}
       </div>
+      <ThemeSwitch />
     </div>
   );
 }

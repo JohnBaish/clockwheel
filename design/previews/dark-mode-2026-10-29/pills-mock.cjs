@@ -1,4 +1,4 @@
-const { chromium } = require('playwright'); const fs = require('fs'), path = require('path')
+const { chromium } = require('playwright'); const fs = require('fs')
 const D = __dirname, dark = fs.readFileSync(D + '/dark.css', 'utf8') + fs.readFileSync(D + '/clock-face.css', 'utf8')
 const SW = `<span class="mock-label">Dark</span><span class="mock-track"><span class="mock-knob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span></span>`
 function restyle(opt) {

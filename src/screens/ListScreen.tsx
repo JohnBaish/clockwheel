@@ -8,6 +8,7 @@ import { IconGrip, IconPin, IconPlus, IconNote, IconTrash } from '../lib/icons';
 import { PINS_ENABLED, NOTES_ENABLED } from '../config';
 import { isTouch, selectAllSoon, toColon } from '../lib/timeInput';
 import { flushSync } from 'react-dom';
+import { darkerThanDarkPage } from '../lib/color';
 
 const NARROW = 720;
 
@@ -88,12 +89,15 @@ export function ListScreen() {
 
   const categorySelect = (s: (typeof rows)[number]) => (
     <select
-      className="tag"
+      className="tag cat-pill"
+      data-darker={darkerThanDarkPage(categories[s.c].color) ? '' : undefined}
       value={s.c}
       onChange={(e) => setSegmentCategory(s.id, e.target.value)}
       style={{
         appearance: 'none', WebkitAppearance: 'none', border: 'none', cursor: 'pointer',
         background: categories[s.c].color, color: categories[s.c].ink, font: 'inherit',
+        // In dark mode global.css outlines the pill in this colour instead of filling it.
+        ['--pill' as string]: categories[s.c].color,
         // 16px on any touch screen, or an iPhone zooms in (iPads too: John, 22 October 2026).
         fontSize: isNarrow || isTouch() ? 16 : undefined,
       }}
