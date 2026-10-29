@@ -3379,3 +3379,12 @@ scroll. Pictures in Lightreader's repo, `design/previews/baish-hub-lightreader-*
 **Couldn't be checked:** the real www.baish.net (served by `middleware.ts` only on that host).
 
 **Merged to `main` 2026-10-28** at John's word (fast-forward; build clean first).
+
+## House style §2 and §16: dark mode follows the device, and every tool has one (2026-10-29, docs only)
+
+John, replacing his 23 October choices: dark mode follows the device's own light or dark setting
+until the visitor uses the switch (only a choice that differs from the device is kept), and every
+tool has a dark mode, built in from the start rather than asked about late in the design. §2 and
+§16 step 9 updated. Hindcaster and Lightreader changed and live the same day. Mock-ups of dark
+mode for Clockmaker, Backtimer, Flowcharter and the landing page went to John; nothing in this
+repo's app changed yet. Re-copied to Hindcaster, Flowcharter, Lightreader and Refueller.
