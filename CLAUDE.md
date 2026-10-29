@@ -3409,3 +3409,7 @@ colour at 22% on the page, text the colour lightened). A darker fill with cream 
 paper and dropped: it falls to 3.1:1 for the pale colours. Both B and C pass 4.5:1 for every seed
 colour; colours darker than the page (News's black) keep their own fill with cream text and a faint
 edge. Waiting for John's choice.
+
+**John's choices (same day):** pills option B (outlined), since the clock face keeps its full
+colours; Flowcharter's chart on the filled card. The Categories screen (where colours are chosen)
+was shown again from the first round of mock-ups; it needs no special treatment.
