@@ -1,0 +1,5 @@
+/* Clockmaker's face: ink drawn as the page's text colour on screen (Copy image stays light) */
+#clock-face-svg [stroke="#201e1d"] { stroke: var(--color-text); }
+#clock-face-svg [fill="#201e1d"] { fill: var(--color-text); }
+#clock-face-svg [stroke="rgba(32,30,29,.55)"] { stroke: color-mix(in srgb, var(--color-text) 55%, transparent); }
+#clock-face-svg [stroke="rgba(32,30,29,.26)"] { stroke: color-mix(in srgb, var(--color-text) 26%, transparent); }

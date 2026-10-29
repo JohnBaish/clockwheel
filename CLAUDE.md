@@ -3388,3 +3388,16 @@ tool has a dark mode, built in from the start rather than asked about late in th
 §16 step 9 updated. Hindcaster and Lightreader changed and live the same day. Mock-ups of dark
 mode for Clockmaker, Backtimer, Flowcharter and the landing page went to John; nothing in this
 repo's app changed yet. Re-copied to Hindcaster, Flowcharter, Lightreader and Refueller.
+
+## Dark mode mock-ups for Clockmaker, Backtimer and the landing page (2026-10-29, design only)
+
+John asked for dark mode for the tools that don't have it, mock-ups first. Made by adding the house
+dark colours (HOUSE-STYLE §2) and a pretend switch in the browser only, on built pages; nothing in the
+app changed. `design/previews/dark-mode-2026-10-29/`: the Guide, Library, Clock, List, Week and
+Categories, standalone Backtimer (walkthrough and a list), and the landing page, at 1200px and 390px
+with touch. The CSS used is beside them: `dark.css` (Hindcaster's colours, plus the ramp steps
+Clockmaker uses that Hindcaster didn't: neutral-200 to -600 and -900, accent-200) and
+`clock-face.css` (the clock face's ink ticks, `:00` labels and hub hour in the text colour; Copy image
+and printing would stay light). Noted for John: the "News" category is pure black, which sits darker
+than the dark page; category colours are the user's own and were left alone. Checked: no errors, no
+sideways scroll. Waiting for John before anything is built.
