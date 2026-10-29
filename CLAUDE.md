@@ -3460,3 +3460,11 @@ and dark: the wording shows, no errors, no sideways scroll. At John's word, the 
 At John's request: a line near the top asking future sessions to update
 this project's file in the project tracker (`JohnBaish/baish.net-directory`)
 when something significant changes.
+
+### 2026-10-29 — House style: the project tracker (docs only, straight to `main`)
+
+At John's request: §10 now describes the project tracker
+(`JohnBaish/baish.net-directory`) and when to update it; §16's first-thread
+prompt asks for the tracker line in a new tool's `CLAUDE.md`, and a new step 10
+adds the tool to the tracker. Re-copied to Flowcharter, Hindcaster, Lightreader
+and Refueller.
