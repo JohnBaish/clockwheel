@@ -3445,3 +3445,10 @@ identical. **Couldn't be checked:** a real phone; Safari.
 
 **For John:** the Library footer and the Guide say clocks are saved only in this browser; they
 don't mention the light or dark choice (Hindcaster's footer does). Wording left as it is.
+
+**Footer wording, then merged and live (2026-10-29):** John approved a line about the light or dark choice. Library footer:
+"Your clocks are saved automatically, but only in this browser, on this device, along with your choice of light or dark
+mode if you change it. Use Export …". Standalone Backtimer footer, a separate sentence after "clear it at any time." (so
+"clear it", which doesn't reset the theme, stays true): "Your choice of light or dark mode, if you change it, is also kept
+only in this browser." The Guide and the baish.net page are unchanged. Checked at 1200px and 390px with touch, in light
+and dark: the wording shows, no errors, no sideways scroll. At John's word, the branch was merged to `main` with the dark mode work.

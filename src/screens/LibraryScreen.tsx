@@ -120,8 +120,9 @@ export function LibraryScreen() {
           fontSize: 12, lineHeight: 1.6, color: 'var(--color-neutral-700)', textAlign: 'center',
         }}
       >
-        Your clocks are saved automatically, but only in this browser, on this device. Use Export to
-        back up your work or move it to another browser.
+        Your clocks are saved automatically, but only in this browser, on this device, along with your
+        choice of light or dark mode if you change it. Use Export to back up your work or move it to
+        another browser.
       </div>
     </>
   );
