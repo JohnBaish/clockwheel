@@ -3468,3 +3468,11 @@ At John's request: §10 now describes the project tracker
 prompt asks for the tracker line in a new tool's `CLAUDE.md`, and a new step 10
 adds the tool to the tracker. Re-copied to Flowcharter, Hindcaster, Lightreader
 and Refueller.
+
+## House style: sharper dark-mode text; no bold Caprasimo (2026-10-30, docs only, straight to `main`)
+
+From Riverwatcher's mock-up (John, on a MacBook): §2 now has dark mode also set finer text smoothing
+(`-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale` on `body`, in the
+screen-only dark block), as Macs draw light-on-dark text with soft, heavy edges; §3 now says anything
+inheriting Caprasimo is never set bold (small labels inside headings use Figtree). Re-copied to
+Flowcharter, Hindcaster, Lightreader, Refueller and Riverwatcher.
