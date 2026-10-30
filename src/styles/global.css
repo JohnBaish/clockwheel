@@ -218,6 +218,10 @@
     --shadow-md: 0 0 0 1px color-mix(in srgb, #e8dfcf 7%, transparent), 0 3px 10px #0008;
     --shadow-lg: 0 0 0 1px color-mix(in srgb, #e8dfcf 8%, transparent), 0 12px 32px #000a;
   }
+  /* Finer text smoothing in dark mode: Macs draw light text on a dark page with heavy, soft edges,
+     most of all the Caprasimo headings (John, October 30th 2026; HOUSE-STYLE §2). Only macOS
+     browsers use it; light mode is left as it is. */
+  :root[data-theme="dark"] body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
   /* The List's category pills: outlined in the category's colour, with cream text (John's option
      B), so they don't glare. A colour darker than the page (News's black) keeps its own fill, with
      a faint edge so it shows. The clock face's wedges keep their full colours. */

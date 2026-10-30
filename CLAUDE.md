@@ -3476,3 +3476,20 @@ From Riverwatcher's mock-up (John, on a MacBook): §2 now has dark mode also set
 screen-only dark block), as Macs draw light-on-dark text with soft, heavy edges; §3 now says anything
 inheriting Caprasimo is never set bold (small labels inside headings use Figtree). Re-copied to
 Flowcharter, Hindcaster, Lightreader, Refueller and Riverwatcher.
+
+## Sharper dark-mode text — LIVE (2026-10-30, branch `dark-text-smoothing`, merged the same day)
+
+Macs draw light text on a dark page with heavy, soft edges, most of all the Caprasimo headings (found in
+Riverwatcher's mock-up; "way better" with finer smoothing, John, on a MacBook). `global.css`, in the
+screen-only dark block straight after the dark colours: `:root[data-theme="dark"] body {
+-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }`. Only macOS browsers use it;
+light mode unchanged. Dark mode always sets `data-theme="dark"`, including when following the device
+(checked in `theme.ts` and the scripts in `index.html`, `backtimer.html` and `landing.html`). Covers
+Clockmaker, Backtimer and the baish.net page (`landing.ts` imports the same `global.css`). The house
+style rules were added in the previous entry.
+
+**Verified:** build, lint (known warnings only), `npm run check`. In Chromium at 1200px and 390px with
+touch, light and dark devices, every screen (Clockmaker's eight, standalone Backtimer, the baish.net page): smoothing `antialiased` in dark only, `auto` in light; no
+errors; no sideways scroll. No element drawn in Caprasimo above weight 400 (no faked bold) on any screen.
+**Couldn't be checked:** how a Mac actually draws the text (this container runs Linux); John to look on
+his MacBook.
