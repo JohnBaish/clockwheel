@@ -5,7 +5,7 @@ what that did and didn't touch. Historical entries throughout this file
 that say "Clockwheel" are accurate records of what the app was called at
 the time they were written; they're deliberately not rewritten.)
 
-**Project tracker:** when something significant changes (a stage finished, a decision made, something goes live or is parked), update the relevant files (`clockmaker.md`, `backtimer.md` or `baish-net-hub.md`) and their lines in `INDEX.md` in `JohnBaish/baish.net-directory`, following that repo's README.
+**Project tracker:** when something significant changes (a stage finished, a decision made, something goes live or is parked), update the relevant files (`clockmaker.md`, `backtimer.md` or `baish-net-hub.md`) and their lines in `INDEX.md` in `JohnBaish/baish.net-directory`, following that repo's README. Before committing there, run `node site/check-tracker.mjs` in that repo and fix anything it lists.
 
 **Starting a new tool in the same style (e.g. Flowcharter)? Read
 `HOUSE-STYLE.md` first** — the shared design system, phone rules, privacy
@@ -3493,3 +3493,10 @@ touch, light and dark devices, every screen (Clockmaker's eight, standalone Back
 errors; no sideways scroll. No element drawn in Caprasimo above weight 400 (no faked bold) on any screen.
 **Couldn't be checked:** how a Mac actually draws the text (this container runs Linux); John to look on
 his MacBook.
+
+### 2026-10-31 — House style: the tracker checker (docs only, straight to `main`)
+
+At John's request: §10 and the tracker line near the top now ask sessions to run
+`node site/check-tracker.mjs` in `JohnBaish/baish.net-directory` before committing there, and say
+why (the tracker website reads each `INDEX.md` line by its exact pattern; two lines had strayed).
+Re-copied to Flowcharter, Hindcaster, Lightreader and Refueller. No app code changed.
