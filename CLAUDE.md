@@ -5,7 +5,7 @@ what that did and didn't touch. Historical entries throughout this file
 that say "Clockwheel" are accurate records of what the app was called at
 the time they were written; they're deliberately not rewritten.)
 
-**Project tracker:** when something significant changes (a stage finished, a decision made, something goes live or is parked), update the relevant files (`clockmaker.md`, `backtimer.md` or `baish-net-hub.md`) and their lines in `INDEX.md` in `JohnBaish/baish.net-directory`, following that repo's README. Before committing there, run `node site/check-tracker.mjs` in that repo and fix anything it lists.
+**Project tracker:** when something significant changes (a stage finished, a decision made, something goes live or is parked), update the relevant files (`clockmaker.md`, `backtimer.md` or `baish-net-hub.md`) and their lines in `INDEX.md` in `JohnBaish/baish.net-directory`, following that repo's README, straight to its `main` (John's standing permission, even when this session was given its own branch). Before committing there, run `node site/check-tracker.mjs` in that repo and fix anything it lists.
 
 **Starting a new tool in the same style (e.g. Flowcharter)? Read
 `HOUSE-STYLE.md` first** — the shared design system, phone rules, privacy
@@ -3500,3 +3500,12 @@ At John's request: §10 and the tracker line near the top now ask sessions to ru
 `node site/check-tracker.mjs` in `JohnBaish/baish.net-directory` before committing there, and say
 why (the tracker website reads each `INDEX.md` line by its exact pattern; two lines had strayed).
 Re-copied to Flowcharter, Hindcaster, Lightreader and Refueller. No app code changed.
+
+### 2026-10-31 — House style: tracker changes straight to `main` (docs only, straight to `main`)
+
+A Storykeeper session saved its tracker update on its own branch, as sessions are told to push only
+to their own branch. At John's request, §10 and the tracker line near the top now give his standing
+permission to push tracker changes straight to `main` in `JohnBaish/baish.net-directory`, even when
+the session was given its own branch. The tracker's own `CLAUDE.md` now also brings any such stray
+changes onto `main`. Re-copied to Flowcharter, Hindcaster, Lightreader and Refueller; Storykeeper's
+notes updated too. No app code changed.
