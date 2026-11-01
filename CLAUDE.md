@@ -3522,3 +3522,24 @@ and items 11 and 12.
 **Verified:** `vite build` clean; `vite preview` of `/landing.html` in Chromium at 1200px and 390px (touch), light and dark: seven
 cards in order, every link right, brand fonts loaded, no errors, no sideways scroll. Vercel's preview built. **Couldn't be checked:**
 the real www.baish.net (served by `middleware.ts` only on that host; this session's network blocks it).
+
+## The baish.net overview, in two parts; Lightreader's 24-hour times (2026-11-01, docs only, straight to `main`)
+
+John (from the Refueller session) chose to split the overview (option C): the words as a text file a chat reads easily, and
+a pictures-only PDF. With `baish.net` and its subdomains now allowed in the environment, the pictures come from the live
+sites. **What (`design/overview/`):** `baish-net-overview.md`, every site (the hub, Backtimer, Clockmaker, Flowcharter,
+Hindcaster, and now Lightreader and Refueller), "Under way" (Riverwatcher, Storykeeper), what the sites have in common
+(including dark mode on every site), the principles, and five possible themes (Claude's, labelled). Flowcharter's and
+Hindcaster's sections come from the October overview, the tracker and the live sites, as this session couldn't open their
+repos. `baish-net-pictures-2026-11-01.pdf` (19 A4 pages, 5.7 MB, 30 figures): every site at 1440px and 390px with touch,
+a dark-mode page, and the favicons and link-preview pictures fetched from the live sites. `capture.mjs` (seven sites, live
+or five repos served locally, dark-mode set), `prep.py` (halves and strips; phone pictures at three-quarters size),
+`build-pictures.py` (new: lays out `pictures.html`), `make.sh` (now writes the pictures PDF, and fetches icons and preview
+pictures from the live sites with `LIVE=1`), `README.md` rewritten. The October PDF and `overview.html` removed (in git
+history). `HOUSE-STYLE.md`: §1 and §16 describe the two parts; §15 adds Lightreader's 24-hour times ("06:48") as an agreed
+exception beside Clockmaker's.
+
+**Verified:** `LIVE=1 bash design/overview/make.sh` run end to end: 33 pictures, no page errors, no sideways scrolling,
+brand fonts loaded on every one; the PDF has no page that spills over, no missing picture, all fonts loaded; every page
+looked at. Captions re-checked against the retaken pictures (Lightreader's "Now" time corrected to 14:29). **Not checked:**
+the local mode of `make.sh` (it now builds five repos; only the live mode was run).

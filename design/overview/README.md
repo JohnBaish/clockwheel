@@ -1,65 +1,53 @@
-# The baish.net overview PDF
+# The baish.net overview
 
-A single PDF describing every baish.net site — the hub and each tool — for John
-to share with Claude in other chats when discussing themes and ideas. It's for
-reading, not testing. First made on 2026-10-22
-(`baish-net-overview-2026-10-22.pdf`, 24 pages, about 6 MB).
+A description of every baish.net site, the hub and each tool, for John to share with Claude in other chats when discussing
+themes and ideas. It's for reading, not testing. Since November 1st 2026 it comes in two parts (John chose this, option C):
 
-**Update it whenever a new tool goes live** (HOUSE-STYLE §16), and whenever a
-tool changes enough that the overview would mislead.
+- **`baish-net-overview.md`: the words.** What each site is for, what it does, how it looks (with hex colours), how it's
+  built and hosted, where it stands, what's open, then what the sites have in common, the principles written down, and a
+  short list of possible themes (Claude's observations, labelled as such). Small and plain, so a chat reads it quickly;
+  attach it to a chat or add it to a Claude Project. Written by hand.
+- **`baish-net-pictures-<date>.pdf`: the pictures.** Screenshots of every site on a computer (1440px) and a phone (390px
+  with touch), a dark-mode page, and every favicon and link-preview picture. About 19 A4 pages and 6 MB. Made by a script.
 
-## What's in it
+The first version (October 22nd 2026) was a single 24-page PDF with words and pictures together; it's in git history
+(`baish-net-overview-2026-10-22.pdf`, `overview.html`).
 
-- A cover page: contents, and how the screenshots were made.
-- For each site: a written page (purpose and audience, main features, design
-  system with hex colours, tech and hosting, status, known issues and ideas),
-  then screenshots at 1440px and at 390px with touch, full page, each with a
-  caption. Each tool is shown in a realistic working state, with its help
-  screens. Very tall phone pages are split into strips side by side.
-- Two closing pages: what the sites have in common, the principles written in
-  `HOUSE-STYLE.md`, and a short list of possible themes (Claude's
-  observations, labelled as such).
-- Limits John set: under about 25 pages and 20 MB.
+**Update both whenever a new tool goes live** (HOUSE-STYLE §16), and whenever a tool changes enough that the overview
+would mislead.
 
 ## Files
 
 | File | What it does |
 |---|---|
-| `overview.html` | The document itself: all the words and captions, laid out as A4 pages. Edit this. |
-| `make.sh` | Does everything: builds the sites, takes the screenshots, prepares them, writes the PDF. |
-| `capture.mjs` | The screenshots (Playwright), including the sample content typed into each tool. |
-| `prep.py` | Splits very tall screenshots into strips; saves JPEGs in `img/` (not kept in git). |
-| `pdf.mjs` | Makes the PDF, and stops to report any page where something spills off, any missing picture or unloaded font. |
+| `baish-net-overview.md` | The words. Edit by hand. |
+| `make.sh` | Makes the pictures: takes the screenshots, prepares them, writes `pictures.html` and the PDF. |
+| `capture.mjs` | The screenshots (Playwright), including the sample content typed into each tool, and the dark-mode set. |
+| `prep.py` | Cuts very tall pages into halves or strips, makes phone pictures a little lighter, saves JPEGs in `img/` (not kept in git). |
+| `build-pictures.py` | Lays out the pages and writes the captions into `pictures.html`. Edit this, not `pictures.html`. |
+| `pdf.mjs` | Makes the PDF, and reports any page where something spills off, any missing picture or unloaded font. |
 
 ## Updating it (Claude's steps)
 
-1. Have all the tool repos checked out side by side (`clockwheel`,
-   `flowcharter`, `hindcaster`, any new one) on an up-to-date `main`, each with
-   `npm ci` done.
-2. **A new tool:** add its screenshots to `capture.mjs` (its address, a
-   realistic working state, any help screen), its favicon and preview image to
-   `make.sh`, and to `overview.html` a written page and screenshot pages like
-   the others, a row in the cover's contents table, and its place on the two
-   closing pages. Add its card to the hub page's description.
-3. Run `bash design/overview/make.sh` from the clockwheel folder.
-   - **Live sites (preferred):** if John has added `baish.net` and its
-     subdomains to the environment's Allowed domains, run
-     `LIVE=1 bash design/overview/make.sh` and change the cover's "How the
-     screenshots were made" box to say the live sites were used.
-   - **Otherwise** it builds each site from its `main` (what Vercel deploys)
-     and serves it locally; the cover says so.
-4. Read the written pages again against the current notes (`HOUSE-STYLE.md`,
-   each repo's `CLAUDE.md`, `SPEC.md`, `PLAN.md`) and update statuses, dates,
-   counts, page numbers in the contents table and the date on the cover.
-   **Captions name things that change** (Hindcaster's day and figures, commit
-   numbers): re-check every one against its new screenshot.
-5. Look at every page of the PDF. Then delete the old PDF and keep the new one,
-   named `baish-net-overview-<date>.pdf`, and send it to John.
+1. **Allow the live sites.** John adds `baish.net` and its subdomains to the environment's Allowed domains (the cloud
+   environment's settings, Network access). Check with `curl -s -o /dev/null -w "%{http_code}" https://www.baish.net/`.
+2. **A new tool:** add its screenshots to `capture.mjs` (its address, a realistic working state, a dark-mode picture), its
+   favicon and preview picture to `make.sh`, its splitting to `prep.py` if its pages are tall, and its pages, contents line
+   and favicon to `build-pictures.py` (`SITES`, and a `section(...)` with its `page(...)` calls). In
+   `baish-net-overview.md`, a section like the others, its line in "At a glance", and its place in "What the sites have in
+   common" and the themes.
+3. From the clockwheel folder, run `LIVE=1 bash design/overview/make.sh`. (Without `LIVE=1` it builds each site from its
+   `main` and serves it locally; that needs every repo checked out beside clockwheel with `npm ci` done, and the cover's "How
+   the pictures were made" box must then say so.)
+4. **Captions name things that change** (the date and time taken, Hindcaster's day, Lightreader's "Now" time, Refueller's
+   collection): set `TAKEN` and `TAKEN_AT` in `build-pictures.py`, check every caption against its new picture, then rerun
+   `python3 -I design/overview/build-pictures.py` and `node design/overview/pdf.mjs …` (no need to retake the pictures).
+5. Read the words again against the current notes (`HOUSE-STYLE.md`, each repo's `CLAUDE.md`, `SPEC.md`, `PLAN.md`, and the
+   project tracker in `JohnBaish/baish.net-directory`), and update statuses, dates and the date at the top.
+6. Look at every page of the PDF. Delete the old PDF, keep the new one, and send both files to John.
 
 ## Known limits
 
-- Hindcaster's figures are whichever update is current when the screenshots
-  are taken.
-- Local builds can't reproduce what only Vercel does: the hub and Backtimer
-  are reached by `landing.html` and `?host=backtimer` instead of their own
-  addresses, and Vercel's visit-statistics script is missing (harmless).
+- Pictures with real figures show whatever is current when they're taken.
+- Local builds can't reproduce what only Vercel does: the hub and Backtimer are reached by `landing.html` and
+  `?host=backtimer` instead of their own addresses, and the visit-statistics script is missing (harmless).
