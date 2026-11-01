@@ -3564,3 +3564,11 @@ Lightreader, Refueller and Riverwatcher. No app code changed.
 ## "Delete merged branches" workflow (2026-11-01, straight to `main`)
 
 A "Delete merged branches" workflow (`.github/workflows/tidy-branches.yml`, Run workflow only, nothing scheduled): deletes only branches fully merged into `main`, never `main`, and only if a branch hasn't moved since it was checked; "Only list" (ticked by default) changes nothing; named unmerged branches can be added, each kept as an `archive/<name>` tag first. Added because cloud sessions can't delete branches (John: automate it, with no danger to the websites; the sites build from `main`, and deletions made by the job start no other workflows). Tested against a pretend GitHub here: the trial changed nothing; the real run deleted the merged branch and the named one (kept as a tag), and refused `main`. House style §10 now says every repo has it; re-copied to the other tools.
+
+## House style §10: sessions run "Delete merged branches" themselves (2026-11-01, docs only, straight to `main`)
+
+John: a session should delete merged branches itself. Found in the Refueller session: a cloud session can't delete a branch directly,
+but it can start the "Delete merged branches" workflow with the GitHub tools (done there: a trial run, then the real run, deleting
+`feature-sort` and `sort-mockups`). §10 no longer asks sessions to list branches for John; after a merge they run the workflow
+themselves, trial run first, check the branches are gone and note it in the log; an unmerged branch is named only when John says it's
+dead. To be re-copied to the other repos.
