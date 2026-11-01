@@ -3543,3 +3543,11 @@ exception beside Clockmaker's.
 brand fonts loaded on every one; the PDF has no page that spills over, no missing picture, all fonts loaded; every page
 looked at. Captions re-checked against the retaken pictures (Lightreader's "Now" time corrected to 14:29). **Not checked:**
 the local mode of `make.sh` (it now builds five repos; only the live mode was run).
+
+## The overview checked against Flowcharter's and Hindcaster's repos (2026-11-01, docs only, straight to `main`)
+
+With both repos now in the session, their sections of `design/overview/baish-net-overview.md` were checked against
+their notes, `index.html` and code (titles, colours, features, status). All correct; two additions: Full screen is
+offered on tablets too (Flowcharter), and "Compared with a year ago" can be moved to the top of the page, remembered on
+the device (Hindcaster). The "How to read this" note no longer says their repos couldn't be opened. `HOUSE-STYLE.md` and
+`SEO-HANDOVER.md` re-copied to both (Flowcharter `58d442e`, Hindcaster `9053131`). The pictures PDF is unchanged.

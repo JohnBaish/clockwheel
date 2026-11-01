@@ -11,8 +11,7 @@ companion PDF, "baish.net in pictures" (`baish-net-pictures-2026-11-01.pdf`), ma
 - **Two more are being built** (not live yet): Riverwatcher and Storykeeper (see "Under way", near the end).
 - **Sources:** each project's own notes (`CLAUDE.md`, `SPEC.md`, `PLAN.md`), the shared `HOUSE-STYLE.md`, John's project
   tracker, the October 22nd 2026 overview, and the live sites themselves. Colours and version numbers come from the code.
-  For Flowcharter and Hindcaster, this session couldn't open their repos, so their sections come from the October overview,
-  the tracker's current entries and the live sites.
+  Flowcharter's and Hindcaster's sections were first written without their repos, then checked against them the same day.
 - **Labelled observations:** anything that is Claude's own observation rather than something John has written down says so.
 
 ## At a glance
@@ -174,7 +173,7 @@ examples (booking a restaurant table) are deliberately general.
 - **Step by step:** conversational cards ("What happens next?") that build the chart as you go, with the chart beside them;
   Back really undoes; switch to the List at any time.
 - Library with Export and Import; Print (the paper turns to suit the chart); Copy image; Full screen for wide charts on
-  phones; a Guide on a first visit; two-tab warning; Back stays in the tool; safety net. Dark mode.
+  phones and tablets; a Guide on a first visit; two-tab warning; Back stays in the tool; safety net. Dark mode.
 
 **How it looks.** The shared style, with a nav bar of a terracotta "New chart" button and two links (Library, Guide) and a
 List | Chart pair of tabs. The chart has its own palette: seven pale fills, each with an ink outline and ink text (at least
@@ -211,7 +210,7 @@ hours, so Hindcaster collects and keeps the readings itself. (A "hindcast" is re
 - **Rainfall** (Environment Agency gauges), midnight to midnight: the nearest gauges for a postcode, or the spread for an
   area.
 - **Compared with a year ago:** high, low and rain against the same places over a fortnight a year earlier, with small strip
-  charts.
+  charts; the section can be moved to the top of the page (remembered on the device).
 - **Three updates a day:** about 5.50am (early; the night marked incomplete), 9.30am (final) and 9.30pm (the day so far).
 - "About these figures", print rules, clock-change notes, and checks on implausible gauge readings. Dark mode.
 
