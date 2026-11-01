@@ -3509,3 +3509,16 @@ permission to push tracker changes straight to `main` in `JohnBaish/baish.net-di
 the session was given its own branch. The tracker's own `CLAUDE.md` now also brings any such stray
 changes onto `main`. Re-copied to Flowcharter, Hindcaster, Lightreader and Refueller; Storykeeper's
 notes updated too. No app code changed.
+
+## Refueller added to the baish.net landing page (2026-11-01, branch `landing-refueller`, merged the same day)
+
+John (from the Refueller session, `JohnBaish/refueller`, live at `https://refueller.baish.net/`): a seventh card, after Lightreader
+and before John's Blog (tools alphabetical): **Refueller**, "Petrol and diesel prices near you, and the cheapest on your journey."
+(Claude's draft, John agreed). The hub's search description, by John's standing reminder: "Free browser tools by John Baish: radio
+clocks, backtiming, flowcharts, yesterday's weather, sunrise and sunset times, and fuel prices." (135 characters). Title and `og:` tags
+unchanged; the head comment now says seven links and names the Refueller repo. `SEO-HANDOVER.md`: Refueller's column in the §1 table,
+and items 11 and 12.
+
+**Verified:** `vite build` clean; `vite preview` of `/landing.html` in Chromium at 1200px and 390px (touch), light and dark: seven
+cards in order, every link right, brand fonts loaded, no errors, no sideways scroll. Vercel's preview built. **Couldn't be checked:**
+the real www.baish.net (served by `middleware.ts` only on that host; this session's network blocks it).
