@@ -3551,3 +3551,12 @@ their notes, `index.html` and code (titles, colours, features, status). All corr
 offered on tablets too (Flowcharter), and "Compared with a year ago" can be moved to the top of the page, remembered on
 the device (Hindcaster). The "How to read this" note no longer says their repos couldn't be opened. `HOUSE-STYLE.md` and
 `SEO-HANDOVER.md` re-copied to both (Flowcharter `58d442e`, Hindcaster `9053131`). The pictures PDF is unchanged.
+
+## House style §10: tidy branches as you go (2026-11-01, docs only, straight to `main`)
+
+John asked for a check of unmerged branches across all the repos, then agreed the usual practice: delete a branch as
+soon as it's merged; keep unmerged ones only for work worth returning to, noted in the project's notes; tag dead
+unmerged work before deleting. Added to §10's git safety, with two findings from the check: cloud copies are often
+shallow, which makes merged branches look unmerged; and cloud sessions can't delete branches or push tags (GitHub
+refused both with 403), so sessions list the branches for John to delete. Re-copied to Flowcharter, Hindcaster,
+Lightreader, Refueller and Riverwatcher. No app code changed.
