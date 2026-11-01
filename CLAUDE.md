@@ -3560,3 +3560,7 @@ unmerged work before deleting. Added to §10's git safety, with two findings fro
 shallow, which makes merged branches look unmerged; and cloud sessions can't delete branches or push tags (GitHub
 refused both with 403), so sessions list the branches for John to delete. Re-copied to Flowcharter, Hindcaster,
 Lightreader, Refueller and Riverwatcher. No app code changed.
+
+## "Delete merged branches" workflow (2026-11-01, straight to `main`)
+
+A "Delete merged branches" workflow (`.github/workflows/tidy-branches.yml`, Run workflow only, nothing scheduled): deletes only branches fully merged into `main`, never `main`, and only if a branch hasn't moved since it was checked; "Only list" (ticked by default) changes nothing; named unmerged branches can be added, each kept as an `archive/<name>` tag first. Added because cloud sessions can't delete branches (John: automate it, with no danger to the websites; the sites build from `main`, and deletions made by the job start no other workflows). Tested against a pretend GitHub here: the trial changed nothing; the real run deleted the merged branch and the named one (kept as a tag), and refused `main`. House style §10 now says every repo has it; re-copied to the other tools.
