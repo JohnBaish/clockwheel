@@ -6,8 +6,9 @@ import sys, os
 from PIL import Image
 src, out = sys.argv[1], sys.argv[2]
 strips = {'bt-working-phone': 2, 'hc-rg4-phone': 4, 'hc-county-desktop': 2,
-          'lr-rg4-phone': 4, 'rf-rg4-phone': 4}
-parts = {'hc-rg4-desktop': 2, 'lr-rg4-desktop': 2, 'rf-rg4-desktop': 2, 'rf-journey-desktop': 2}
+          'lr-rg4-phone': 4, 'rf-rg4-phone': 4, 'rw-rg4-phone': 4}
+parts = {'hc-rg4-desktop': 2, 'lr-rg4-desktop': 2, 'rf-rg4-desktop': 2, 'rf-journey-desktop': 2,
+         'rw-rg4-desktop': 2, 'rw-county-desktop': 2}
 OVERLAP = 30
 for f in sorted(os.listdir(src)):
     if not f.endswith('.png'):

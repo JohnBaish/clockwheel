@@ -11,6 +11,7 @@ const FC = LIVE ? 'https://flowcharter.baish.net' : 'http://localhost:4302';
 const HC = LIVE ? 'https://hindcaster.baish.net' : 'http://localhost:4303';
 const LR = LIVE ? 'https://lightreader.baish.net' : 'http://localhost:4304';
 const RF = LIVE ? 'https://refueller.baish.net' : 'http://localhost:4305';
+const RW = LIVE ? 'https://riverwatcher.baish.net' : 'http://localhost:4306';
 const HUB = LIVE ? 'https://www.baish.net/' : 'http://localhost:4301/landing.html';
 // Locally, the app's own test switch gives backtimer.baish.net's standalone presentation.
 const BT = LIVE ? 'https://backtimer.baish.net/' : 'http://localhost:4301/backtimer.html?host=backtimer';
@@ -109,6 +110,13 @@ await shot('rf-calc-phone', PHONE, `${RF}/#RG4`, { wait: '.results-head', full: 
   before: async p => { await p.getByRole('button', { name: 'Worth driving here?' }).first().tap(); await p.waitForSelector('.calc'); await p.waitForTimeout(1200); } });
 await shot('rf-journey-desktop', DESK, `${RF}/#route/@Wokingham/@Horsham`, { wait: '.results-head' });
 
+// Riverwatcher (real river levels from the latest hourly collection)
+await shot('rw-chooser-desktop', DESK, `${RW}/#choose`);
+await shot('rw-rg4-desktop', DESK, `${RW}/#postcode/RG4`, { wait: '#detail' });
+await shot('rw-rg4-phone', PHONE, `${RW}/#postcode/RG4`, { wait: '#detail' });
+await shot('rw-county-desktop', DESK, `${RW}/#county/berkshire`, { wait: '#detail' });
+await shot('rw-england-desktop', DESK, `${RW}/#england`, { wait: '#detail', full: false });
+
 // Dark mode: each tool's main screen on a phone, following the device's setting
 await shot('dark-hub', dark(PHONE), HUB, { full: false });
 await shot('dark-bt', dark(PHONE), BT, { storage: btSeed, full: false });
@@ -117,6 +125,7 @@ await shot('dark-fc', dark(PHONE), `${FC}/`, { storage: fc('chart'), wait: waitC
 await shot('dark-hc', dark(PHONE), `${HC}/#postcode/RG4`, { full: false });
 await shot('dark-lr', dark(PHONE), `${LR}/`, { storage: lr, wait: '.group', full: false });
 await shot('dark-rf', dark(PHONE), `${RF}/#RG4`, { wait: '.results-head', full: false });
+await shot('dark-rw', dark(PHONE), `${RW}/#postcode/RG4`, { wait: '#detail', full: false });
 
 await browser.close();
 console.log(JSON.stringify(log, null, 1));

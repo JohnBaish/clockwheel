@@ -3523,6 +3523,18 @@ and items 11 and 12.
 cards in order, every link right, brand fonts loaded, no errors, no sideways scroll. Vercel's preview built. **Couldn't be checked:**
 the real www.baish.net (served by `middleware.ts` only on that host; this session's network blocks it).
 
+## The baish.net overview updated for Riverwatcher (2026-11-02, docs only, straight to `main`)
+
+Riverwatcher went live and onto the hub the same day. `design/overview/`: `baish-net-overview.md` gains a Riverwatcher section
+(written from its `SPEC.md`, `CLAUDE.md` and the live site), its line in "At a glance", the hub's new card and description, eight
+live sites, and the "Under way" list now only Storykeeper; Refueller's section brought up to date (sorting, and "The wider
+picture" by council area, county, region and country). The pictures: `capture.mjs`, `make.sh` and `prep.py` take Riverwatcher too
+(RG4 on a computer and a phone, the chooser, Berkshire, England, dark mode, its favicon and preview picture);
+`build-pictures.py` adds four Riverwatcher pages and updates every caption that names a time or day.
+`baish-net-pictures-2026-11-02.pdf` (23 A4 pages, 36 figures) replaces the November 1st PDF, made with `LIVE=1` from the live
+sites at about 6.45pm. **Verified:** no page errors and no sideways scrolling in any picture, all fonts loaded, nothing spilling
+off a page, every page looked at.
+
 ## Riverwatcher added to the baish.net landing page (2026-11-02, branch `landing-riverwatcher`, merged the same day)
 
 John (from the Riverwatcher session, `JohnBaish/riverwatcher`, live at `https://riverwatcher.baish.net/`): an eighth card, after

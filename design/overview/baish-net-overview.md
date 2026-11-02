@@ -1,14 +1,15 @@
 # baish.net: an overview of John Baish's sites
 
-*Written on Sunday November 1st 2026, as background for discussing themes and ideas in other chats. The pictures are in the
-companion PDF, "baish.net in pictures" (`baish-net-pictures-2026-11-01.pdf`), made the same day from the live sites.*
+*Written on Sunday November 1st 2026, updated on Monday November 2nd 2026 (Riverwatcher live), as background for discussing
+themes and ideas in other chats. The pictures are in the companion PDF, "baish.net in pictures"
+(`baish-net-pictures-2026-11-02.pdf`), made the same day from the live sites.*
 
 ## How to read this
 
-- **Seven live sites:** the hub at www.baish.net and six free tools: Backtimer, Clockmaker, Flowcharter, Hindcaster,
-  Lightreader and Refueller. Each tool has its own section below, in the same order: what it's for, what it does, how it
+- **Eight live sites:** the hub at www.baish.net and seven free tools: Backtimer, Clockmaker, Flowcharter, Hindcaster,
+  Lightreader, Refueller and Riverwatcher. Each tool has its own section below, in the same order: what it's for, what it does, how it
   looks, how it's built, where it stands, and what's open.
-- **Two more are being built** (not live yet): Riverwatcher and Storykeeper (see "Under way", near the end).
+- **One more is being built** (not a public tool): Storykeeper (see "Under way", near the end).
 - **Sources:** each project's own notes (`CLAUDE.md`, `SPEC.md`, `PLAN.md`), the shared `HOUSE-STYLE.md`, John's project
   tracker, the October 22nd 2026 overview, and the live sites themselves. Colours and version numbers come from the code.
   Flowcharter's and Hindcaster's sections were first written without their repos, then checked against them the same day.
@@ -29,6 +30,8 @@ companion PDF, "baish.net in pictures" (`baish-net-pictures-2026-11-01.pdf`), ma
   since October 28th.
 - **Refueller**, refueller.baish.net: "Petrol and diesel prices near you, and the cheapest on your journey." Live since
   October 31st; on the hub since November 1st.
+- **Riverwatcher**, riverwatcher.baish.net: "River levels in your chosen area, with historical comparisons." Live and on the
+  hub since November 2nd.
 
 The quoted lines are each tool's own card on the hub.
 
@@ -38,14 +41,14 @@ The quoted lines are each tool's own card on the hub.
 
 **Address:** www.baish.net (the bare baish.net redirects there). Search title: "baish.net – free browser tools by John
 Baish". Search description: "Free browser tools by John Baish: radio clocks, backtiming, flowcharts, yesterday's weather,
-sunrise and sunset times, and fuel prices."
+sunrise and sunset times, fuel prices and river levels."
 
 **Purpose and audience.** A front door for anyone who arrives at the domain rather than at a particular tool. Before
 September 30th 2026 the bare domain went to John's old Blogspot blog.
 
 **What it does.**
-- Seven whole-card links, the tools in alphabetical order (Backtimer, Clockmaker, Flowcharter, Hindcaster, Lightreader,
-  Refueller), then **John's Blog** (jbaish.blogspot.com: "Daily blog entries from 2006 to 2010, featuring small tech and
+- Eight whole-card links, the tools in alphabetical order (Backtimer, Clockmaker, Flowcharter, Hindcaster, Lightreader,
+  Refueller, Riverwatcher), then **John's Blog** (jbaish.blogspot.com: "Daily blog entries from 2006 to 2010, featuring small tech and
   retail innovations and fun things, all of them outdated now but archived for nostalgia and curiosity value.").
 - Its own favicon (a lowercase "b") and link-preview picture ("baish.net — John Baish's websites").
 - Search basics: title, description, canonical address, robots.txt and sitemap; one Google Search Console property covers
@@ -302,8 +305,11 @@ Government's Fuel Finder service, to which petrol stations must report their pri
   road distances worked out in advance from Ordnance Survey's map of every road.
 - **Price history:** a station's price over 14 days against the average of the eight, from Refueller's own record (Fuel
   Finder keeps no history).
-- **The wider picture:** average unleaded and diesel prices for these eight, the postcode area and Great Britain, building
-  up to 30 days.
+- **The wider picture:** average unleaded and diesel prices for these eight and Great Britain over up to 30 days, then a
+  list for each level (council area, county, region, country, Great Britain), each with a fact ("The dearest of England's nine
+  regions for both fuels").
+- **Sorting:** the list by distance, unleaded or diesel price (remembered on the device); the journey list by journey order,
+  detour or price.
 - **Find cheaper fuel near the route:** From, an optional Via and To (places or postcodes); the route worked out on the
   device from Ordnance Survey's main roads and described in a sentence ("via the M25 and Dorking"); the cheapest stations
   within about two miles of it that add no more than three miles and about six minutes, in the order you'd reach them, plus
@@ -329,11 +335,51 @@ fuels, a map, filters (motorway services, 24 hours), Northern Ireland, county or
 
 ---
 
+## Riverwatcher
+
+**Address:** riverwatcher.baish.net. Search title: "Riverwatcher – river levels in England". Search description: "Free river
+levels for anywhere in England, by postcode or county. See whether rivers are high or low for the time of year, from
+Environment Agency gauges." Started October 30th 2026 (from research in a Claude chat on October 25th); live November 2nd.
+
+**Purpose and audience.** Anyone curious whether the rivers near them are high or low. The Environment Agency's own pages give
+a gauge's level; Riverwatcher's point is comparison: whether it's unusual **for the time of year**, against the same gauge's
+past years.
+
+**What it does.**
+- **A postcode** (first half used): a sentence summary river by river, then the nearest five gauges within 10 miles, grouped
+  under each river, listed upstream to downstream ("The Kennet joins here"), each with its word for the time of year (very
+  low, low, normal, high, very high), latest level, change over 24 hours, a year ago and a two-week line. The chosen gauge in
+  detail: a chart of two weeks to a year shaded in the five bands for each day, and comparisons ("Higher than on 61% of late
+  October days since 2000", "The highest for the time of year since 2025", a year ago, the record).
+- **Locks, weirs and drains:** where a structure holds the level (the Thames locks, the fen drains), only "high" or "very
+  high" is said; otherwise "Held steady by a lock or weir". Gauges merely named after a mill or weir that rise and fall like
+  rivers are judged as rivers.
+- **A county, a region or England:** a summary count, "the most unusual" high and low gauges (ranked by how long since each
+  was last this high or low, so "the lowest since 1967" beats "since 2022"), and the full list or the ten highest and lowest.
+- **Flood warnings** in force nearby, coloured by severity, with a link to GOV.UK and Floodline.
+- A warning if the figures go more than three hours out of date; "About these figures"; print rules; dark mode.
+
+**How it looks.** Close to Hindcaster: the same chooser, place strip, summary card and footer. Its own judgement colours:
+low water terracotta (`#8c491a` very low, `#d1824c` low), normal grey `#c0b6a5`, high water blue (`#6d98c2` high, `#2c5885`
+very high), always with the word; flood warnings in red. Favicon: two waves.
+
+**How it's built.** `JohnBaish/riverwatcher` (code, public) and `JohnBaish/riverwatcher-data` (data, public). A collector in
+GitHub Actions, started every hour by cron-job.org, fetches every gauge's latest reading and the flood warnings from the
+Environment Agency's open API, writes a day file after midnight, and asks Vercel to rebuild through a deploy hook. Each gauge's
+history (from the EA's archive, back to 1952 at the oldest) is a table of its usual levels for every fifth day of the year,
+cleaned of old zero points, stuck readings and impossible figures; a monthly workflow tops it up. River order and joins come
+from Ordnance Survey's Open Rivers, counties and regions from Boundary-Line. Every visitor loads the same files, so nothing
+about a choice is sent.
+
+**Where it stands.** Live (November 2nd) and on the hub. A full review ("fresh look") the same day was followed by every fix
+John chose. **Dates to remember:** the monthly history workflow first runs on November 3rd; renew the cron-job.org GitHub key
+by January 29th 2027. **Ideas for later (agreed):** river flow for lock reaches (stage 6, with a mock-up first), downstream
+gauges at locks, tidal stations and groundwater, full postcodes, Wales and Scotland.
+
+---
+
 ## Under way (not live yet)
 
-- **Riverwatcher:** a free tool for river levels in England from open Environment Agency data, looking close to Hindcaster.
-  You enter a postcode and it offers the nearest river gauges; its main purpose is comparison with recent weeks and longer
-  history. Being built (the collector is running).
 - **Storykeeper:** a private website for the Baish family's stories (a page per person, a friendly family tree, places). Not
   a public baish.net tool.
 - Also in the tracker: an Instagram carousel promoting the tools to friends, many of whom work or have worked in radio
@@ -349,7 +395,8 @@ task and mood". Rule of thumb: copy, don't reinvent.
 
 **Colour.** Page cream `#f5ead8`, surface `#ebddc5`, ink `#201e1d`, terracotta accent `#c67139`, dark terracotta `#8c491a`,
 muted text `#645c50`, olive (rare) `#7a8a5e`, dividers in ink at 16%. Each tool may add a palette on top (Clockmaker's
-categories, Flowcharter's shapes, Hindcaster's and Refueller's charts, Lightreader's five kinds of light).
+categories, Flowcharter's shapes, Hindcaster's and Refueller's charts, Lightreader's five kinds of light, Riverwatcher's five
+river words).
 
 **Dark mode on every site** (since October 29th): a warm dark grey page (`#2a2723`, from Hindcaster's agreed set),
 following the device's own light or dark setting until the visitor uses the switch at the top right; only a choice that
@@ -371,9 +418,9 @@ Caprasimo, a tagline in Figtree.
 
 **Technology and hosting.** Vite, React and TypeScript, the same versions everywhere; no accounts; GitHub, deployed by Vercel
 from `main`, each tool on its own baish.net address; anonymous Vercel visit statistics (no cookies). Automatic plain-script
-checks where the rules matter, and a "safety net" so a fault never shows a blank page. Two tools collect public data on a
-timetable: Hindcaster (GitHub Actions, started by cron-job.org) and Refueller (an AWS function in London, as its source only
-answers UK addresses). Everything is kept free to run.
+checks where the rules matter, and a "safety net" so a fault never shows a blank page. Three tools collect public data on a
+timetable: Hindcaster and Riverwatcher (GitHub Actions, started by cron-job.org) and Refueller (an AWS function in London, as
+its source only answers UK addresses). Everything is kept free to run.
 
 **Search.** For each tool: a title, a description starting "Free …", a canonical address, robots.txt, a sitemap, some
 visible explanation for first-time visitors, and "More free tools at www.baish.net." in the footer; one Search Console
@@ -394,7 +441,7 @@ than", not "under" and "over"; no sentence ending in a preposition; dates month 
 sentences, 10 and above as digits; halves rounded away from zero.
 
 **Help built in.** Each tool explains itself to a first-time visitor: Guide screens (Clockmaker, Flowcharter), a walkthrough
-and explainer (Backtimer), "About these figures" (Hindcaster, Lightreader, Refueller).
+and explainer (Backtimer), "About these figures" (Hindcaster, Lightreader, Refueller, Riverwatcher).
 
 **Ways of working.** Agree before building; show rendered options (A, B, C) on a computer and a phone; questions in numbered
 batches. A spec and a staged plan for each new tool; every stage on a branch; merge to `main` only when John says (notes
@@ -410,7 +457,7 @@ records where every project stands.
 1. **Two audiences.** Backtimer and Clockmaker are broadcasting tools, and Hindcaster began with broadcasters in mind;
    Flowcharter, Lightreader and Refueller are for anyone. The hub doesn't yet say so.
 2. **Two kinds of tool.** Editors that keep your work in the browser (Backtimer, Clockmaker, Flowcharter), and readers of
-   public data (Hindcaster, Lightreader, Refueller, and soon Riverwatcher). The readers brought timetabled collectors,
+   public data (Hindcaster, Lightreader, Refueller, Riverwatcher). The readers brought timetabled collectors,
    secrets, data licences and attribution into the family; Lightreader is the exception, working everything out from
    astronomy.
 3. **"Place" as a common thread.** Hindcaster, Lightreader, Refueller and Riverwatcher all start from a postcode, share
