@@ -3523,6 +3523,19 @@ and items 11 and 12.
 cards in order, every link right, brand fonts loaded, no errors, no sideways scroll. Vercel's preview built. **Couldn't be checked:**
 the real www.baish.net (served by `middleware.ts` only on that host; this session's network blocks it).
 
+## Riverwatcher added to the baish.net landing page (2026-11-02, branch `landing-riverwatcher`, merged the same day)
+
+John (from the Riverwatcher session, `JohnBaish/riverwatcher`, live at `https://riverwatcher.baish.net/`): an eighth card, after
+Refueller and before John's Blog (tools alphabetical): **Riverwatcher**, "River levels in your chosen area, with historical
+comparisons." (its link-preview line; John's choice, option a). The hub's search description, by John's standing reminder:
+"Free browser tools by John Baish: radio clocks, backtiming, flowcharts, yesterday's weather, sunrise and sunset times, fuel
+prices and river levels." (148 characters). Title and `og:` tags unchanged; the head comment now says eight links and names the
+Riverwatcher repo. `SEO-HANDOVER.md`: Riverwatcher's column in the §1 table, and items 11 and 12.
+
+**Verified:** `vite build` clean; `vite preview` of `/landing.html` in Chromium at 1200px and 390px (touch), light and dark: eight
+cards in order, every link right, brand fonts loaded, no errors, no sideways scroll. **Couldn't be checked:** the real
+www.baish.net until it deploys.
+
 ## The baish.net overview, in two parts; Lightreader's 24-hour times (2026-11-01, docs only, straight to `main`)
 
 John (from the Refueller session) chose to split the overview (option C): the words as a text file a chat reads easily, and
