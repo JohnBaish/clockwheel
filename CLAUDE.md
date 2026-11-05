@@ -3597,3 +3597,10 @@ but it can start the "Delete merged branches" workflow with the GitHub tools (do
 `feature-sort` and `sort-mockups`). §10 no longer asks sessions to list branches for John; after a merge they run the workflow
 themselves, trial run first, check the branches are gone and note it in the log; an unmerged branch is named only when John says it's
 dead. To be re-copied to the other repos.
+
+## House style §2: reviewing dark mode colours (2026-11-05, docs only, straight to `main`)
+
+From the tracker (`JohnBaish/baish.net-directory`), where John chose option D (a colour for each group) to
+make its dark mode more colourful: §2 now has "Reviewing dark mode colours", the way to mock up and choose
+options, for the other tools' coming dark-mode reviews (Storykeeper, Lightreader, Hindcaster, Refueller,
+Riverwatcher). No app code changed; not yet re-copied to the other repos.
