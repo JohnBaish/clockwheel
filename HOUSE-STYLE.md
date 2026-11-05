@@ -120,6 +120,42 @@ terracotta labels below 4.5:1. How it's built (Hindcaster's
   or dark mode), so the page opens the same way next time."
 - Charts: re-check their colours in both themes ("Charts" in §5).
 
+### Reviewing dark mode colours
+
+How the tracker's dark mode was made more colourful (November 5th 2026),
+for any tool whose dark mode John wants to review. Dark mode only: light
+mode stays exactly as it is.
+
+1. **Mock up, don't build.** On the built site, add the candidate CSS in
+   the browser only (Playwright's `addStyleTag`), scoped to
+   `:root[data-theme="dark"]`. Nothing in the app changes until John
+   chooses.
+2. **Show "now" plus about four options**, each the same few pages: the
+   main page at 1200px, the same at 390px with touch, and one busy inner
+   page at 390px. One picture per option, the three side by side. The
+   tracker's four were:
+   - A, colour by status: each card tinted in its status colour, with a
+     coloured edge;
+   - B and C, a coloured ground: the page and cards a dark teal or a dark
+     plum instead of brown-grey, everything else unchanged;
+   - D, colour by group: each group's heading and a band across the top
+     of its cards in its own colour, the page left brown-grey. John chose
+     D.
+   Other ideas worth offering: coloured headings only; a coloured nav bar;
+   colour on links and controls only.
+3. **Keep colour tied to meaning** (a status, a group, a kind of thing)
+   rather than decoration, and keep the house terracotta as the accent.
+4. **Check each colour** against the surface behind it: at least 4.5:1 for
+   text (light, soft colours on the dark ground, such as `#f0a36c`,
+   `#b9d48a`, `#8fc3d6`, `#cdaee6`), and the shades told apart by more
+   than hue where it matters (a word, a position).
+5. **When building the chosen one:** name colours by what they mean
+   (classes such as `g-live-and-developing`), not by position on the page
+   (`nth-of-type` leaked group colours onto other pages in the tracker's
+   mock-up); keep printing, Copy image and link-preview images light;
+   finer text smoothing still applies; never bold Caprasimo. Check light
+   mode is unchanged, at 1200px and 390px with touch, both themes.
+
 ## 3. Type
 
 - **Headings and buttons:** Caprasimo, weight 400 — the only weight that
