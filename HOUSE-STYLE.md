@@ -298,6 +298,22 @@ Every screen must work on a 390px-wide phone with no sideways scrolling.
   visible button for it (a full-width "+ Add …" under the list).
 - Keep important buttons in the top ~60% of the screen while a keypad is
   open (it covers roughly the bottom 40%).
+- **A phone held sideways** (about 844×390, as little as 667×320 on the
+  smallest iPhone with Safari's bar) is wider than 720px, so it gets the
+  computer layout on a screen less than 500px tall, and is tapped, not
+  clicked. Treat `@media (max-height: 500px)` as "short screen" (Storykeeper,
+  November 8th and 9th 2026):
+  - keep what stays at the top small (a slim header; no second bar held
+    under it);
+  - no chart, map or pop-up taller than the screen: cap its width so its
+    height fits, keeping its shape (`max-width: calc((100svh - 40px) *
+    var(--ar))`, with `--ar`, its width over height, set on the element).
+    Cap the box that tooltips are measured from, not only the drawing
+    inside it, or they land in the wrong place;
+  - anything a finger drags (a map, a tree) must be shorter than the
+    screen, so there's always page above or below it to swipe;
+  - typing boxes stay 16px: check a more specific style doesn't beat the
+    touch-screen rule (Refueller's search box did).
 - Drag-to-reorder uses `useDragReorder` on a grip handle only (never the
   browser's own drag-and-drop, which ignores touch).
 - Text boxes for codes (postcodes and the like): `autoCapitalize="characters"`,
@@ -471,8 +487,9 @@ and add its tags. Nothing else needs fixing or remaking first.
   if an answer changes (Hindcaster's `scripts/check-*.ts`, no test
   library). Prove a new check works by breaking the thing it checks and
   seeing it fail. Clockmaker and Backtimer's are `scripts/check-sums.ts`.
-- Check work in a real browser (Playwright) at 1200px and at 390px with
-  touch emulation — not just "it builds". Say plainly what couldn't be
+- Check work in a real browser (Playwright) at 1200px, at 390px with
+  touch emulation, and sideways at 844×390 with touch — not just "it
+  builds". Say plainly what couldn't be
   checked (e.g. a real iPhone keyboard).
 - Keep a dated entry in the project's `CLAUDE.md` for every change: what,
   why, what was deliberately left alone, how it was verified.
@@ -532,7 +549,8 @@ project a long, careful review on a computer and a phone, and report back
 
 - Read the notes first, so agreed decisions aren't reported as faults.
   Review the live `main`.
-- Use it like a real person at 1200px and at 390px with touch: first visit,
+- Use it like a real person at 1200px, at 390px with touch, and with a
+  phone held sideways (844×390 with touch): first visit,
   every screen, realistic and extreme content, abandoning and going back.
   Run an automatic sweep for errors, sideways scrolling and small tap targets.
   Look at every screenshot.

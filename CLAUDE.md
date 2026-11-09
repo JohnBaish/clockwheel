@@ -3612,3 +3612,14 @@ From a check of every site on a sideways iPhone (John: make the fixes and merge 
 `--face-max-h` (the screen's height less 24px) and `ClockFace.tsx` caps the face's width with it, keeping its shape: now 456×366 at
 844×390 and 369×296 at 667×320. Upright phones (302×242) and computers (760×610) unchanged; Copy image sizes the picture from the drawing
 itself, so it's unaffected. Checked: build, `npm run check` (12), the Clock screen in Chromium at those sizes, no errors.
+
+## House style and fresh look: a phone held sideways (2026-11-09, docs only, straight to `main`)
+
+John asked whether the fresh-look reviews had checked a phone held sideways (Storykeeper's holiday map went wrong that way on
+November 8th). They hadn't: only 1200×860 and 390×844. A check of every site sideways found Refueller's boxes at 15px (iPhone zooms),
+Storykeeper's tree catching the swipe and its maps taller than the screen, Flowcharter's tall charts with no Full screen, and charts
+and the clock face slightly too tall; all fixed and live the same day. At John's request the review now does every pass at three sizes
+(adding 844×390 with touch, and a look at 667×320) and measures what goes wrong sideways (`.claude/skills/fresh-look/SKILL.md`, the
+report template's line); HOUSE-STYLE §6 gains "A phone held sideways" (short screens are `max-height: 500px`; keep the top small; cap
+charts and maps by width with `--ar`; draggable things shorter than the screen; 16px boxes), and §10 and §11 check at the third size.
+Re-copied to the other repos.
