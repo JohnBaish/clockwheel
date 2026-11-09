@@ -410,7 +410,7 @@ export function ClockFace({ segments, hour, name, categories }: ClockFaceProps) 
       ref={svgRef}
       id="clock-face-svg"
       viewBox={`${-EX} ${-EY} ${EX * 2} ${EY * 2}`}
-      style={{ width: '100%', maxWidth: `${px(Math.min(760, 700 * (EX / EY)))}px`, height: 'auto', display: 'block', margin: '0 auto' }}
+      style={{ width: '100%', maxWidth: `min(${px(Math.min(760, 700 * (EX / EY)))}px, calc(var(--face-max-h, 100000px) * ${EX / EY}))`, height: 'auto', display: 'block', margin: '0 auto' }}
     >
       {nodes}
     </svg>

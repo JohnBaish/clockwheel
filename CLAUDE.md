@@ -3604,3 +3604,11 @@ From the tracker (`JohnBaish/baish.net-directory`), where John chose option D (a
 make its dark mode more colourful: §2 now has "Reviewing dark mode colours", the way to mock up and choose
 options, for the other tools' coming dark-mode reviews (Storykeeper, Lightreader, Hindcaster, Refueller,
 Riverwatcher). No app code changed; not yet re-copied to the other repos.
+
+## The clock face fits a phone held sideways — LIVE (2026-11-09, branch `claude/bold-rubin-n8utv4`, merged the same day)
+
+From a check of every site on a sideways iPhone (John: make the fixes and merge each without asking): on an iPhone held sideways
+(844×390) the clock face was 756×607, so the whole clock couldn't be seen at once. On a screen less than 500px tall, `global.css` sets
+`--face-max-h` (the screen's height less 24px) and `ClockFace.tsx` caps the face's width with it, keeping its shape: now 456×366 at
+844×390 and 369×296 at 667×320. Upright phones (302×242) and computers (760×610) unchanged; Copy image sizes the picture from the drawing
+itself, so it's unaffected. Checked: build, `npm run check` (12), the Clock screen in Chromium at those sizes, no errors.

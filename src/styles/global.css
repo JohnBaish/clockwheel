@@ -260,3 +260,10 @@
 }
 /* The baish.net page has no nav bar: the switch sits at the top right of the page. */
 .landing-switch { position: absolute; top: var(--space-3); right: var(--space-4); }
+
+/* A phone held sideways (less than 500px tall; 2026-11-09): the clock face is never taller than the screen.
+   ClockFace.tsx caps its width with this, keeping its shape. */
+@media screen and (max-height: 500px) {
+  :root { --face-max-h: calc(100svh - 24px); }
+}
+
