@@ -32,11 +32,11 @@ tool linked back to the hub. Done in three steps.
 
 ### Step 1: invisible changes (in the page code, not on screen)
 
-| What | Clockmaker | Backtimer | Flowcharter | Hindcaster | Lightreader | Refueller | Riverwatcher | Hub |
-|---|---|---|---|---|---|---|---|---|
-| `<title>` | Clockmaker – free radio hot clock & format clock maker | Backtimer – free backtiming calculator for radio and TV | Flowcharter – free flowchart maker from a simple list | Hindcaster – yesterday's weather in England | Lightreader – sunrise, sunset and twilight times in England | Refueller – fuel prices near you | Riverwatcher – river levels in England | baish.net – free browser tools by John Baish |
-| `<meta name="description">` | Free hot clock maker for radio. Build a format clock for each hour, see it as a circle or a list, plan your week and print it. Works in your browser. | Free backtiming calculator for radio and TV. Enter your out-time and items, and see exactly when each one needs to start to hit the news on time. | Free flowchart maker. Type your steps as a list, or answer simple questions step by step, and Flowcharter draws the chart. Print it or copy it as an image. | What was the weather yesterday? Free figures for anywhere in England by postcode or county: highs, overnight lows, wind and rainfall, compared with a year ago. | Free sunrise, sunset and twilight times for any postcode in England: today, through the year, and compared with dates or places you choose. | Free petrol and diesel prices near any postcode or place in Great Britain, and the cheapest along your journey. From the Government's Fuel Finder service. | Free river levels for anywhere in England, by postcode or county. See whether rivers are high or low for the time of year, from Environment Agency gauges. | Free browser tools by John Baish: radio clocks, backtiming, flowcharts, yesterday's weather, sunrise and sunset times, fuel prices and river levels. |
-| `<link rel="canonical">` | https://clockmaker.baish.net/ | https://backtimer.baish.net/ | https://flowcharter.baish.net/ | https://hindcaster.baish.net/ | https://lightreader.baish.net/ | https://refueller.baish.net/ | https://riverwatcher.baish.net/ | https://www.baish.net/ |
+| What | Clockmaker | Backtimer | Flowcharter | Hindcaster | Lightreader | Refueller | Riverwatcher | Roadteller | Hub |
+|---|---|---|---|---|---|---|---|---|---|
+| `<title>` | Clockmaker – free radio hot clock & format clock maker | Backtimer – free backtiming calculator for radio and TV | Flowcharter – free flowchart maker from a simple list | Hindcaster – yesterday's weather in England | Lightreader – sunrise, sunset and twilight times in England | Refueller – fuel prices near you | Riverwatcher – river levels in England | Roadteller – free road collision figures for any postcode | baish.net – free browser tools by John Baish |
+| `<meta name="description">` | Free hot clock maker for radio. Build a format clock for each hour, see it as a circle or a list, plan your week and print it. Works in your browser. | Free backtiming calculator for radio and TV. Enter your out-time and items, and see exactly when each one needs to start to hit the news on time. | Free flowchart maker. Type your steps as a list, or answer simple questions step by step, and Flowcharter draws the chart. Print it or copy it as an image. | What was the weather yesterday? Free figures for anywhere in England by postcode or county: highs, overnight lows, wind and rainfall, compared with a year ago. | Free sunrise, sunset and twilight times for any postcode in England: today, through the year, and compared with dates or places you choose. | Free petrol and diesel prices near any postcode or place in Great Britain, and the cheapest along your journey. From the Government's Fuel Finder service. | Free river levels for anywhere in England, by postcode or county. See whether rivers are high or low for the time of year, from Environment Agency gauges. | Free road accident figures for any postcode or place in Great Britain: how many, when, where, and whether people were walking, cycling or driving. | Free browser tools by John Baish: radio clocks, backtiming, flowcharts, weather, daylight, fuel prices, river levels and road collisions. (On branch `landing-roadteller`; live: "…, yesterday's weather, sunrise and sunset times, fuel prices and river levels.") |
+| `<link rel="canonical">` | https://clockmaker.baish.net/ | https://backtimer.baish.net/ | https://flowcharter.baish.net/ | https://hindcaster.baish.net/ | https://lightreader.baish.net/ | https://refueller.baish.net/ | https://riverwatcher.baish.net/ | https://roadteller.baish.net/ | https://www.baish.net/ |
 
 Why each part:
 - **Title and search description** are what Google shows in its results.
@@ -178,7 +178,8 @@ Do the code parts on a branch; John merges.
 11. Add a card for the tool to `landing.html` (alphabetical among the
     tools, before John's Blog). *Flowcharter: already done. Hindcaster:
     done 2026-10-20. Lightreader: done 2026-10-28. Refueller: done 2026-11-01. Riverwatcher:
-    done 2026-11-02.*
+    done 2026-11-02. Roadteller: on branch `landing-roadteller`, 2026-11-11, not merged (John: more work on
+    baish.net first).*
 12. **John's standing reminder: when a tool is added or changed, update the
     hub's `<title>` and search description to match.** Since 2026-10-20 the
     title is general ("free browser tools"), so usually only the description
@@ -186,7 +187,9 @@ Do the code parts on a branch; John merges.
     Lightreader (2026-10-28): naming every tool made it 191 characters, so
     John chose a list of what they do instead, without the names.
     Refueller (2026-11-01): "…, sunrise and sunset times, and fuel prices." (135). Riverwatcher
-    (2026-11-02): "…, fuel prices and river levels." (148).*
+    (2026-11-02): "…, fuel prices and river levels." (148). Roadteller (2026-11-11, on the branch): "…, flowcharts,
+    weather, daylight, fuel prices, river levels and road collisions." (137; John chose shorter words to stay
+    under about 155).*
 
 **Check before merging** (Playwright, 1200px and 390px with touch):
 

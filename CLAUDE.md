@@ -3623,3 +3623,14 @@ and the clock face slightly too tall; all fixed and live the same day. At John's
 report template's line); HOUSE-STYLE §6 gains "A phone held sideways" (short screens are `max-height: 500px`; keep the top small; cap
 charts and maps by width with `--ar`; draggable things shorter than the screen; 16px boxes), and §10 and §11 check at the third size.
 Re-copied to the other repos.
+
+## Roadteller added to the baish.net landing page (2026-11-11, branch `landing-roadteller`, NOT merged)
+
+John (from the Roadteller session, `JohnBaish/roadteller`, live at `https://roadteller.baish.net/`): a ninth card, after
+Riverwatcher and before John's Blog (tools alphabetical): **Roadteller**, "Collisions on nearby roads, compared with traffic
+levels." (its link-preview line). The hub's search description, John's choice: "Free browser tools by John Baish: radio
+clocks, backtiming, flowcharts, weather, daylight, fuel prices, river levels and road collisions." (137 characters; naming
+road collisions in the old wording came to 165). Head comment: nine links, the Roadteller repo. `SEO-HANDOVER.md`:
+Roadteller's column, the hub's new description, items 11 and 12. **Kept on the branch at John's request**: more work on
+baish.net is to come before it's merged. **Verified:** `vite build`; `/landing.html` in Chromium at 1200px, 390px and
+844×390 with touch, light and dark: nine cards in order, the link right, no errors, no sideways scroll.
