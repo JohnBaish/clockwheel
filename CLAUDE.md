@@ -3624,7 +3624,7 @@ report template's line); HOUSE-STYLE §6 gains "A phone held sideways" (short sc
 charts and maps by width with `--ar`; draggable things shorter than the screen; 16px boxes), and §10 and §11 check at the third size.
 Re-copied to the other repos.
 
-## Roadteller added to the baish.net landing page (2026-11-11, branch `landing-roadteller`, NOT merged)
+## Roadteller added to the baish.net landing page (2026-11-11, branch `landing-roadteller`, merged with the redesign below)
 
 John (from the Roadteller session, `JohnBaish/roadteller`, live at `https://roadteller.baish.net/`): a ninth card, after
 Riverwatcher and before John's Blog (tools alphabetical): **Roadteller**, "Collisions on nearby roads, compared with traffic
@@ -3635,7 +3635,7 @@ Roadteller's column, the hub's new description, items 11 and 12. **Kept on the b
 baish.net is to come before it's merged. **Verified:** `vite build`; `/landing.html` in Chromium at 1200px, 390px and
 844×390 with touch, light and dark: nine cards in order, the link right, no errors, no sideways scroll.
 
-## baish.net redesigned: three coloured panels (2026-11-11, branch `claude/practical-tesla-vyyqcj`, NOT merged)
+## baish.net redesigned: three coloured panels — LIVE (2026-11-11, branch `claude/practical-tesla-vyyqcj`, merged the same day)
 
 John asked for a redesign now that Roadteller and Nightreader are joining. Options A to E shown as a
 private page (https://claude.ai/artifact/2hmiqdNV7YHTuPvp3K3fdK); he chose **E**. `landing-roadteller`
@@ -3658,10 +3658,14 @@ private page (https://claude.ai/artifact/2hmiqdNV7YHTuPvp3K3fdK); he chose **E**
   earlier sites carry none, so Refueller and Riverwatcher aren't marked though they joined within
   three weeks. Without JavaScript, no tags.
 - Search description: "planets" added to John's Roadteller wording ("…weather, daylight, planets, fuel
-  prices, river levels and road collisions.", 146 characters), for John to confirm.
+  prices, river levels and road collisions.", 146 characters); John agreed.
 
 **Verified:** `npm run check` (13), lint (the two known warnings), build; Chromium against `vite
 preview` at 1200px, 900px, 844 by 390, 390px and 320px (the last four with touch), light and dark: nine
 sites, no sideways scrolling, no errors, both fonts; NEW on Nightreader and Roadteller today, only
 Nightreader on December 1st, none on December 2nd. **Couldn't be checked:** www.baish.net itself (only
 served there by `middleware.ts`), a real phone.
+
+**Merged to `main` (2026-11-11)** at John's word (fast-forward; checks 13 and build first). John: Nightreader
+may go public now; the NEW dates stay November 10th and 11th, so the two tags drop off in the right order.
+Still for John: check www.baish.net, and in Search Console ask Google to look at www.baish.net again.
