@@ -3676,3 +3676,14 @@ Still for John: check www.baish.net, and in Search Console ask Google to look at
 figures, from the live sites at about 11.30am) replaces the November 2nd PDF. Every caption naming a time or figure checked
 against its new picture. **Verified:** no page errors, no sideways scrolling, brand fonts loaded in every picture; the PDF has
 no page that spills over, no missing picture, all fonts loaded; every page looked at. Not run: `make.sh`'s local mode.
+
+## baish.net: new pictures for Backtimer and Clockmaker (2026-11-11, branch `claude/practical-tesla-vyyqcj`, not merged)
+
+John found the two clock pictures on the redesigned hub not as good as they could be: they were fine-line clock dials
+cut from the link-preview pictures, busy (Backtimer) or faint (Clockmaker), unlike the other seven sites' bold
+shapes, and alike. After three rounds of drawings on the live page (light and dark) he chose: Clockmaker, a clock
+wheel of segments in its own category colours (option C); Backtimer, a clock at 10:10 with an ink dot at 12 and a
+terracotta arrow running backwards from it to :35, the rest of the hour a faint line (option H). Sources in
+`design/hub-pictures/` (with how to remake them); `public/hub/backtimer.webp` and `clockmaker.webp` replaced.
+The small icons shown below 1,000px wide are unchanged. **Checked:** build, `npm run check` (13); the built page at
+1200px, light and dark: no errors, no sideways scrolling.
