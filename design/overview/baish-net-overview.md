@@ -446,8 +446,8 @@ fonts. Favicon: a cream crescent and star on indigo with a terracotta ring.
 **How it's built.** `JohnBaish/nightreader` (public). Astronomy Engine and the sun code from Lightreader, worked out on the
 device in a worker; stars from d3-celestial (XHIP catalogue); Great Britain's postcode districts from Refueller.
 
-**Where it stands.** Live and on the hub. **Still to do:** Search Console, Web Analytics in Vercel, a full review ("fresh
-look"), the star catalogue's terms, and a final choice of tab icon.
+**Where it stands.** Live and on the hub; a full review ("fresh look") on November 10th, with every change from it made.
+**Still to do:** Search Console, Web Analytics in Vercel, the star catalogue's terms, and a final choice of tab icon.
 
 ---
 
