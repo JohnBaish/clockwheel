@@ -5,7 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon-baish.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>baish.net – free browser tools by John Baish</title>
-    <meta name="description" content="Free browser tools by John Baish: radio clocks, backtiming, flowcharts, weather, daylight, fuel prices, river levels and road collisions." />
+    <meta name="description" content="Free browser tools by John Baish: radio clocks, backtiming, flowcharts, weather, daylight, planets, fuel prices, river levels and road collisions." />
     <link rel="canonical" href="https://www.baish.net/" />
     <!-- Search (SEO), 2026-10-17: <title> and the search description are
          written for search engines; the og:/twitter: tags below are for link
@@ -18,11 +18,12 @@
          CLAUDE.md's "baish.net root landing page" entry). Deliberately no
          React/app JS: src/landing.ts imports just the design-system CSS so
          this matches Clockmaker/Backtimer's look at a fraction of the
-         weight. Update the nine links below if any of the nine
-         destinations' URLs ever change. (Flowcharter, Hindcaster, Lightreader, Refueller,
-         Riverwatcher and Roadteller live in their own repos, JohnBaish/flowcharter,
+         weight. Update the links below if any destination's URL ever changes. The page
+         was redesigned on 2026-11-11 (three coloured panels, pictures on a computer,
+         NEW tags from each site's data-launched date: see CLAUDE.md). (Flowcharter, Hindcaster, Lightreader, Refueller,
+         Riverwatcher, Roadteller and Nightreader live in their own repos, JohnBaish/flowcharter,
          JohnBaish/hindcaster, JohnBaish/lightreader, JohnBaish/refueller,
-         JohnBaish/riverwatcher and JohnBaish/roadteller.) -->
+         JohnBaish/riverwatcher, JohnBaish/roadteller and JohnBaish/nightreader.) -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="baish.net" />
     <meta property="og:description" content="John Baish’s websites" />
@@ -34,13 +35,65 @@
     <meta name="twitter:image" content="https://www.baish.net/og-baish.png" />
     <script type="module" src="/src/landing.ts"></script>
     <style>
-      body {
-        min-height: 100vh; display: flex; align-items: center; justify-content: center;
-        padding: var(--space-6) var(--space-4);
+      /* The baish.net page (redesigned 2026-11-11, John's option E): three coloured panels.
+         Computer: three columns, headings centred, each site with the drawing from its link-preview
+         picture (public/hub/). Phone: one column, headings left-aligned, each site's small icon. */
+      :root {
+        --hub-sky: #2b3566; --hub-sky-tint: #e3e3ec;
+        --hub-near: #56633f; --hub-near-tint: #e1eecc;
+        --hub-make: #8c491a; --hub-make-tint: #ffe1d0;
       }
-      .landing-wrap { width: 100%; max-width: 560px; display: flex; flex-direction: column; gap: var(--space-3); }
-      .landing-header { text-align: center; margin-bottom: var(--space-3); }
-      .landing-header h1 { font-size: 32px; margin: 2px 0 0; }
+      @media screen {
+        :root[data-theme="dark"] {
+          --hub-sky: #b9c0ea; --hub-sky-tint: #2f3247;
+          --hub-near: #d4e4b8; --hub-near-tint: #2f3a20;
+          --hub-make: #f2a573; --hub-make-tint: #4a2a14;
+        }
+      }
+      body { margin: 0; }
+      .hub { max-width: 1140px; margin: 0 auto; padding: 44px var(--space-4) 0; }
+      .hub-head { text-align: center; }
+      .hub-head h1 { font-size: 40px; line-height: 1.1; margin: 2px 0 0; }
+      .hub-cols { margin-top: 30px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; align-items: start; }
+      .hub-panel { border-radius: 22px; background: var(--color-surface); overflow: hidden; }
+      .hub-panel h2 { margin: 0; padding: 16px 20px 14px; font-size: 21px; line-height: 1.2; text-align: center; }
+      .hub-sky h2 { background: var(--hub-sky-tint); color: var(--hub-sky); }
+      .hub-near h2 { background: var(--hub-near-tint); color: var(--hub-near); }
+      .hub-make h2 { background: var(--hub-make-tint); color: var(--hub-make); }
+      .hub-row { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 16px; align-items: center; padding: 16px 20px; border-top: 1px solid var(--color-divider); color: inherit; text-decoration: none; }
+      .hub-panel h2 + .hub-row { border-top: 0; }
+      .hub-row:hover, .hub-row:focus-visible { background: color-mix(in srgb, var(--color-accent) 7%, var(--color-surface)); outline: none; }
+      .hub-row:focus-visible { box-shadow: inset 0 0 0 2px var(--color-accent); }
+      .hub-pic { width: 96px; height: 96px; border-radius: 50%; display: block; background: #ebddc5; }
+      .hub-icon { display: none; width: 40px; height: 40px; }
+      .hub-text { display: block; min-width: 0; }
+      .hub-name { display: block; font-family: var(--font-heading); font-weight: var(--font-heading-weight); font-size: 19px; line-height: 1.2; }
+      .hub-line { display: block; margin-top: 5px; font-size: 13px; color: var(--color-neutral-700); }
+      .hub-new { display: inline-block; vertical-align: 3px; margin-left: 8px; font-family: var(--font-body); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; background: var(--color-accent); padding: 2px 7px 2px 9px; border-radius: 3px 99px 99px 3px; }
+      :root[data-theme="dark"] .hub-new { color: #2a2723; }
+      .hub-new[hidden] { display: none; }
+      .hub-foot { margin: 40px 0 0; padding: 18px 0 36px; border-top: 1px solid var(--color-divider); color: var(--color-neutral-700); font-size: 13px; text-align: center; }
+      .hub-foot a { color: var(--color-text); }
+      /* Three columns get tight on smaller computers, tablets and phones held sideways: the small
+         icons there instead of the pictures, as on a phone. */
+      @media (max-width: 1000px) {
+        .hub-cols { gap: 16px; }
+        .hub-panel h2 { font-size: 19px; padding: 14px 14px 12px; }
+        .hub-row { grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: start; padding: 14px; }
+        .hub-pic { display: none; }
+        .hub-icon { display: block; }
+        .hub-name { font-size: 18px; }
+      }
+      @media (max-width: 720px) {
+        .hub { padding-top: 56px; }
+        .hub-head h1 { font-size: 34px; }
+        .hub-cols { grid-template-columns: 1fr; gap: 18px; }
+        .hub-panel h2 { text-align: left; }
+        .hub-row { grid-template-columns: 40px minmax(0, 1fr); gap: 14px; align-items: start; padding: 16px 20px; }
+        .hub-pic { display: none; }
+        .hub-icon { display: block; }
+        .hub-line { margin-top: 4px; }
+      }
     </style>
     <!-- Dark mode: set before the page draws, so there's no flash of the wrong colours. A
          choice kept by the switch wins; otherwise the device's own setting (John, 29 October 2026).
@@ -56,56 +109,68 @@
     </script>
   </head>
   <body>
-    <div class="landing-wrap">
-      <div class="landing-header">
+    <main class="hub">
+      <header class="hub-head">
         <div class="card-kicker">John Baish</div>
         <h1>baish.net</h1>
+      </header>
+      <div class="hub-cols">
+      <section class="hub-panel hub-sky">
+        <h2>The sky and weather</h2>
+        <a class="hub-row" href="https://lightreader.baish.net/" data-site="lightreader">
+          <img class="hub-pic" src="/hub/lightreader.webp" width="96" height="96" alt="" loading="lazy" />
+          <svg class="hub-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#f5ead8" stroke="#c67139" stroke-width="2.5"/><path d="M13.5 29a10.5 10.5 0 0 1 21 0Z" fill="#c67139"/><line x1="11" y1="31" x2="37" y2="31" stroke="#201e1d" stroke-width="4.5" stroke-linecap="round"/></svg>
+          <span class="hub-text"><span class="hub-name">Lightreader<span class="hub-new" hidden>New</span></span><span class="hub-line">Sunrise, sunset and light-based facts for English places you choose.</span></span>
+        </a>
+        <a class="hub-row" href="https://nightreader.baish.net/" data-site="nightreader" data-launched="2026-11-11">
+          <img class="hub-pic" src="/hub/nightreader.webp" width="96" height="96" alt="" loading="lazy" />
+          <svg class="hub-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><defs><mask id="nr-moon"><rect width="48" height="48" fill="#fff"/><circle cx="29.5" cy="19.5" r="10" fill="#000"/></mask></defs><circle cx="24" cy="24" r="21" fill="#0d1233" stroke="#c67139" stroke-width="2.5"/><circle cx="23" cy="25" r="12" fill="#f4ead6" mask="url(#nr-moon)"/><circle cx="31.5" cy="16" r="2.3" fill="#eba274"/></svg>
+          <span class="hub-text"><span class="hub-name">Nightreader<span class="hub-new" hidden>New</span></span><span class="hub-line">The planets from your postcode, tonight and through the year.</span></span>
+        </a>
+        <a class="hub-row" href="https://hindcaster.baish.net/" data-site="hindcaster">
+          <img class="hub-pic" src="/hub/hindcaster.webp" width="96" height="96" alt="" loading="lazy" />
+          <svg class="hub-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#f5ead8" stroke="#c67139" stroke-width="2.5"/><circle cx="29.5" cy="17.5" r="7" fill="#c67139"/><g fill="#201e1d"><circle cx="17" cy="29" r="5.5"/><circle cx="23.5" cy="25.5" r="7"/><circle cx="31" cy="29.5" r="5"/><rect x="17" y="28" width="14" height="6.5"/></g></svg>
+          <span class="hub-text"><span class="hub-name">Hindcaster<span class="hub-new" hidden>New</span></span><span class="hub-line">Look back at yesterday's weather anywhere in England.</span></span>
+        </a>
+      </section>
+      <section class="hub-panel hub-near">
+        <h2>Near you</h2>
+        <a class="hub-row" href="https://refueller.baish.net/" data-site="refueller">
+          <img class="hub-pic" src="/hub/refueller.webp" width="96" height="96" alt="" loading="lazy" />
+          <svg class="hub-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#f5ead8" stroke="#c67139" stroke-width="2.5"/><rect x="14" y="12" width="14" height="23" rx="2" fill="#201e1d"/><rect x="16.5" y="15" width="9" height="6.5" rx="1" fill="#f5ead8"/><rect x="12" y="33" width="18" height="3.5" rx="1" fill="#201e1d"/><path d="M28 18 H31.5 Q33.5 18 33.5 20 V30 Q33.5 32 35 32" fill="none" stroke="#c67139" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <span class="hub-text"><span class="hub-name">Refueller<span class="hub-new" hidden>New</span></span><span class="hub-line">Petrol and diesel prices near you, and the cheapest on your journey.</span></span>
+        </a>
+        <a class="hub-row" href="https://roadteller.baish.net/" data-site="roadteller" data-launched="2026-11-10">
+          <img class="hub-pic" src="/hub/roadteller.webp" width="96" height="96" alt="" loading="lazy" />
+          <svg class="hub-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#c67139"/><path d="M13 38 L21 11 M35 38 L27 11" fill="none" stroke="#201e1d" stroke-width="4.5" stroke-linecap="round"/><path d="M24 35 V30 M24 23.5 V19.5" fill="none" stroke="#f5ead8" stroke-width="3.5" stroke-linecap="round"/></svg>
+          <span class="hub-text"><span class="hub-name">Roadteller<span class="hub-new" hidden>New</span></span><span class="hub-line">Collisions on nearby roads, compared with traffic levels.</span></span>
+        </a>
+        <a class="hub-row" href="https://riverwatcher.baish.net/" data-site="riverwatcher">
+          <img class="hub-pic" src="/hub/riverwatcher.webp" width="96" height="96" alt="" loading="lazy" />
+          <svg class="hub-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#f5ead8" stroke="#c67139" stroke-width="2.5"/><path d="M11 19.5 Q14.25 15.5 17.5 19.5 T24 19.5 T30.5 19.5 T37 19.5" fill="none" stroke="#201e1d" stroke-width="4.5" stroke-linecap="round"/><path d="M11 29.5 Q14.25 25.5 17.5 29.5 T24 29.5 T30.5 29.5 T37 29.5" fill="none" stroke="#c67139" stroke-width="4.5" stroke-linecap="round"/></svg>
+          <span class="hub-text"><span class="hub-name">Riverwatcher<span class="hub-new" hidden>New</span></span><span class="hub-line">River levels in your chosen area, with historical comparisons.</span></span>
+        </a>
+      </section>
+      <section class="hub-panel hub-make">
+        <h2>Producing and planning</h2>
+        <a class="hub-row" href="https://backtimer.baish.net/" data-site="backtimer">
+          <img class="hub-pic" src="/hub/backtimer.webp" width="96" height="96" alt="" loading="lazy" />
+          <svg class="hub-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#c67139"/><circle cx="24" cy="24" r="3.5" fill="#201e1d"/><line x1="24" y1="24" x2="15.3" y2="19" stroke="#201e1d" stroke-width="4.5" stroke-linecap="round"/><line x1="24" y1="24" x2="36.1" y2="17" stroke="#f5ead8" stroke-width="4.5" stroke-linecap="round"/></svg>
+          <span class="hub-text"><span class="hub-name">Backtimer<span class="hub-new" hidden>New</span></span><span class="hub-line">Work out exactly when each item needs to start to hit your out-time.</span></span>
+        </a>
+        <a class="hub-row" href="https://clockmaker.baish.net/" data-site="clockmaker">
+          <img class="hub-pic" src="/hub/clockmaker.webp" width="96" height="96" alt="" loading="lazy" />
+          <svg class="hub-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#f5ead8" stroke="#c67139" stroke-width="2.5"/><circle cx="24" cy="24" r="3.5" fill="#201e1d"/><line x1="24" y1="24" x2="15.3" y2="19" stroke="#201e1d" stroke-width="4.5" stroke-linecap="round"/><line x1="24" y1="24" x2="36.1" y2="17" stroke="#c67139" stroke-width="4.5" stroke-linecap="round"/></svg>
+          <span class="hub-text"><span class="hub-name">Clockmaker<span class="hub-new" hidden>New</span></span><span class="hub-line">Display a broadcast hour in a circular layout.</span></span>
+        </a>
+        <a class="hub-row" href="https://flowcharter.baish.net/" data-site="flowcharter">
+          <img class="hub-pic" src="/hub/flowcharter.webp" width="96" height="96" alt="" loading="lazy" />
+          <svg class="hub-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#f5ead8" stroke="#c67139" stroke-width="2.5"/><path d="M16 18 V32 H27" fill="none" stroke="#201e1d" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="10.5" y="10.5" width="11" height="11" rx="2.5" fill="#201e1d"/><circle cx="33" cy="32" r="6" fill="#c67139"/></svg>
+          <span class="hub-text"><span class="hub-name">Flowcharter<span class="hub-new" hidden>New</span></span><span class="hub-line">Create a flowchart from a list, or build it step by step.</span></span>
+        </a>
+      </section>
       </div>
-
-      <a class="card link-card" href="https://backtimer.baish.net/">
-        <div class="card-title">Backtimer</div>
-        <p class="card-body">Work out exactly when each item needs to start to hit your out-time.</p>
-      </a>
-
-      <a class="card link-card" href="https://clockmaker.baish.net/">
-        <div class="card-title">Clockmaker</div>
-        <p class="card-body">Display a broadcast hour in a circular layout.</p>
-      </a>
-
-      <a class="card link-card" href="https://flowcharter.baish.net/">
-        <div class="card-title">Flowcharter</div>
-        <p class="card-body">Create a flowchart from a list, or build it step by step.</p>
-      </a>
-
-      <a class="card link-card" href="https://hindcaster.baish.net/">
-        <div class="card-title">Hindcaster</div>
-        <p class="card-body">Look back at yesterday's weather anywhere in England.</p>
-      </a>
-
-      <a class="card link-card" href="https://lightreader.baish.net/">
-        <div class="card-title">Lightreader</div>
-        <p class="card-body">Sunrise, sunset and light-based facts for English places you choose.</p>
-      </a>
-
-      <a class="card link-card" href="https://refueller.baish.net/">
-        <div class="card-title">Refueller</div>
-        <p class="card-body">Petrol and diesel prices near you, and the cheapest on your journey.</p>
-      </a>
-
-      <a class="card link-card" href="https://riverwatcher.baish.net/">
-        <div class="card-title">Riverwatcher</div>
-        <p class="card-body">River levels in your chosen area, with historical comparisons.</p>
-      </a>
-
-      <a class="card link-card" href="https://roadteller.baish.net/">
-        <div class="card-title">Roadteller</div>
-        <p class="card-body">Collisions on nearby roads, compared with traffic levels.</p>
-      </a>
-
-      <a class="card link-card" href="https://jbaish.blogspot.com/">
-        <div class="card-title">John's Blog</div>
-        <p class="card-body">Daily blog entries from 2006 to 2010, featuring small tech and retail innovations and fun things, all of them outdated now but archived for nostalgia and curiosity value.</p>
-      </a>
-    </div>
+      <footer class="hub-foot">Also available: <a href="https://jbaish.blogspot.com/">John's Blog</a>, daily entries from 2006 to 2010, kept for nostalgia.</footer>
+    </main>
   </body>
 </html>

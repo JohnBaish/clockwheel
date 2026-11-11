@@ -3634,3 +3634,34 @@ road collisions in the old wording came to 165). Head comment: nine links, the R
 Roadteller's column, the hub's new description, items 11 and 12. **Kept on the branch at John's request**: more work on
 baish.net is to come before it's merged. **Verified:** `vite build`; `/landing.html` in Chromium at 1200px, 390px and
 844×390 with touch, light and dark: nine cards in order, the link right, no errors, no sideways scroll.
+
+## baish.net redesigned: three coloured panels (2026-11-11, branch `claude/practical-tesla-vyyqcj`, NOT merged)
+
+John asked for a redesign now that Roadteller and Nightreader are joining. Options A to E shown as a
+private page (https://claude.ai/artifact/2hmiqdNV7YHTuPvp3K3fdK); he chose **E**. `landing-roadteller`
+(the Roadteller card, `SEO-HANDOVER.md` and its log entry) was merged into this branch first.
+- `landing.html`: three panels, "The sky and weather" (Lightreader, Nightreader, Hindcaster), "Near
+  you" (Refueller, Roadteller, Riverwatcher), "Producing and planning" (Backtimer, Clockmaker,
+  Flowcharter), in John's order, each heading in its own colour (night blue, green, terracotta; dark
+  versions under `@media screen`). Computer (more than 1,000px): three columns, headings centred,
+  each site with the drawing from its link-preview picture (`public/hub/*.webp`, 192px, cropped from
+  each site's `og-*.png` at 86,85 to 546,545, 1 to 4 KB each). Below 1,000px (smaller computers,
+  tablets, phones held sideways) the sites' own small icons, inline, instead; below 720px one column
+  with headings left-aligned (John agreed Claude's recommendation). Pictures hidden on smaller screens
+  aren't downloaded (`loading="lazy"`).
+- John's Blog is now the footer: "Also available: John's Blog, daily entries from 2006 to 2010, kept
+  for nostalgia." No extra line under "baish.net" (John).
+- **NEW tags** (John's rule): shown for three weeks from the day a site goes on baish.net, never more
+  than three at once, the oldest dropping first. `src/lib/newTags.ts` (`newSites`, `ukToday`), run by
+  `src/landing.ts` from each row's `data-launched`; a check in `npm run check`. Only sites from now on
+  carry a date (Roadteller November 10th, Nightreader November 11th, as John set for this exercise);
+  earlier sites carry none, so Refueller and Riverwatcher aren't marked though they joined within
+  three weeks. Without JavaScript, no tags.
+- Search description: "planets" added to John's Roadteller wording ("…weather, daylight, planets, fuel
+  prices, river levels and road collisions.", 146 characters), for John to confirm.
+
+**Verified:** `npm run check` (13), lint (the two known warnings), build; Chromium against `vite
+preview` at 1200px, 900px, 844 by 390, 390px and 320px (the last four with touch), light and dark: nine
+sites, no sideways scrolling, no errors, both fonts; NEW on Nightreader and Roadteller today, only
+Nightreader on December 1st, none on December 2nd. **Couldn't be checked:** www.baish.net itself (only
+served there by `middleware.ts`), a real phone.

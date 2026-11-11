@@ -8,6 +8,7 @@ import { clockOf, dur, hourBalance, parseDur, parseOutTime, signedDur, wrapHour 
 import { toColon } from '../src/lib/timeInput.ts';
 import { countOf, numberWord } from '../src/lib/words.ts';
 import { savedCopyDiffers } from '../src/lib/staleCopy.ts';
+import { newSites, ukToday } from '../src/lib/newTags.ts';
 
 let passed = 0;
 function check(name: string, run: () => void) {
@@ -106,6 +107,26 @@ check('another tab: moving about is not a change, real work is', () => {
   assert.equal(savedCopyDiffers(edited, mine), true);
   assert.equal(savedCopyDiffers(null, mine), false);
   assert.equal(savedCopyDiffers('not json', mine), false);
+});
+
+check('baish.net NEW tags: three weeks, and never more than three', () => {
+  const sites = [
+    { id: 'old', launched: '2026-10-01' },
+    { id: 'road', launched: '2026-11-10' },
+    { id: 'night', launched: '2026-11-11' },
+  ];
+  const on = (today: string, list = sites) => [...newSites(list, today)].sort().join(',');
+  assert.equal(on('2026-11-11'), 'night,road');
+  assert.equal(on('2026-11-30'), 'night,road');
+  assert.equal(on('2026-12-01'), 'night'); // Roadteller's 21st day: gone
+  assert.equal(on('2026-12-02'), '');
+  assert.equal(on('2026-11-09'), ''); // not launched yet
+  const more = [...sites, { id: 'c', launched: '2026-11-12' }, { id: 'd', launched: '2026-11-13' }];
+  assert.equal(on('2026-11-13', more), 'c,d,night'); // a fourth new site: the oldest, Roadteller, drops
+  const sameDay = [{ id: 'first', launched: '2026-11-11' }, { id: 'second', launched: '2026-11-11' }, { id: 'x', launched: '2026-11-11' }, { id: 'y', launched: '2026-11-11' }];
+  assert.equal(on('2026-11-11', sameDay), 'second,x,y'); // same day: later on the page counts as newer
+  assert.equal(ukToday(new Date('2026-07-01T23:30:00Z')), '2026-07-02'); // BST
+  assert.equal(ukToday(new Date('2026-12-01T23:30:00Z')), '2026-12-01'); // GMT
 });
 
 console.log(`${passed} checks passed`);
