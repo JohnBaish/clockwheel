@@ -8,7 +8,7 @@ themes and ideas. It's for reading, not testing. Since November 1st 2026 it come
   short list of possible themes (Claude's observations, labelled as such). Small and plain, so a chat reads it quickly;
   attach it to a chat or add it to a Claude Project. Written by hand.
 - **`baish-net-pictures-<date>.pdf`: the pictures.** Screenshots of every site on a computer (1440px) and a phone (390px
-  with touch), a dark-mode page, and every favicon and link-preview picture. About 19 A4 pages and 6 MB. Made by a script.
+  with touch), a dark-mode page, and every favicon and link-preview picture. About 30 A4 pages and 11 MB. Made by a script.
 
 The first version (October 22nd 2026) was a single 24-page PDF with words and pictures together; it's in git history
 (`baish-net-overview-2026-10-22.pdf`, `overview.html`).

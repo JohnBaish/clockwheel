@@ -2,8 +2,8 @@
 
 *Written on Sunday November 1st 2026, updated on Monday November 2nd 2026 (Riverwatcher live) and Wednesday November 11th
 2026 (Roadteller and Nightreader live, and the hub redesigned), as background for discussing themes and ideas in other chats.
-The pictures are in the companion PDF, "baish.net in pictures" (`baish-net-pictures-2026-11-02.pdf`), made on November 2nd
-from the live sites: it doesn't yet show Roadteller, Nightreader or the redesigned hub.*
+The pictures are in the companion PDF, "baish.net in pictures" (`baish-net-pictures-2026-11-11.pdf`), made on November 11th
+from the live sites.*
 
 ## How to read this
 

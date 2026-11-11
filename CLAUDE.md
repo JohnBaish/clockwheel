@@ -3669,3 +3669,10 @@ served there by `middleware.ts`), a real phone.
 **Merged to `main` (2026-11-11)** at John's word (fast-forward; checks 13 and build first). John: Nightreader
 may go public now; the NEW dates stay November 10th and 11th, so the two tags drop off in the right order.
 Still for John: check www.baish.net, and in Search Console ask Google to look at www.baish.net again.
+
+**The overview's pictures remade (2026-11-11, docs only, straight to `main`):** `design/overview/` now photographs Roadteller
+(RG14, West Berkshire, a first visit, phone, dark) and Nightreader (RG4, a first visit, phone, dark) too (`capture.mjs`,
+`prep.py`, `make.sh`, `build-pictures.py`), and the redesigned hub. `baish-net-pictures-2026-11-11.pdf` (30 A4 pages, 45
+figures, from the live sites at about 11.30am) replaces the November 2nd PDF. Every caption naming a time or figure checked
+against its new picture. **Verified:** no page errors, no sideways scrolling, brand fonts loaded in every picture; the PDF has
+no page that spills over, no missing picture, all fonts loaded; every page looked at. Not run: `make.sh`'s local mode.

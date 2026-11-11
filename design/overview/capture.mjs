@@ -1,6 +1,6 @@
 // Takes every screenshot for the baish.net overview pictures (README.md here says how it's used).
 // LIVE=1 node capture.mjs <output folder>   — the live sites (needs *.baish.net allowed; preferred)
-// node capture.mjs <output folder>          — the five repos built and served locally by make.sh
+// node capture.mjs <output folder>          — the repos built and served locally by make.sh
 import fs from 'node:fs';
 const PW = process.env.PLAYWRIGHT_MODULE || '/opt/node-tools/node_modules/playwright/index.mjs';
 const { chromium } = await import(PW);
@@ -12,6 +12,8 @@ const HC = LIVE ? 'https://hindcaster.baish.net' : 'http://localhost:4303';
 const LR = LIVE ? 'https://lightreader.baish.net' : 'http://localhost:4304';
 const RF = LIVE ? 'https://refueller.baish.net' : 'http://localhost:4305';
 const RW = LIVE ? 'https://riverwatcher.baish.net' : 'http://localhost:4306';
+const NR = LIVE ? 'https://nightreader.baish.net' : 'http://localhost:4307';
+const RD = LIVE ? 'https://roadteller.baish.net' : 'http://localhost:4308';
 const HUB = LIVE ? 'https://www.baish.net/' : 'http://localhost:4301/landing.html';
 // Locally, the app's own test switch gives backtimer.baish.net's standalone presentation.
 const BT = LIVE ? 'https://backtimer.baish.net/' : 'http://localhost:4301/backtimer.html?host=backtimer';
@@ -117,6 +119,18 @@ await shot('rw-rg4-phone', PHONE, `${RW}/#postcode/RG4`, { wait: '#detail' });
 await shot('rw-county-desktop', DESK, `${RW}/#county/berkshire`, { wait: '#detail' });
 await shot('rw-england-desktop', DESK, `${RW}/#england`, { wait: '#detail', full: false });
 
+// Roadteller (real collision figures, 2021 to 2025)
+await shot('rd-start-desktop', DESK, `${RD}/`);
+await shot('rd-rg14-desktop', DESK, `${RD}/#RG14`, { wait: '.b-hero' });
+await shot('rd-rg14-phone', PHONE, `${RD}/#RG14`, { wait: '.b-hero' });
+await shot('rd-council-desktop', DESK, `${RD}/#council/E06000037`, { wait: '.b-hero' });
+
+// Nightreader (real sky for the night the picture is taken; dark for everyone)
+const nrReady = async p => { await p.waitForSelector('.hero'); await p.waitForFunction(() => !document.body.innerText.includes('Working out'), null, { timeout: 30000 }); };
+await shot('nr-first-desktop', DESK, `${NR}/`);
+await shot('nr-rg4-desktop', DESK, `${NR}/#RG4`, { before: nrReady });
+await shot('nr-rg4-phone', PHONE, `${NR}/#RG4`, { before: nrReady });
+
 // Dark mode: each tool's main screen on a phone, following the device's setting
 await shot('dark-hub', dark(PHONE), HUB, { full: false });
 await shot('dark-bt', dark(PHONE), BT, { storage: btSeed, full: false });
@@ -126,6 +140,8 @@ await shot('dark-hc', dark(PHONE), `${HC}/#postcode/RG4`, { full: false });
 await shot('dark-lr', dark(PHONE), `${LR}/`, { storage: lr, wait: '.group', full: false });
 await shot('dark-rf', dark(PHONE), `${RF}/#RG4`, { wait: '.results-head', full: false });
 await shot('dark-rw', dark(PHONE), `${RW}/#postcode/RG4`, { wait: '#detail', full: false });
+await shot('dark-rd', dark(PHONE), `${RD}/#RG14`, { wait: '.b-hero', full: false });
+await shot('dark-nr', dark(PHONE), `${NR}/#RG4`, { before: nrReady, full: false });
 
 await browser.close();
 console.log(JSON.stringify(log, null, 1));

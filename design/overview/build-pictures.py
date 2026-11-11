@@ -4,8 +4,8 @@
 # picture after a new capture. The style is copied from the October 2026 overview's look.
 import os
 HERE = os.path.dirname(os.path.abspath(__file__))
-TAKEN = 'Monday November 2nd 2026'
-TAKEN_AT = 'about 6.45pm'
+TAKEN = 'Wednesday November 11th 2026'
+TAKEN_AT = 'about 11.30am'
 
 STYLE = """
 @font-face { font-family: Caprasimo; font-weight: 400; src: url('../../node_modules/@fontsource/caprasimo/files/caprasimo-latin-400-normal.woff2'); }
@@ -50,7 +50,8 @@ figcaption b { color: var(--ink); }
 """
 
 SITES = [('baish', 'baish.net (hub)'), ('backtimer', 'Backtimer'), ('clockmaker', 'Clockmaker'), ('flowcharter', 'Flowcharter'),
-         ('hindcaster', 'Hindcaster'), ('lightreader', 'Lightreader'), ('refueller', 'Refueller'), ('riverwatcher', 'Riverwatcher')]
+         ('hindcaster', 'Hindcaster'), ('lightreader', 'Lightreader'), ('nightreader', 'Nightreader'), ('refueller', 'Refueller'),
+         ('riverwatcher', 'Riverwatcher'), ('roadteller', 'Roadteller')]
 
 pages, toc, count = [], [], [0]
 
@@ -82,8 +83,10 @@ def section(name):
 
 section('baish.net (hub)')
 page('baish.net · the hub', '<div class="row">'
-     + fig('hub-desktop.jpg', 'The hub on a computer (1440px). Seven tools in alphabetical order, then John\'s blog.', 'flex:0 0 125mm')
-     + fig('hub-phone.jpg', 'The hub on a phone (390px), first screen.', 'flex:0 0 46mm') + '</div>', 'Hub')
+     + fig('hub-desktop.jpg', 'The hub on a computer (1440px), redesigned on November 11th: nine tools in three coloured panels, '
+         '"The sky and weather", "Near you" and "Producing and planning", each with the drawing from its link-preview picture, '
+         'NEW on the two newest, and John\'s blog in the footer.', 'flex:0 0 125mm')
+     + fig('hub-phone.jpg', 'The hub on a phone (390px, full page): one column, small icons.', 'flex:0 0 46mm') + '</div>', 'Hub')
 
 section('Backtimer')
 page('Backtimer · a running order, and a first visit',
@@ -117,7 +120,7 @@ page('Flowcharter · a chart from a short list', '<div class="row"><div style="f
 
 section('Hindcaster')
 page('Hindcaster · results for a postcode (1 of 2)',
-     fig('hc-rg4-desktop-part1.jpg', 'Postcode district RG4 (Caversham, Reading), Sunday November 1st, final update at 9.31am on November 2nd '
+     fig('hc-rg4-desktop-part1.jpg', 'Postcode district RG4 (Caversham, Reading), Tuesday November 10th, from Wednesday\'s final update at 9.30am '
          '(1440px, top half): the Summary, the three stations chosen round the postcode, and the nearest rain gauges.', 'width:170mm', 'real'),
      'Hindcaster')
 page('Hindcaster · results for a postcode (2 of 2)',
@@ -133,7 +136,7 @@ page('Hindcaster · choosing a place, and a county',
 
 section('Lightreader')
 page('Lightreader · a postcode, today (1 of 2)',
-     fig('lr-rg4-desktop-part1.jpg', 'RG4 (Caversham) at 18:44 on Monday November 2nd (1440px, top half): tomorrow\'s sunrise and sunset (shown once it\'s dark), the next '
+     fig('lr-rg4-desktop-part1.jpg', 'RG4 (Caversham) at 11:29 on Wednesday November 11th (1440px, top half): today\'s sunrise and sunset, the next '
          '24 hours as a ribbon of light, then sentence cards (Today, This fortnight, Looking back, Looking ahead and more).', 'width:165mm', 'real'),
      'Lightreader')
 page('Lightreader · a postcode, through the year (2 of 2)',
@@ -144,9 +147,24 @@ page('Lightreader · on a phone, and a first visit',
             'RG4 on a phone (full page, four strips): on a phone the ribbon runs downwards, with true night folded.', '', 'real')
      + fig('lr-first-desktop.jpg', 'A first visit, before a postcode is chosen.', 'width:110mm;margin-top:3mm'), 'Lightreader')
 
+section('Nightreader')
+page('Nightreader · tonight\'s sky (1 of 2)',
+     fig('nr-rg4-desktop-part1.jpg', 'RG4 (Caversham), tonight, Wednesday November 11th into Thursday (1440px, top half): 11h 4m of Moon-free '
+         'true night, from 18:16 to 05:20, beside the Moon at its true phase; "The sky tonight" (the heights of the Moon and planets through '
+         'the night); and "Where and when to look", the view south with real stars and the towns along the horizon. Dark for everyone, its '
+         'own look.', 'width:140mm', 'real'), 'Nightreader')
+page('Nightreader · the year in darkness (2 of 2)',
+     fig('nr-rg4-desktop-part2.jpg', 'RG4, bottom half: "The year in darkness" (every night for a year, with moonlight as pale slanting bands), '
+         '"Looking ahead" (meteor showers, the Moon\'s phases, eclipses), "About these figures" and the footer.', 'width:140mm', 'real'),
+     'Nightreader')
+page('Nightreader · on a phone, and a first visit',
+     strips([f'nr-rg4-phone-s{i}.jpg' for i in range(1, 5)], 42,
+            'RG4 on a phone (full page, four strips, read left to right).', '', 'real')
+     + fig('nr-first-desktop.jpg', 'A first visit, before a postcode is chosen.', 'width:110mm;margin-top:3mm'), 'Nightreader')
+
 section('Refueller')
 page('Refueller · eight stations near a postcode (1 of 2)',
-     fig('rf-rg4-desktop-part1.jpg', 'RG4 (Caversham), prices from the 4.15pm collection on Monday November 2nd (1440px, top half): the eight '
+     fig('rf-rg4-desktop-part1.jpg', 'RG4 (Caversham), prices from the 10.15am collection on Wednesday November 11th (1440px, top half): the eight '
          'nearest stations with unleaded and diesel prices, how long each price has stood, where it sits among the eight, and opening hours.',
          'width:170mm', 'real'), 'Refueller')
 page('Refueller · the wider picture and the journey planner (2 of 2)',
@@ -164,12 +182,12 @@ page('Refueller · a journey, and a first visit',
 
 section('Riverwatcher')
 page('Riverwatcher · river levels near a postcode (1 of 2)',
-     fig('rw-rg4-desktop-part1.jpg', 'RG4 (Caversham), levels collected at 6.10pm on Monday November 2nd (1440px, top half): the summary river '
-         'by river, then the nearest gauges grouped by river and listed upstream to downstream. Most Thames gauges are held steady by locks; '
-         'the Loddon at Twyford is added as the nearest free-flowing gauge.', 'width:170mm', 'real'), 'Riverwatcher')
-page('Riverwatcher · the chosen gauge in detail (2 of 2)',
-     fig('rw-rg4-desktop-part2.jpg', 'RG4, bottom half: the nearest gauge (Reading) in detail, with its chart against the bands for the time of '
-         'year, a year ago and its record; then "About these figures" and the footer.', 'width:170mm', 'real'), 'Riverwatcher')
+     fig('rw-rg4-desktop-part1.jpg', 'RG4 (Caversham), levels updated at 11.10am on Wednesday November 11th (1440px, top half): the summary river '
+         'by river, then the nearest gauges grouped by river and listed upstream to downstream, the nearest (Reading) open in detail '
+         'just below it, with its chart against the bands for the time of year, a year ago and its record.', 'width:170mm', 'real'), 'Riverwatcher')
+page('Riverwatcher · river levels near a postcode (2 of 2)',
+     fig('rw-rg4-desktop-part2.jpg', 'RG4, bottom half: the Kennet and the Loddon (the Loddon at Twyford added as the nearest free-flowing '
+         'gauge), then "About these figures" and the footer.', 'width:170mm', 'real'), 'Riverwatcher')
 page('Riverwatcher · on a phone', strips([f'rw-rg4-phone-s{i}.jpg' for i in range(1, 5)], 42,
                                          'RG4 on a phone (full page, four strips, read left to right).', '', 'real'), 'Riverwatcher')
 page('Riverwatcher · choosing a place, a county and England',
@@ -179,11 +197,30 @@ page('Riverwatcher · choosing a place, a county and England',
      + fig('rw-county-desktop-part1.jpg', 'Berkshire (1440px, top half): the summary, the most unusual gauges, and every gauge in the county '
            'folded away.', 'width:150mm', 'real'), 'Riverwatcher')
 
+section('Roadteller')
+page('Roadteller · a circle round a postcode (1 of 2)',
+     fig('rd-rg14-desktop-part1.jpg', 'A mile round the middle of RG14 (Newbury), injury collisions from 2021 to 2025 (1440px, top half): 129 '
+         'collisions and 146 people hurt, beside West Berkshire\'s rate on its A-roads and motorways (one for every 14.0 million miles '
+         'driven, about a third of Great Britain\'s); "Better or worse than before?" against Great Britain since 2000; who was hurt; and '
+         'when.', 'width:150mm', 'real'), 'Roadteller')
+page('Roadteller · where, and which roads (2 of 2)',
+     fig('rd-rg14-desktop-part2.jpg', 'RG14, bottom half: "Where they happened", a map of 250-metre squares shaded by count; the main roads '
+         'through the circle, each with its rate; "About these figures" and the footer.', 'width:150mm', 'real'), 'Roadteller')
+page('Roadteller · on a phone, and a first visit',
+     strips([f'rd-rg14-phone-s{i}.jpg' for i in range(1, 5)], 42,
+            'RG14 on a phone (full page, four strips, read left to right).', '', 'real')
+     + fig('rd-start-desktop.jpg', 'A first visit: a postcode or place, or a council area.', 'width:110mm;margin-top:3mm'), 'Roadteller')
+page('Roadteller · a council area',
+     strips(['rd-council-desktop-part1.jpg', 'rd-council-desktop-part2.jpg'], 89,
+            'West Berkshire (1440px, two strips): its rate on A-roads and motorways against Great Britain and South East England, '
+            '"Allowing for the mix of roads", the trend, who and when, a map in one-kilometre squares, and its roads.', '', 'real'),
+     'Roadteller')
+
 section('Dark mode')
 count[0] += 1
 dark = [('hub', 'the hub'), ('bt', 'Backtimer'), ('cm', 'Clockmaker'), ('fc', 'Flowcharter'), ('hc', 'Hindcaster'), ('lr', 'Lightreader'),
-        ('rf', 'Refueller'), ('rw', 'Riverwatcher')]
-cells = ''.join(f'<figure style="flex:0 0 41mm;margin:0"><img src="img/dark-{k}.jpg"><figcaption>{label}</figcaption></figure>' for k, label in dark)
+        ('nr', 'Nightreader (always dark)'), ('rf', 'Refueller'), ('rw', 'Riverwatcher'), ('rd', 'Roadteller')]
+cells = ''.join(f'<figure style="flex:0 0 33mm;margin:0"><img src="img/dark-{k}.jpg"><figcaption>{label}</figcaption></figure>' for k, label in dark)
 page('Dark mode on every site',
      '<h2>Dark mode</h2><p class="lede">Since October 29th every site has a dark mode that follows the phone or computer\'s own setting until '
      'the visitor uses the switch at the top right. Each site\'s main screen on a phone, with the device set to dark.</p>'
@@ -192,7 +229,7 @@ page('Dark mode on every site',
 
 section('Icons and link previews')
 favs = ''.join(f'<span class="fav"><img src="img/fav-{k}.svg">{name}</span>' for k, name in SITES)
-ogs = ''.join(f'<figure style="flex:0 0 80mm;margin:0 0 1mm"><img src="img/og-{k}.png"><figcaption>{name}</figcaption></figure>' for k, name in SITES)
+ogs = ''.join(f'<figure style="flex:0 0 56mm;margin:0 0 1mm"><img src="img/og-{k}.png"><figcaption>{name}</figcaption></figure>' for k, name in SITES)
 page('Icons and link previews',
      '<h2>Icons and link previews</h2><p class="lede">Each site\'s favicon (the icon in a browser tab) and the picture shown when its address '
      f'is shared, as served by the live sites.</p><div class="row" style="flex-wrap:wrap;margin:2mm 0 4mm">{favs}</div>'
@@ -208,7 +245,7 @@ favrow = ''.join(f'<span class="fav"><img src="img/fav-{k}.svg">{name.split(" ")
 cover = f'''<section class="page">
   <div class="kicker">Pictures · {TAKEN}</div>
   <h1>baish.net in pictures</h1>
-  <p class="lede" style="font-size:13pt">Screenshots of John Baish's eight sites, on a computer and on a phone. The words (what each site is for,
+  <p class="lede" style="font-size:13pt">Screenshots of John Baish's ten sites, on a computer and on a phone. The words (what each site is for,
   how it works, how it's built and where it stands) are in the companion text file, <b>baish-net-overview.md</b>.</p>
   <div class="row" style="margin:3mm 0 4mm;flex-wrap:wrap">{favrow}</div>
   <table><tr><th>Section</th><th>Pages</th></tr>{rows}</table>
@@ -220,8 +257,9 @@ cover = f'''<section class="page">
       strips shown side by side, read left to right.</li>
       <li><b>Content:</b> pictures marked <span class="sample">sample</span> use content typed in for the picture (a running order, a week, a
       flowchart). Clockmaker's clock is its built-in Example. Pictures marked <span class="sample real">real</span> show the sites' real
-      figures at the time: Hindcaster's final update for Sunday November 1st, Lightreader's times for Caversham (RG4), Refueller's
-      prices from the 4.15pm collection, and Riverwatcher's levels from the 6.10pm collection.</li>
+      figures at the time: Hindcaster's final update for Tuesday November 10th, Lightreader's and Nightreader's times for Caversham
+      (RG4), Refueller's prices from the 10.15am collection, Riverwatcher's levels from the 11.10am update, and Roadteller's collision
+      figures for 2021 to 2025.</li>
       <li><b>Checks:</b> no page errors and no sideways scrolling on any picture, and the brand fonts loaded every time.</li>
       <li><b>Light mode</b> throughout, apart from the dark-mode page near the end.</li>
     </ul>
