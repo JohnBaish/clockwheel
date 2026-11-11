@@ -1,13 +1,14 @@
 # baish.net: an overview of John Baish's sites
 
-*Written on Sunday November 1st 2026, updated on Monday November 2nd 2026 (Riverwatcher live), as background for discussing
-themes and ideas in other chats. The pictures are in the companion PDF, "baish.net in pictures"
-(`baish-net-pictures-2026-11-02.pdf`), made the same day from the live sites.*
+*Written on Sunday November 1st 2026, updated on Monday November 2nd 2026 (Riverwatcher live) and Wednesday November 11th
+2026 (Roadteller and Nightreader live, and the hub redesigned), as background for discussing themes and ideas in other chats.
+The pictures are in the companion PDF, "baish.net in pictures" (`baish-net-pictures-2026-11-02.pdf`), made on November 2nd
+from the live sites: it doesn't yet show Roadteller, Nightreader or the redesigned hub.*
 
 ## How to read this
 
-- **Eight live sites:** the hub at www.baish.net and seven free tools: Backtimer, Clockmaker, Flowcharter, Hindcaster,
-  Lightreader, Refueller and Riverwatcher. Each tool has its own section below, in the same order: what it's for, what it does, how it
+- **Ten live sites:** the hub at www.baish.net and nine free tools: Backtimer, Clockmaker, Flowcharter, Hindcaster,
+  Lightreader, Nightreader, Refueller, Riverwatcher and Roadteller. Each tool has its own section below, in the same order: what it's for, what it does, how it
   looks, how it's built, where it stands, and what's open.
 - **One more is being built** (not a public tool): Storykeeper (see "Under way", near the end).
 - **Sources:** each project's own notes (`CLAUDE.md`, `SPEC.md`, `PLAN.md`), the shared `HOUSE-STYLE.md`, John's project
@@ -32,6 +33,10 @@ themes and ideas in other chats. The pictures are in the companion PDF, "baish.n
   October 31st; on the hub since November 1st.
 - **Riverwatcher**, riverwatcher.baish.net: "River levels in your chosen area, with historical comparisons." Live and on the
   hub since November 2nd.
+- **Roadteller**, roadteller.baish.net: "Collisions on nearby roads, compared with traffic levels." Live and on the hub
+  since November 11th.
+- **Nightreader**, nightreader.baish.net: "The planets from your postcode, tonight and through the year." Live since
+  November 10th; on the hub since November 11th.
 
 The quoted lines are each tool's own card on the hub.
 
@@ -40,25 +45,30 @@ The quoted lines are each tool's own card on the hub.
 ## baish.net, the hub
 
 **Address:** www.baish.net (the bare baish.net redirects there). Search title: "baish.net – free browser tools by John
-Baish". Search description: "Free browser tools by John Baish: radio clocks, backtiming, flowcharts, yesterday's weather,
-sunrise and sunset times, fuel prices and river levels."
+Baish". Search description: "Free browser tools by John Baish: radio clocks, backtiming, flowcharts, weather, daylight,
+planets, fuel prices, river levels and road collisions."
 
 **Purpose and audience.** A front door for anyone who arrives at the domain rather than at a particular tool. Before
 September 30th 2026 the bare domain went to John's old Blogspot blog.
 
 **What it does.**
-- Eight whole-card links, the tools in alphabetical order (Backtimer, Clockmaker, Flowcharter, Hindcaster, Lightreader,
-  Refueller, Riverwatcher), then **John's Blog** (jbaish.blogspot.com: "Daily blog entries from 2006 to 2010, featuring small tech and
-  retail innovations and fun things, all of them outdated now but archived for nostalgia and curiosity value.").
+- **Redesigned on November 11th 2026:** the nine tools in three groups, each a panel with its own heading colour: "The sky
+  and weather" (Lightreader, Nightreader, Hindcaster; night blue), "Near you" (Refueller, Roadteller, Riverwatcher; green)
+  and "Producing and planning" (Backtimer, Clockmaker, Flowcharter; terracotta).
+- **A "NEW" tag** for three weeks after a site joins the hub, never on more than three at once, the oldest dropping first
+  (Roadteller's goes on December 1st, Nightreader's on December 2nd).
+- **John's Blog** is now a footer line: "Also available: John's Blog, daily entries from 2006 to 2010, kept for nostalgia."
+  (jbaish.blogspot.com).
 - Its own favicon (a lowercase "b") and link-preview picture ("baish.net — John Baish's websites").
 - Search basics: title, description, canonical address, robots.txt and sitemap; one Google Search Console property covers
   the whole domain.
 - Dark mode, like every site (since October 29th).
 - John's standing rule: when a tool is added or changed, the hub's card, title and description are updated to match.
 
-**How it looks.** The shared style (see "What the sites have in common"): a cream page, one centred column of rounded cards
-with a terracotta hover tint, card titles in Caprasimo, descriptions in Figtree, a small "JOHN BAISH" kicker over the
-"baish.net" heading.
+**How it looks.** The shared style (see "What the sites have in common"): a small "JOHN BAISH" kicker over the "baish.net"
+heading, then the three panels. On a computer, three columns with the headings centred, and each tool shown with the large
+drawing from its link-preview picture; below 1,000px (smaller computers, tablets, phones held sideways) each tool's small
+icon instead; on a phone, one column with the headings left-aligned. Names in Caprasimo, lines in Figtree.
 
 **How it's built.** It lives in the `JohnBaish/clockwheel` repo as `landing.html`, a third entry point in the same Vite build
 and Vercel project as Clockmaker and Backtimer. It is deliberately not a React app: it loads only the shared styles and the
@@ -69,9 +79,8 @@ project's domains its own robots.txt and sitemap.
 www.backtimer.baish.net doesn't load yet; it needs a DNS record and a redirect for each tool, no code); whether to retire the
 old address clockwheel.baish.net (still works; its canonical points to Clockmaker).
 
-*Observation:* the hub describes every tool in one line, without saying who each is for or grouping them. With seven tools
-now, of which three (Backtimer, Clockmaker, and in part Hindcaster) were made with broadcasters in mind and four for anyone,
-that is a possible theme for discussion.
+*Observation:* the November redesign answers the earlier question of grouping (the old page was one alphabetical list).
+Hindcaster, made partly with broadcasters in mind, now sits with the sky and weather tools rather than with them.
 
 ---
 
@@ -375,6 +384,70 @@ about a choice is sent.
 John chose. **Dates to remember:** the monthly history workflow first runs on November 3rd; renew the cron-job.org GitHub key
 by January 29th 2027. **Ideas for later (agreed):** river flow for lock reaches (stage 6, with a mock-up first), downstream
 gauges at locks, tidal stations and groundwater, full postcodes, Wales and Scotland.
+
+---
+
+## Roadteller
+
+**Address:** roadteller.baish.net. Search title: "Roadteller – free road collision figures for any postcode". Search
+description: "Free road accident figures for any postcode or place in Great Britain: how many, when, where, and whether people
+were walking, cycling or driving." Started November 9th 2026 (from a proposal in a Claude chat, first called Riskreckoner);
+live and on the hub November 11th.
+
+**Purpose and audience.** Anyone wondering how safe the roads near them are, measured fairly: injury collisions set against
+how much traffic the roads carry, rather than raw counts.
+
+**What it does.**
+- **A circle round a postcode or place** (half a mile, one mile by default, or two miles): how many injury collisions in the
+  last five years, how many people were hurt, and the five years before; the trend since 2000 (or 1989); who was hurt and how
+  they were travelling; when (hours and days of the week); a map of shaded squares; and the main roads through the circle,
+  by the Department for Transport's junction names.
+- **A council area:** the rate on its A-roads and motorways, written "one for every 14.0 million miles driven", against Great
+  Britain's and the region's, and "Allowing for the mix of roads" (what national rates would give on the area's own traffic).
+- "Copy chart" and "Share chart" on the charts; "About these figures"; dark mode.
+- Totals only: no list of individual collisions and no details of the people involved, and no "dangerous" or "safe" labels.
+
+**How it looks.** The shared style, with one terracotta for collisions and a five-step shading on the maps. Favicon: a road
+ahead on solid terracotta.
+
+**How it's built.** `JohnBaish/roadteller` (public). A Python data build, run by a "Rebuild data" workflow when new figures
+come out, uses the police's injury collision records (STATS19, used from 1989), the Department for Transport's traffic counts,
+OS Open Roads and Boundary-Line, and writes files by 50 km square. A circle is counted on the visitor's own device, so the
+postcode never leaves it.
+
+**Where it stands.** Live (November 11th) after a full review whose fixes were all built; on the hub the same day. **Still to
+do:** Search Console.
+
+---
+
+## Nightreader
+
+**Address:** nightreader.baish.net. Search title: "Nightreader – planets in the night sky from your postcode". Search
+description: "When it’s properly dark tonight, where the Moon is, and which planets you can see from any postcode in Great
+Britain, through the year." A sister tool to Lightreader, started November 9th 2026; live November 10th; on the hub
+November 11th.
+
+**Purpose and audience.** Anyone who wants to know whether tonight is worth going out to look at the sky, and where to look.
+
+**What it does.**
+- **Tonight:** one figure for how much properly dark, Moon-free time there is, beside the Moon drawn at its true phase; the
+  Moon's sentences; "The sky tonight", a chart of the heights of the Moon and the planets through the night.
+- **"Where and when to look":** the view south with real stars, constellation lines, the Moon and planets, towns along the
+  horizon, heights in fists, a compass reading for each, and a slider from sunset to sunrise.
+- **"The year in darkness":** a picture of 365 nights, the sky's darkness and the moonlight each night, with full and new
+  Moons marked; point or tap a night for its figures.
+- **"Looking ahead":** the Moon's phases, eclipses, planets at their best, and meteor showers, with more folded under "See
+  more".
+- "Copy" (computer) or "Share" (phone) on the three pictures; 24-hour times, as Lightreader.
+
+**How it looks.** Its own look, for beauty's sake: dark for everyone, in deep indigo and ember colours, with the family's
+fonts. Favicon: a cream crescent and star on indigo with a terracotta ring.
+
+**How it's built.** `JohnBaish/nightreader` (public). Astronomy Engine and the sun code from Lightreader, worked out on the
+device in a worker; stars from d3-celestial (XHIP catalogue); Great Britain's postcode districts from Refueller.
+
+**Where it stands.** Live and on the hub. **Still to do:** Search Console, Web Analytics in Vercel, a full review ("fresh
+look"), the star catalogue's terms, and a final choice of tab icon.
 
 ---
 
