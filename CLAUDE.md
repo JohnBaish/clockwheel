@@ -3691,3 +3691,6 @@ The small icons shown below 1,000px wide are unchanged. **Checked:** build, `npm
 **Then (same day):** John asked for a faint ring round Clockmaker's wheel, as Backtimer's, tried at full, 75% and 50%
 width; he chose 75% (4.5px, ink at 40%, its inside edge on the wheel). Both new pictures also given the thin cream rim the
 other seven have (a 92px dial on a cream square), which they'd lacked. Rebuilt and checked as above.
+
+**Decided (same day):** on phones and screens under 1,000px the two sites keep their own tab icons, like the
+other seven. John looked at a mock-up with the new drawings shrunk into their place and chose to leave them.
