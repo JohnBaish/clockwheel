@@ -5,7 +5,8 @@ site's link-preview picture, except these two, drawn for the page on November 11
 
 - `backtimer.svg`: a clock at 10:10 with an ink dot at 12 and a terracotta arrow running backwards from
   it to :35, the rest of the hour a faint line.
-- `clockmaker.svg`: a clock wheel of segments in Clockmaker's own category colours.
+- `clockmaker.svg`: a clock wheel of segments in Clockmaker's own category colours, with a faint ring
+  (ink at 40%, 4.5px, its inside edge on the wheel), as the faint part of Backtimer's ring but thinner.
 
 To remake a `.webp`: render the SVG at 192 by 192 (for example with Playwright), then save it as WebP,
 quality 90.

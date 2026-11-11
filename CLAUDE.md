@@ -3687,3 +3687,7 @@ terracotta arrow running backwards from it to :35, the rest of the hour a faint 
 `design/hub-pictures/` (with how to remake them); `public/hub/backtimer.webp` and `clockmaker.webp` replaced.
 The small icons shown below 1,000px wide are unchanged. **Checked:** build, `npm run check` (13); the built page at
 1200px, light and dark: no errors, no sideways scrolling.
+
+**Then (same day):** John asked for a faint ring round Clockmaker's wheel, as Backtimer's, tried at full, 75% and 50%
+width; he chose 75% (4.5px, ink at 40%, its inside edge on the wheel). Both new pictures also given the thin cream rim the
+other seven have (a 92px dial on a cream square), which they'd lacked. Rebuilt and checked as above.
