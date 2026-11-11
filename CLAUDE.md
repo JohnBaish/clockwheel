@@ -3677,7 +3677,7 @@ figures, from the live sites at about 11.30am) replaces the November 2nd PDF. Ev
 against its new picture. **Verified:** no page errors, no sideways scrolling, brand fonts loaded in every picture; the PDF has
 no page that spills over, no missing picture, all fonts loaded; every page looked at. Not run: `make.sh`'s local mode.
 
-## baish.net: new pictures for Backtimer and Clockmaker (2026-11-11, branch `claude/practical-tesla-vyyqcj`, not merged)
+## baish.net: new pictures for Backtimer and Clockmaker — LIVE (2026-11-11, branch `claude/practical-tesla-vyyqcj`, merged the same day)
 
 John found the two clock pictures on the redesigned hub not as good as they could be: they were fine-line clock dials
 cut from the link-preview pictures, busy (Backtimer) or faint (Clockmaker), unlike the other seven sites' bold
