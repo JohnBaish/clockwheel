@@ -235,24 +235,92 @@ page('Icons and link previews',
      f'is shared, as served by the live sites.</p><div class="row" style="flex-wrap:wrap;margin:2mm 0 4mm">{favs}</div>'
      f'<div class="row" style="flex-wrap:wrap;gap:3mm 6mm">{ogs}</div>', 'Icons')
 
+# The private sites: behind Cloudflare Access, so built from their repos and photographed locally (capture-private.mjs).
+PRIVATE = [('tenniserver', 'Tenniserver'), ('motoracer', 'Motoracer')]
+PRIVATE_TAKEN = 'Thursday November 12th 2026'
+COVER_DATE = 'November 11th and 12th 2026'  # the cover's kicker: the dates the pictures were taken
+
+
+def looks(pre, names, cap):
+    count[0] += 1
+    cells = ''.join(f'<figure style="flex:0 0 40mm;margin:0"><img src="img/{pre}-look-{k}-{m}.jpg"><figcaption>{n}, {m}</figcaption></figure>'
+                    for k, n in names for m in ('light', 'dark'))
+    return (f'<div class="row" style="flex-wrap:wrap;gap:3mm 6mm">{cells}</div><p class="note" style="margin-top:1.5mm">'
+            f'<b style="color:var(--ink)">Fig {count[0]}.</b> {cap}</p>')
+
+
+section('Tenniserver (private)')
+page('Tenniserver · a private site · Today and Results', '<div class="row">'
+     + fig('ts-today-desktop.jpg', 'Today, Thursday November 12th, from the 10am update (1440px): the WTA Finals at Indian Wells, two group '
+           'matches in UK time, each tournament in its surface\'s colour (Court look, light).', 'flex:0 0 125mm', 'real')
+     + fig('ts-today-phone.jpg', 'Today on a phone (first screen).', 'flex:0 0 46mm', 'real') + '</div>'
+     + fig('ts-results-desktop.jpg', 'Results, the last two days: the WTA Finals group matches on Wednesday and Tuesday, the winner marked with '
+           'a ball and the sets she won filled in.', 'width:150mm', 'real'), 'Tenniserver')
+page('Tenniserver · the calendar and the rankings', '<div class="row">'
+     + fig('ts-year-desktop.jpg', 'The calendar\'s year view (1440px): every event from now to the end of 2027, a line per month, coloured by '
+           'type; men\'s 1000s and 500s in the full colour, women\'s paler, a week with both split; the upright line is today. List and '
+           'Month views sit beside it.', 'flex:0 0 125mm', 'real')
+     + fig('ts-year-phone.jpg', 'The year view on a phone (first screen).', 'flex:0 0 46mm', 'real') + '</div>'
+     + fig('ts-rankings-desktop.jpg', 'Rankings (first screen): the WTA top 50 published on Monday November 9th, with country, points and '
+           'movement; Men and By surname are one tap away.', 'width:115mm', 'real'), 'Tenniserver')
+page('Tenniserver · the six looks',
+     '<h2>Six looks</h2><p class="lede">Three looks, each light and dark, chosen with the three icons and the "… look" label in the header; '
+     'each phone remembers its own choice. Results on a phone, first screen.</p>'
+     + looks('ts', [('a', 'Court'), ('b', 'Order of play'), ('c', 'Clubhouse')],
+             'Court (surface colours, pale boxes in light mode), Order of play (like a printed order of play) and Clubhouse (soft cards, lilac).')
+     + '<div class="row" style="margin-top:4mm;align-items:center"><span class="fav"><img src="img/fav-tenniserver.svg">Tab icon</span>'
+     + '<figure style="flex:0 0 56mm;margin:0"><img src="img/og-tenniserver.png"><figcaption>Link-preview picture</figcaption></figure></div>',
+     'Tenniserver')
+
+section('Motoracer (private)')
+page('Motoracer · a private site · the spoiler question and Next race', '<div class="row">'
+     + fig('mr-ask-phone.jpg', 'A first visit on Thursday November 12th: São Paulo\'s qualifying and race have happened, so the phone is asked '
+           'before anything else shows.', 'flex:0 0 46mm', 'real')
+     + fig('mr-weekend-desktop.jpg', 'Next race, after "No, show both" (1440px, Timing screen look, light): Las Vegas, its sessions in UK time '
+           '(all overnight), the circuit since 2023 (its outline traced from car positions, 1st of 21 for overtaking, a safety car in one of '
+           'its three races), and the last race.', 'flex:0 0 125mm', 'real') + '</div><div class="row">'
+     + strips(['mr-weekend-phone-s1.jpg', 'mr-weekend-phone-s2.jpg'], 38, 'Next race on a phone (full page, two strips).', 'flex:0 0 80mm', 'real')
+     + fig('mr-results-desktop.jpg', 'Results: the São Paulo Grand Prix in full, with grid, places gained or lost, gap and points; '
+           'practice and qualifying a tap away.', 'flex:1', 'real') + '</div>', 'Motoracer')
+page('Motoracer · the championships', '<div class="row">'
+     + fig('mr-champs-desktop.jpg', 'Championships after round 20 of 23 (1440px): drivers and teams, with movement, poles, podiums, wins and '
+           'points, every heading sortable, and the title line ("Kimi Antonelli can no longer be caught").', 'flex:0 0 105mm', 'real')
+     + '<div style="flex:1">'
+     + fig('mr-season-desktop.jpg', 'Tap a driver for their season race by race: Antonelli\'s grid, finish, places gained or lost and points '
+           '(S where a sprint\'s points are included).', '', 'real')
+     + fig('mr-season-phone.jpg', 'The same on a phone, rising from the bottom.', 'width:46mm', 'real') + '</div></div>', 'Motoracer')
+page('Motoracer · the calendar and team-mates',
+     fig('mr-year-desktop.jpg', 'The calendar\'s year view for 2026, coloured by overtaking: each circuit ranked by real passes in its races '
+         'since 2023, in four groups (it can also be coloured by UK time of day, or by sprint weekends).', 'width:140mm', 'real')
+     + fig('mr-mates-desktop.jpg', 'Team-mates (first screen): who qualified ahead, who finished ahead, and points, team by team, the first '
+           'driver solid in the team colour and the second pale.', 'width:140mm', 'real'), 'Motoracer')
+page('Motoracer · the six looks',
+     '<h2>Six looks</h2><p class="lede">Three looks, each light and dark, chosen as in Tenniserver; each phone remembers its own. Next race on '
+     'a phone, first screen.</p>'
+     + looks('mr', [('a', 'Timing screen'), ('b', 'Race programme'), ('c', 'Grid')],
+             'Timing screen, Race programme (like a printed race-day programme) and Grid (bold, with tinted boxes).')
+     + '<div class="row" style="margin-top:4mm;align-items:center"><span class="fav"><img src="img/fav-motoracer.svg">Tab icon '
+       '(the start lights)</span><span class="note">No link-preview picture.</span></div>', 'Motoracer')
+
 # The cover, last, so the page numbers are known.
 ranges = []
 for i, (name, first) in enumerate(toc):
     last = toc[i + 1][1] - 1 if i + 1 < len(toc) else len(pages) + 1
     ranges.append((name, str(first) if first == last else f'{first}–{last}'))
 rows = ''.join(f'<tr><td><b>{name}</b></td><td>{p}</td></tr>' for name, p in ranges)
-favrow = ''.join(f'<span class="fav"><img src="img/fav-{k}.svg">{name.split(" ")[0]}</span>' for k, name in SITES)
+favrow = ''.join(f'<span class="fav"><img src="img/fav-{k}.svg">{name.split(" ")[0]}</span>' for k, name in SITES + PRIVATE)
 cover = f'''<section class="page">
-  <div class="kicker">Pictures · {TAKEN}</div>
+  <div class="kicker">Pictures · {COVER_DATE}</div>
   <h1>baish.net in pictures</h1>
-  <p class="lede" style="font-size:13pt">Screenshots of John Baish's ten sites, on a computer and on a phone. The words (what each site is for,
+  <p class="lede" style="font-size:13pt">Screenshots of John Baish's ten public sites and his two private
+  ones, on a computer and on a phone. The words (what each site is for,
   how it works, how it's built and where it stands) are in the companion text file, <b>baish-net-overview.md</b>.</p>
   <div class="row" style="margin:3mm 0 4mm;flex-wrap:wrap">{favrow}</div>
   <table><tr><th>Section</th><th>Pages</th></tr>{rows}</table>
   <div class="box">
     <h3>How the pictures were made</h3>
     <ul>
-      <li><b>From the live sites</b>, on {TAKEN} at {TAKEN_AT}, in Chromium.</li>
+      <li><b>The public sites</b>, from the live sites on {TAKEN} at {TAKEN_AT}, in Chromium.</li>
       <li><b>Sizes:</b> computer at 1440px wide; phone at 390px wide with touch. Very tall pages are cut into halves (one per page) or into
       strips shown side by side, read left to right.</li>
       <li><b>Content:</b> pictures marked <span class="sample">sample</span> use content typed in for the picture (a running order, a week, a
@@ -260,8 +328,10 @@ cover = f'''<section class="page">
       figures at the time: Hindcaster's final update for Tuesday November 10th, Lightreader's and Nightreader's times for Caversham
       (RG4), Refueller's prices from the 10.15am collection, Riverwatcher's levels from the 11.10am update, and Roadteller's collision
       figures for 2021 to 2025.</li>
+      <li><b>Tenniserver and Motoracer</b> (private, behind a sign-in): built from their repos on {PRIVATE_TAKEN}, with the real
+      data saved there (Tenniserver's 10am update; Motoracer's of 5.50pm on November 11th).</li>
       <li><b>Checks:</b> no page errors and no sideways scrolling on any picture, and the brand fonts loaded every time.</li>
-      <li><b>Light mode</b> throughout, apart from the dark-mode page near the end.</li>
+      <li><b>Light mode</b> throughout, apart from the dark-mode page and the private sites' dark looks.</li>
     </ul>
   </div>
   <div class="folio"><span>baish.net pictures</span><span>1</span></div>

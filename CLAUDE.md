@@ -3694,3 +3694,19 @@ other seven have (a 92px dial on a cream square), which they'd lacked. Rebuilt a
 
 **Decided (same day):** on phones and screens under 1,000px the two sites keep their own tab icons, like the
 other seven. John looked at a mock-up with the new drawings shrunk into their place and chose to leave them.
+
+## The overview gains the two private sites (2026-11-12, docs only, straight to `main`)
+
+At John's word (Debs now has Tenniserver, so nothing needs keeping secret): Tenniserver and Motoracer added to
+`design/overview/`. `baish-net-overview.md`: a "The private sites" section (what they share, then each site: purpose, what it
+covers and does, its three looks, how it's built, where it stands), lines in "How to read this", "At a glance" and "What the
+sites have in common", and theme 6 (Claude's). Pictures: `capture-private.mjs` (new) photographs both from local builds, always,
+as they're behind Cloudflare Access (Tenniserver's 10am update, Motoracer's of 5.50pm on November 11th; a first visit's spoiler
+question, then "No, show both"); `make.sh` builds and serves them on ports 4309 and 4310 even with `LIVE=1`; `prep.py` and
+`build-pictures.py` add seven pages after the icons page (three for Tenniserver, four for Motoracer, each with its six looks and
+icons), and the cover lists both. `baish-net-pictures-2026-11-12.pdf` (37 pages, 62 figures) replaces the November 11th PDF.
+**How it was made:** this session's environment doesn't allow `baish.net`, so the public sites weren't retaken: the PDF is the
+November 11th PDF's pages 2 to 30 (unchanged, figure numbers checked identical) with a new cover and the seven new pages
+(README says so). **Verified:** 27 pictures, no page errors, no sideways scrolling, every site's fonts loaded; the new pages and
+cover with no overflow and all fonts loaded; every new page looked at, every caption checked against its picture. Not run: a full
+`make.sh` (needs `baish.net` allowed).

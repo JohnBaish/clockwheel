@@ -1,15 +1,18 @@
 # baish.net: an overview of John Baish's sites
 
-*Written on Sunday November 1st 2026, updated on Monday November 2nd 2026 (Riverwatcher live) and Wednesday November 11th
-2026 (Roadteller and Nightreader live, and the hub redesigned), as background for discussing themes and ideas in other chats.
-The pictures are in the companion PDF, "baish.net in pictures" (`baish-net-pictures-2026-11-11.pdf`), made on November 11th
-from the live sites.*
+*Written on Sunday November 1st 2026, updated on Monday November 2nd 2026 (Riverwatcher live), Wednesday November 11th
+2026 (Roadteller and Nightreader live, and the hub redesigned) and Thursday November 12th 2026 (the two private sites,
+Tenniserver and Motoracer, added), as background for discussing themes and ideas in other chats. The pictures are in the
+companion PDF, "baish.net in pictures" (`baish-net-pictures-2026-11-12.pdf`): the public sites photographed live on November
+11th, the private ones built from their repos on November 12th.*
 
 ## How to read this
 
 - **Ten live sites:** the hub at www.baish.net and nine free tools: Backtimer, Clockmaker, Flowcharter, Hindcaster,
   Lightreader, Nightreader, Refueller, Riverwatcher and Roadteller. Each tool has its own section below, in the same order: what it's for, what it does, how it
   looks, how it's built, where it stands, and what's open.
+- **Two private sites,** not baish.net tools and not on the hub: Tenniserver (tennis, for John's partner) and Motoracer
+  (Formula 1, for John, his partner and one of his sons), behind a sign-in. They have their own section after the tools.
 - **One more is being built** (not a public tool): Storykeeper (see "Under way", near the end).
 - **Sources:** each project's own notes (`CLAUDE.md`, `SPEC.md`, `PLAN.md`), the shared `HOUSE-STYLE.md`, John's project
   tracker, the October 22nd 2026 overview, and the live sites themselves. Colours and version numbers come from the code.
@@ -38,7 +41,12 @@ from the live sites.*
 - **Nightreader**, nightreader.baish.net: "The planets from your postcode, tonight and through the year." Live since
   November 10th; on the hub since November 11th.
 
-The quoted lines are each tool's own card on the hub.
+The quoted lines are each tool's own card on the hub. The two private sites, which aren't on the hub:
+
+- **Tenniserver**, tenniserver.baish.workers.dev: "The big tennis tournaments, in UK time." (its link-preview line). Live
+  since November 11th; given to John's partner on November 12th.
+- **Motoracer**, motoracer.baish.workers.dev: Formula 1 race weekends in UK time, results, championships and calendar, with
+  spoilers hidden on request. Live since November 11th; its first real race weekend is Las Vegas, November 19th to 22nd.
 
 ---
 
@@ -451,6 +459,100 @@ device in a worker; stars from d3-celestial (XHIP catalogue); Great Britain's po
 
 ---
 
+## The private sites
+
+Two small sites made for the family rather than the public: not on the hub, not baish.net addresses, and asking search
+engines not to index them. Each is behind Cloudflare Access (a sign-in by an emailed code, only for the people allowed). They
+are a pair: Motoracer was made as a sister to Tenniserver and reuses its approach and much of its code.
+
+What they share, and how they differ from the tools: **their own looks**, not the house style, on the same foundations (phone
+first, plain English, no sideways scrolling, 44px tap targets, dark mode following the device, John's wording rules), with
+**three looks each, every one in light and dark**, chosen with three small icons and a "… look" label in the header and
+remembered on each phone; plain HTML, CSS and JavaScript built by a short script (no Vite or React); hosted on **Cloudflare
+Workers** from private GitHub repos, rebuilt on every push to `main`; a collector on GitHub Actions that saves small data
+files, so nothing anyone does is sent anywhere; a credit line saying they aren't connected with or endorsed by the sports'
+bodies (Tenniserver names its data sources there too).
+
+### Tenniserver
+
+**Address:** tenniserver.baish.workers.dev, behind a sign-in. A personal gift from John to his partner (the footer: "Made by
+John for Debs."). Data test and spec November 10th 2026; live November 11th; given to her November 12th, and she's very pleased
+with it (John).
+
+**Purpose and audience.** One person who follows the professional game and wants the matches that matter, in UK time, without
+wading through everything else.
+
+**What it covers.** ATP and WTA singles at the bigger events: the four Grand Slams, the ATP and WTA Finals, the 1000s and 500s,
+and the team events (Davis Cup Finals, Billie Jean King Cup Finals, United Cup, Laver Cup). Which events count comes from a
+hand-kept season list (`events-2027.json`, 55 events, from the official ATP and WTA calendars and the team events' own sites,
+each fact with a source), because the data sources don't label levels reliably.
+
+**What it does.**
+- **Today** and **Tomorrow:** each tournament under way, Grand Slams first, matches in order of play with seeds and UK start
+  times, "Under way at 5.05pm", "Time not set yet", "Order of play still to come"; on busy days the finished matches fold away.
+- **Results:** the last two days' finished matches with full scores, the winner marked; matches still going at the last
+  update say so.
+- **Calendar:** List, Month and Year views of every event to the end of 2027, coloured by type (Grand Slams, the Finals, 1000s,
+  500s, team events), men's events in the full colour and women's paler; earlier events with their champions.
+- **Rankings:** the WTA and ATP top 50, women first, by ranking or by surname, with country, points and movement; dated by the
+  Monday the new list was first seen.
+- "Updated at 10am. Next update at about 5pm."; a notice if the updates seem to have stopped; light printing.
+
+**How it looks.** Three looks: **Court** (each tournament in its surface's colour, hard-court blue, clay orange, grass green,
+with pale tinted boxes in light mode), **Order of play** (like a printed order of play: serif type, one red) and **Clubhouse**
+(soft rounded cards, lilac, tennis-ball yellow). Fonts Barlow Condensed, Figtree, Source Serif 4, IBM Plex Mono and Outfit,
+self-hosted. Favicon: a tennis ball on the Court look's blue. Link-preview picture: "The big tennis tournaments, in UK time."
+
+**How it's built.** `JohnBaish/tenniserver` (private). ESPN's public scoreboard and rankings feeds (unofficial, so every reply
+is checked and the last good data kept) for matches, results and rankings; Live Tennis API (free key, a secret) for the team
+events. The collector runs on GitHub Actions four times a day, at 6am, 10am, 5pm and 11pm UK time, started by cron-job.org.
+Checks: the season list, the collector (on real saved replies) and the page's rules.
+
+**Where it stands.** Live and in use. **Next:** team events (stage 5): watch the Billie Jean King Cup Play-offs, November 20th to
+22nd, to see what the data gives, then build the team pages before the Davis Cup Final 8, November 24th to 29th. Also: a watch
+on when ESPN publishes each day's order of play (to November 29th); the collector's GitHub token to renew before February 9th
+2027; a 2028 season list by late November 2027.
+
+### Motoracer
+
+**Address:** motoracer.baish.workers.dev, behind the same sign-in. For John, his partner and one of his sons. Started and live
+November 11th 2026.
+
+**Purpose and audience.** Following Formula 1 from the UK without doing the time-zone sums, and without having a result spoiled
+before it's been watched.
+
+**What it does.**
+- **Next race:** the round, its circuit, every session in UK time (overnight ones marked), a "Next:" line ("Next: Practice 1 in
+  eight days, Friday November 20th, 12.30am"), the circuit's outline, how it ranks for overtaking and how often it has had a
+  safety car since 2023, and the last race's top three.
+- **Results:** practice, sprint qualifying, sprint, qualifying and race, with grid places gained or lost.
+- **Championships:** drivers and teams with movement, poles, podiums, wins and points, every heading sortable, a line on the
+  title ("Kimi Antonelli can no longer be caught"); tap a driver or team for their season race by race.
+- **Team-mates:** who out-qualified, out-raced and out-scored whom, team by team.
+- **Calendar:** List, Month and Year views; the year can be coloured by overtaking, by UK time of day, or by sprint weekends.
+- **Spoilers:** each phone is asked on arrival about every qualifying, sprint or race since its last visit ("Do you want it
+  hidden?"); anything hidden stays hidden everywhere (results, tables, the calendar's winner) until "Show it". Practice is
+  never hidden.
+
+**How it looks.** Three looks: **Timing screen** (like the broadcast timing graphics), **Race programme** (like a printed
+race-day programme) and **Grid** (bold, with each team's colour and tinted boxes). Its own fonts (Saira Condensed, IBM Plex Sans
+and Mono, and others for the other looks), self-hosted. No F1 or team logos. Favicon: the start lights. No link-preview
+picture.
+
+**How it's built.** `JohnBaish/motoracer` (private). Jolpica (free, no key) for the timetable, results and standings; OpenF1 for
+team colours, first names and car positions (from which the circuit outlines are traced); formula1.com for the hand-kept season
+lists (the last three rounds of 2026, and 2027's 24 rounds). Overtaking and safety-car figures for every circuit from all 90
+Grands Prix since 2023 in OpenF1, with its own clean-up (first laps, pit stops and safety-car periods left out). Race weekends
+fall at different times, so the Cloudflare Worker's hourly timer starts the collector on GitHub at planned times: before each
+weekend, after each day's sessions, twice more after each race, and monthly while a season's times are missing.
+
+**Where it stands.** Live; two full reviews ("fresh looks") on November 11th and 12th, with every change made. **Next:** the
+first real weekend, Las Vegas, November 19th to 22nd (the timer's first run at 10.30pm on Thursday November 19th). January 15th
+2027: 2027's session times, and the circuit figures rebuilt to include 2026. The timer's GitHub token to renew before February
+9th 2027.
+
+---
+
 ## Under way (not live yet)
 
 - **Storykeeper:** a private website for the Baish family's stories (a page per person, a friendly family tree, places). Not
@@ -494,6 +596,9 @@ from `main`, each tool on its own baish.net address; anonymous Vercel visit stat
 checks where the rules matter, and a "safety net" so a fault never shows a blank page. Three tools collect public data on a
 timetable: Hindcaster and Riverwatcher (GitHub Actions, started by cron-job.org) and Refueller (an AWS function in London, as
 its source only answers UK addresses). Everything is kept free to run.
+
+**The private sites** (Tenniserver and Motoracer) share the ways of working and the wording rules, but not the look,
+the technology or the hosting: see their own section.
 
 **Search.** For each tool: a title, a description starting "Free …", a canonical address, robots.txt, a sitemap, some
 visible explanation for first-time visitors, and "More free tools at www.baish.net." in the footer; one Search Console
@@ -541,3 +646,6 @@ records where every project stands.
 5. **Recurring conventions:** list and picture views of the same thing (Clockmaker, Flowcharter), step-through cards
    (Backtimer, Flowcharter), plain-English sentence summaries (Hindcaster, Lightreader, Refueller's route), Print and Copy
    image.
+6. **A private strand.** Tenniserver and Motoracer are made for a few named people, not the public: their own looks with a
+   choice of six, Cloudflare instead of Vercel, and a sign-in. Anything learned there (choosing a look, spoiler-free
+   viewing, timed collectors) could come back to the public tools, or the other way round.

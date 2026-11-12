@@ -8,7 +8,8 @@ themes and ideas. It's for reading, not testing. Since November 1st 2026 it come
   short list of possible themes (Claude's observations, labelled as such). Small and plain, so a chat reads it quickly;
   attach it to a chat or add it to a Claude Project. Written by hand.
 - **`baish-net-pictures-<date>.pdf`: the pictures.** Screenshots of every site on a computer (1440px) and a phone (390px
-  with touch), a dark-mode page, and every favicon and link-preview picture. About 30 A4 pages and 11 MB. Made by a script.
+  with touch), a dark-mode page, and every favicon and link-preview picture, then the two private sites (Tenniserver and
+  Motoracer) with their six looks. About 37 A4 pages and 13 MB. Made by a script.
 
 The first version (October 22nd 2026) was a single 24-page PDF with words and pictures together; it's in git history
 (`baish-net-overview-2026-10-22.pdf`, `overview.html`).
@@ -23,6 +24,7 @@ would mislead.
 | `baish-net-overview.md` | The words. Edit by hand. |
 | `make.sh` | Makes the pictures: takes the screenshots, prepares them, writes `pictures.html` and the PDF. |
 | `capture.mjs` | The screenshots (Playwright), including the sample content typed into each tool, and the dark-mode set. |
+| `capture-private.mjs` | The private sites' screenshots, always from local builds (they're behind a sign-in), with the real data saved in each repo. |
 | `prep.py` | Cuts very tall pages into halves or strips, makes phone pictures a little lighter, saves JPEGs in `img/` (not kept in git). |
 | `build-pictures.py` | Lays out the pages and writes the captions into `pictures.html`. Edit this, not `pictures.html`. |
 | `pdf.mjs` | Makes the PDF, and reports any page where something spills off, any missing picture or unloaded font. |
@@ -45,6 +47,14 @@ would mislead.
 5. Read the words again against the current notes (`HOUSE-STYLE.md`, each repo's `CLAUDE.md`, `SPEC.md`, `PLAN.md`, and the
    project tracker in `JohnBaish/baish.net-directory`), and update statuses, dates and the date at the top.
 6. Look at every page of the PDF. Delete the old PDF, keep the new one, and send both files to John.
+
+**The private sites** (Tenniserver, Motoracer) are behind Cloudflare Access, so `make.sh` always builds them from their repos
+(checked out beside clockwheel, `npm ci` done) and serves them locally, even with `LIVE=1`. Their captions name the update shown
+and the date (`PRIVATE_TAKEN` in `build-pictures.py`); check them against the new pictures too.
+
+**November 12th 2026:** the private sites were added without retaking the public ones (`baish.net` wasn't allowed in that
+session's environment). The PDF was put together from the November 11th PDF's pages 2 to 30, with a new cover and the seven
+new pages from `build-pictures.py`; the next full run of `make.sh` makes it all in one go.
 
 ## Known limits
 
