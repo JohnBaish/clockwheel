@@ -3721,3 +3721,9 @@ imports the same file). Light mode, printing and Copy image unchanged (Copy imag
 **Verified:** `tsc -b`, lint, `npm run check` (13), build; Chromium, the Guide, Library, Clock, Week, standalone Backtimer and the
 baish.net page at 1200px, 390px and 844×390 with touch, light and dark: dark page `#24211e`, light unchanged, no errors, no
 sideways scroll. **Couldn't check:** a real phone or Mac.
+
+## House style §2: the darker dark mode and colour by state (2026-11-14, docs only, straight to `main`)
+
+After the dark colour review (options 5 and 7, now live on every site), §2 records the new page colour
+`#24211e`, the card shadow, raised panels `#403b35` with `#ea9862` accents, and the rule for coloured
+state edges. Re-copied to Riverwatcher, Lightreader, Refueller, Hindcaster and Flowcharter.
