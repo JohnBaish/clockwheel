@@ -3710,3 +3710,14 @@ November 11th PDF's pages 2 to 30 (unchanged, figure numbers checked identical) 
 (README says so). **Verified:** 27 pictures, no page errors, no sideways scrolling, every site's fonts loaded; the new pages and
 cover with no overflow and all fonts loaded; every new page looked at, every caption checked against its picture. Not run: a full
 `make.sh` (needs `baish.net` allowed).
+
+
+## Dark mode a step darker, to match the other tools — LIVE (2026-11-14, branch `dark-step`, merged the same day)
+
+After the dark colour review of Riverwatcher, Lightreader, Refueller and Hindcaster (house style §2, options 5 and 7), John agreed
+the other sites follow suit so they all match. `global.css`, one block at the end, dark mode on screen only: the page `#24211e`
+(was `#2a2723`) and cards lifted with a shadow. Covers Clockmaker, the standalone Backtimer and the baish.net page (`landing.ts`
+imports the same file). Light mode, printing and Copy image unchanged (Copy image already uses fixed light colours).
+**Verified:** `tsc -b`, lint, `npm run check` (13), build; Chromium, the Guide, Library, Clock, Week, standalone Backtimer and the
+baish.net page at 1200px, 390px and 844×390 with touch, light and dark: dark page `#24211e`, light unchanged, no errors, no
+sideways scroll. **Couldn't check:** a real phone or Mac.
