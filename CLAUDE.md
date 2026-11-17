@@ -3735,3 +3735,14 @@ page and results are in Lightreader's notes), John agreed: every Share button se
 each tool's design), a link to the same place sent separately, and a title; no "today" or "yesterday"; a full postcode cut
 to its first half. New §17, and a line in §16 step 9. Built in Lightreader (live) and Nightreader, Hindcaster,
 Riverwatcher, Refueller and Roadteller (on branches, for John to try site by site). No app code here.
+
+## Rainfaller added to the baish.net page (2026-11-17, branch `landing-rainfaller`, not merged)
+
+John (from the Rainfaller session, `JohnBaish/rainfaller`, live at `https://rainfaller.baish.net/`): a tenth site, after
+Hindcaster in "The sky and weather": **Rainfaller**, "How much rain has fallen nearby, so far today?" (its tagline), picture
+`public/hub/rainfaller.webp` cropped from its link-preview picture as the others are, NEW from November 17th (so three tags:
+Nightreader, Roadteller, Rainfaller). That column now has four sites, so John chose option C from mock-ups: the panels end
+together (`align-items: stretch`, rows `flex: 1`), and above 1,000px a four-site panel (`.hub-four`) has tighter rows and
+78px pictures. The search description gains "rainfall" (156 characters). Head comment updated.
+**Verified:** checks (13), build; `/landing.html` in Chromium at 1200px, 900px, 844×390 and 390px (the last three with
+touch), light and dark: ten sites, panels end level on a computer, three NEW tags, no errors, no sideways scroll.

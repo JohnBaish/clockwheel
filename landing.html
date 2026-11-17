@@ -5,7 +5,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon-baish.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>baish.net – free browser tools by John Baish</title>
-    <meta name="description" content="Free browser tools by John Baish: radio clocks, backtiming, flowcharts, weather, daylight, planets, fuel prices, river levels and road collisions." />
+    <meta name="description" content="Free browser tools by John Baish: radio clocks, backtiming, flowcharts, weather, rainfall, daylight, planets, fuel prices, river levels and road collisions." />
     <link rel="canonical" href="https://www.baish.net/" />
     <!-- Search (SEO), 2026-10-17: <title> and the search description are
          written for search engines; the og:/twitter: tags below are for link
@@ -21,9 +21,10 @@
          weight. Update the links below if any destination's URL ever changes. The page
          was redesigned on 2026-11-11 (three coloured panels, pictures on a computer,
          NEW tags from each site's data-launched date: see CLAUDE.md). (Flowcharter, Hindcaster, Lightreader, Refueller,
-         Riverwatcher, Roadteller and Nightreader live in their own repos, JohnBaish/flowcharter,
+         Riverwatcher, Roadteller, Nightreader and Rainfaller live in their own repos, JohnBaish/flowcharter,
          JohnBaish/hindcaster, JohnBaish/lightreader, JohnBaish/refueller,
-         JohnBaish/riverwatcher, JohnBaish/roadteller and JohnBaish/nightreader.) -->
+         JohnBaish/riverwatcher, JohnBaish/roadteller, JohnBaish/nightreader and
+         JohnBaish/rainfaller.) -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="baish.net" />
     <meta property="og:description" content="John Baish’s websites" />
@@ -74,6 +75,16 @@
       .hub-new[hidden] { display: none; }
       .hub-foot { margin: 40px 0 0; padding: 18px 0 36px; border-top: 1px solid var(--color-divider); color: var(--color-neutral-700); font-size: 13px; text-align: center; }
       .hub-foot a { color: var(--color-text); }
+      /* Computer: the panels end together; a panel with four sites has slightly tighter rows and
+         smaller pictures, and the others spread their rows to match (John's option C, November 17th
+         2026, when Rainfaller made "The sky and weather" four). */
+      .hub-cols { align-items: stretch; }
+      .hub-panel { display: flex; flex-direction: column; }
+      .hub-panel .hub-row { flex: 1; }
+      @media (min-width: 1001px) {
+        .hub-four .hub-row { padding-top: 10px; padding-bottom: 10px; }
+        .hub-four .hub-pic { width: 78px; height: 78px; justify-self: center; }
+      }
       /* Three columns get tight on smaller computers, tablets and phones held sideways: the small
          icons there instead of the pictures, as on a phone. */
       @media (max-width: 1000px) {
@@ -115,7 +126,7 @@
         <h1>baish.net</h1>
       </header>
       <div class="hub-cols">
-      <section class="hub-panel hub-sky">
+      <section class="hub-panel hub-sky hub-four">
         <h2>The sky and weather</h2>
         <a class="hub-row" href="https://lightreader.baish.net/" data-site="lightreader">
           <img class="hub-pic" src="/hub/lightreader.webp" width="96" height="96" alt="" loading="lazy" />
@@ -131,6 +142,11 @@
           <img class="hub-pic" src="/hub/hindcaster.webp" width="96" height="96" alt="" loading="lazy" />
           <svg class="hub-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#f5ead8" stroke="#c67139" stroke-width="2.5"/><circle cx="29.5" cy="17.5" r="7" fill="#c67139"/><g fill="#201e1d"><circle cx="17" cy="29" r="5.5"/><circle cx="23.5" cy="25.5" r="7"/><circle cx="31" cy="29.5" r="5"/><rect x="17" y="28" width="14" height="6.5"/></g></svg>
           <span class="hub-text"><span class="hub-name">Hindcaster<span class="hub-new" hidden>New</span></span><span class="hub-line">Look back at yesterday's weather anywhere in England.</span></span>
+        </a>
+        <a class="hub-row" href="https://rainfaller.baish.net/" data-site="rainfaller" data-launched="2026-11-17">
+          <img class="hub-pic" src="/hub/rainfaller.webp" width="96" height="96" alt="" loading="lazy" />
+          <svg class="hub-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="21" fill="#f5ead8" stroke="#c67139" stroke-width="2.5"/><path d="M24 9.5C24 9.5 14.5 21 14.5 28a9.5 9.5 0 0 0 19 0C33.5 21 24 9.5 24 9.5Z" fill="#201e1d"/><path d="M19.5 28a4.5 4.5 0 0 0 4.5 4.5" fill="none" stroke="#c67139" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <span class="hub-text"><span class="hub-name">Rainfaller<span class="hub-new" hidden>New</span></span><span class="hub-line">How much rain has fallen nearby, so far today?</span></span>
         </a>
       </section>
       <section class="hub-panel hub-near">
