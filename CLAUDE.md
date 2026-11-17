@@ -3750,3 +3750,12 @@ touch), light and dark: ten sites, panels end level on a computer, three NEW tag
 **Merged to `main` (2026-11-17)** at John's word (after he looked at the branch preview); checks and build clean first.
 Checked live: www.baish.net lists Rainfaller with its picture (200). `landing-rainfaller` deleted with the "Delete merged
 branches" workflow (trial run, then the real run).
+
+## House style: the "Delete merged branches" job listed for new tools (2026-11-17, docs only, straight to `main`)
+
+Rainfaller's fresh look found it had no `tidy-branches.yml` (it had been started without it). At John's request, so new
+tools get it: §1's table lists `.github/workflows/tidy-branches.yml` (copy into every project in its first thread), §16's
+first-thread prompt copies it, §10 says so, and the fresh-look review now checks the house-style files are there. The
+workflow was copied into Rainfaller the same day. The other six tools already have it (checked); `riverwatcher-data` and
+`hindcaster-canada` haven't, and the private repos weren't checked. Re-copied to Rainfaller and Hindcaster; the other tools
+get it with their next re-copy. No app code changed.

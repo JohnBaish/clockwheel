@@ -33,6 +33,11 @@ confirmed, or clearly mark it as unconfirmed.
    reviewed.
 3. Run the project's own checks (`npm run build`, `npm run lint`, and
    `npm run check` if it exists) and note anything new beyond known warnings.
+   Check the house-style files are there too: `HOUSE-STYLE.md`,
+   `.claude/skills/fresh-look/` and `.github/workflows/tidy-branches.yml`
+   (the "Delete merged branches" job, `HOUSE-STYLE.md` §10). Report any
+   that's missing (added 2026-11-17, after Rainfaller was found without the
+   job).
 4. Serve the built app (`npx vite preview --port <free port> --strictPort`) and
    use Playwright with Chromium (`executablePath: '/opt/pw-browsers/chromium'`).
    List every way in. Clockmaker, for example, has `index.html`,

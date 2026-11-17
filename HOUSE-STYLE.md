@@ -38,6 +38,7 @@ Backtimer — long, and mostly about those apps. Read it only for the
 | `SEO-HANDOVER.md` | How search (titles, descriptions, canonical, robots.txt/sitemap, visible text, Search Console) was done, with a checklist for each new tool (see §12). |
 | `design/overview/` | The baish.net overview, for discussing themes and ideas in other chats: the words in `baish-net-overview.md`, the screenshots in `baish-net-pictures-<date>.pdf`, and a script that remakes the pictures. Lives here only, not copied (see §16). |
 | `HOUSE-STYLE.md` and `.claude/skills/fresh-look/` | This file, and the "fresh look" review procedure with its PDF template and script (see §11). Copy both into every project, new or existing. |
+| `.github/workflows/tidy-branches.yml` | The "Delete merged branches" job (§10), which a cloud session runs after each merge. Copy it unchanged into every project in its first thread; it can only be run once it's on `main`. |
 
 Dependencies these rely on: `@fontsource/caprasimo`, `@fontsource/figtree`,
 `lucide-react`, React. Stack is **Vite + React + TypeScript**, `oxlint`
@@ -540,7 +541,10 @@ and add its tags. Nothing else needs fixing or remaking first.
   the real run (untick "Only list"); then check that the branches are gone
   (`git ls-remote --heads origin`) and note it in the project's log. Name
   an unmerged branch for deletion only when John has said it's dead. A new
-  tool copies the file.
+  tool copies the file in its first thread (§1, §16): Rainfaller was
+  started without it, and its fresh look found the gap (John,
+  2026-11-17). If a repo hasn't got it, copy it in rather than leaving
+  merged branches behind.
 
 **Preview servers (Claude's checks):** start `vite preview` directly with
 `node node_modules/vite/bin/vite.js preview --port <n> --strictPort` (not
@@ -726,8 +730,9 @@ started this way.
 >    `HOUSE-STYLE.md` and `SEO-HANDOVER.md`. Look at how
 >    `JohnBaish/hindcaster` was started too, if it helps.
 > 2. Move my handover to `design/handover-<date>.md` without changing its
->    words. Copy in `HOUSE-STYLE.md`, `SEO-HANDOVER.md` and
->    `.claude/skills/fresh-look/` from clockwheel, noting the commit.
+>    words. Copy in `HOUSE-STYLE.md`, `SEO-HANDOVER.md`,
+>    `.claude/skills/fresh-look/` and `.github/workflows/tidy-branches.yml`
+>    from clockwheel, noting the commit.
 > 3. Write `SPEC.md` (what the tool does, with numbered open questions at
 >    the end), `PLAN.md` (stages, one branch each) and `CLAUDE.md`
 >    (working notes and a dated log, with a reading list, and the project
