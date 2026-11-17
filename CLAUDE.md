@@ -3746,3 +3746,7 @@ together (`align-items: stretch`, rows `flex: 1`), and above 1,000px a four-site
 78px pictures. The search description gains "rainfall" (156 characters). Head comment updated.
 **Verified:** checks (13), build; `/landing.html` in Chromium at 1200px, 900px, 844×390 and 390px (the last three with
 touch), light and dark: ten sites, panels end level on a computer, three NEW tags, no errors, no sideways scroll.
+
+**Merged to `main` (2026-11-17)** at John's word (after he looked at the branch preview); checks and build clean first.
+Checked live: www.baish.net lists Rainfaller with its picture (200). `landing-rainfaller` deleted with the "Delete merged
+branches" workflow (trial run, then the real run).
