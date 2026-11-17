@@ -3727,3 +3727,11 @@ sideways scroll. **Couldn't check:** a real phone or Mac.
 After the dark colour review (options 5 and 7, now live on every site), §2 records the new page colour
 `#24211e`, the card shadow, raised panels `#403b35` with `#ea9862` accents, and the rule for coloured
 state edges. Re-copied to Riverwatcher, Lightreader, Refueller, Hindcaster and Flowcharter.
+
+## House style §17: sharing a picture (2026-11-17, docs only, straight to `main`)
+
+After testing what apps do with a shared picture (iPhone: WhatsApp, Gmail, Messages; Android: WhatsApp, Gmail; the test
+page and results are in Lightreader's notes), John agreed: every Share button sends a sentence (agreed with him as part of
+each tool's design), a link to the same place sent separately, and a title; no "today" or "yesterday"; a full postcode cut
+to its first half. New §17, and a line in §16 step 9. Built in Lightreader (live) and Nightreader, Hindcaster,
+Riverwatcher, Refueller and Roadteller (on branches, for John to try site by site). No app code here.
