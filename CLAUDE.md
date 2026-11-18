@@ -3762,9 +3762,10 @@ get it with their next re-copy. No app code changed.
 
 ## Trainchecker added to the baish.net page (2026-11-18, branch `claude/laughing-hawking-8d2b6w`, not merged)
 
-John (from the Trainchecker session, `JohnBaish/trainchecker`, stage 5): an eleventh site, fourth in "Near you"
-after Riverwatcher (John's choice of panel): **Trainchecker**, "How the trains are doing, written the way we speak."
-(its tagline, John's choice), picture `public/hub/trainchecker.webp` cropped from its link-preview picture at (86, 85)
+John (from the Trainchecker session, `JohnBaish/trainchecker`, stage 5): an eleventh site in "Near you" (John's
+choice of panel), second, so the column reads Refueller, Trainchecker, Roadteller, Riverwatcher (John, the same day):
+**Trainchecker**, "Are the trains OK? (With gentle, natural answers.)" (John's line, chosen from a second mock-up
+over the tagline), picture `public/hub/trainchecker.webp` cropped from its link-preview picture at (86, 85)
 to (546, 545) as the others are, small icon its favicon, NEW from November 18th. "Near you" now has four sites, so it
 takes `.hub-four` like "The sky and weather". With four NEW dates, the rule of three drops Roadteller's tag (the
 oldest) a day before its three weeks end. The search description, John's choice: "Free browser tools by John Baish:
