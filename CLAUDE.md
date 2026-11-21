@@ -3776,3 +3776,8 @@ radio clocks, backtiming, flowcharts, weather, rainfall, daylight, planets, fuel
 with touch), light and dark: 11 sites, panels end level on a computer, NEW on Nightreader, Rainfaller and
 Trainchecker, no errors, no sideways scroll. **Before merging:** trainchecker.baish.net must exist (John adds the
 domain in Vercel and the DNS record), or the card links nowhere; set `data-launched` to the day it actually goes on.
+
+**Roadteller's NEW tag removed (2026-11-21, same branch):** at John's request, Roadteller's `data-launched` date taken
+off in `landing.html`, so it's never marked NEW again (the rule of three had already dropped it). NEW now shows on
+Nightreader, Rainfaller and Trainchecker. Checked: `npm run check` (13), build; `/landing.html` in Chromium at 1200px
+and 390px with touch: those three tags only, no errors, no sideways scroll. Screenshots sent to John before merging.
