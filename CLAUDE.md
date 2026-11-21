@@ -3760,7 +3760,7 @@ workflow was copied into Rainfaller the same day. The other six tools already ha
 `hindcaster-canada` haven't, and the private repos weren't checked. Re-copied to Rainfaller and Hindcaster; the other tools
 get it with their next re-copy. No app code changed.
 
-## Trainchecker added to the baish.net page (2026-11-18, branch `claude/laughing-hawking-8d2b6w`, not merged)
+## Trainchecker added to the baish.net page — LIVE (2026-11-18, branch `claude/laughing-hawking-8d2b6w`, merged 2026-11-21)
 
 John (from the Trainchecker session, `JohnBaish/trainchecker`, stage 5): an eleventh site in "Near you" (John's
 choice of panel), second, so the column reads Refueller, Trainchecker, Roadteller, Riverwatcher (John, the same day):
